@@ -63,16 +63,16 @@ VERSIONS = {
             'version/chrome/manifest.json',
             'version/chrome/background.js',
         ],
-        'release': '../__export__/release/captcha_chrome',
-        'debug': '../__export__/debug/captcha_chrome',
+        'release': './__export__/release/captcha_chrome',
+        'debug': './__export__/debug/captcha_chrome',
     },
     'firefox': {
         'files': [
             'version/firefox/manifest.json',
             'version/firefox/background.js',
         ],
-        'release': '../__export__/release/captcha_firefox',
-        'debug': '../__export__/debug/captcha_firefox',
+        'release': './__export__/release/captcha_firefox',
+        'debug': './__export__/debug/captcha_firefox',
     },
 }
 
