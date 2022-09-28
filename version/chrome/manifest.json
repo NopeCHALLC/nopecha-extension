@@ -1,0 +1,57 @@
+{
+    "name": "NopeCHA: ReCAPTCHA & hCAPTCHA Solver",
+    "action": {
+        "default_title": "NopeCHA: ReCAPTCHA & hCAPTCHA Solver",
+        "default_icon": "icon/16.png",
+        "default_popup": "popup.html"
+    },
+    "manifest_version": 3,
+    "version": "0.1.11",
+    "description": "Automatically solve CAPTCHAs using AI.",
+    "permissions": [
+        "storage",
+        "scripting"
+    ],
+    "background": {"service_worker": "background.js"},
+    "content_scripts": [
+        {
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "js": ["hcaptcha.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "js": ["hcaptcha_fast.js"],
+            "all_frames": true,
+            "run_at": "document_start"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["recaptcha.js", "recaptcha_voice.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "*://*.google.com/recaptcha/*",
+                "*://*.recaptcha.net/recaptcha/*",
+                "*://recaptcha.net/recaptcha/*"
+            ],
+            "js": ["recaptcha_fast.js"],
+            "all_frames": true,
+            "run_at": "document_start"
+        }
+    ],
+    "host_permissions": ["<all_urls>"],
+    "icons": {
+        "16": "icon/16.png",
+        "32": "icon/32.png",
+        "48": "icon/48.png",
+        "128": "icon/128.png"
+    },
+    "web_accessible_resources": [{
+        "resources": ["utils.js"],
+        "matches": ["<all_urls>"]
+    }]
+}

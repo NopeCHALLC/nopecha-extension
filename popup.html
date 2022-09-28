@@ -1,0 +1,140 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="popup.css">
+    </head>
+
+    <body>
+        <!-- <div id="template" class="hidden">
+            <div class="loading"><div></div><div></div><div></div><div></div></div>
+        </div> -->
+
+        <div id="main">
+            <!-- <div class="settings_group">
+                <div class="label">Server Status</div>
+                <div id="server_status" class="value green">
+                    <div class="loading"><div></div><div></div><div></div><div></div></div>
+                </div>
+            </div> -->
+
+            <div class="content">
+                <div class="settings_group">
+                    <div id="manage" class="clickable">Manage Subscription</div>
+                </div>
+
+                <div class="settings_group vertical">
+                    <input id="key" type="text" placeholder="Subscription Key" style="width: 280px;">
+                    <div id="incorrect_key" class="red hidden">Incorrect Key</div>
+                </div>
+
+                <div class="settings_group">
+                    <div class="label">Subscription</div>
+                    <div id="plan" class="value green">
+                        <div class="loading"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
+
+                <div class="settings_group">
+                    <div class="label">Credits</div>
+                    <div id="credit" class="value">
+                        <div class="loading"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
+
+                <div class="settings_group">
+                    <div class="label">Refills</div>
+                    <div id="refills" class="value green">
+                        <div class="loading"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vspace"></div>
+
+            <div class="tab_btn_row">
+                <div class="tab_btn active" data-target="#hcaptcha_tab">hCaptcha</div>
+                <div class="tab_btn" data-target="#recaptcha_tab">reCAPTCHA</div>
+            </div>
+
+            <div class="tab_content bordered">
+
+                <div id="hcaptcha_tab" class="tab">
+                    <div class="settings_group">
+                        <div class="label">Auto Solve</div>
+                        <label class="switch">
+                            <input id="hcaptcha_auto_solve" type="checkbox" data-disables="hcaptcha_solve_delay">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Solve Delay <span class="light">(ms)</span></div>
+                        <input id="hcaptcha_solve_delay" type="text" class="number">
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Auto Open</div>
+                        <label class="switch">
+                            <input id="hcaptcha_auto_open" type="checkbox" data-disables="hcaptcha_open_delay">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Open Delay <span class="light">(ms)</span></div>
+                        <input id="hcaptcha_open_delay" type="text" class="number">
+                    </div>
+                </div>
+
+                <div id="recaptcha_tab" class="tab hidden">
+                    <div class="settings_group">
+                        <div class="label">Auto Solve</div>
+                        <label class="switch">
+                            <input id="recaptcha_auto_solve" type="checkbox" data-disables="recaptcha_solve_delay,recaptcha_solve_method">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Solve Delay <span class="light">(ms)</span></div>
+                        <input id="recaptcha_solve_delay" type="text" class="number">
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Auto Open</div>
+                        <label class="switch">
+                            <input id="recaptcha_auto_open" type="checkbox" data-disables="recaptcha_open_delay">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Open Delay <span class="light">(ms)</span></div>
+                        <input id="recaptcha_open_delay" type="text" class="number">
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">ReCAPTCHA Method</div>
+                        <select id="recaptcha_solve_method">
+                            <option value="image" selected>Image</option>
+                            <option value="voice">Voice</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- <div class="settings_group footer_group">
+                <div class="label">Debug</div>
+                <label class="switch">
+                    <input id="debug" type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div> -->
+
+            <div class="settings_group footer_group">
+                <div id="footer" class="clickable">bug report & feature request</div>
+            </div>
+        </div>
+        <script src="popup.js"></script>
+    </body>
+</html>

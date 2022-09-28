@@ -1,0 +1,58 @@
+{
+    "name": "NopeCHA: ReCAPTCHA & hCAPTCHA Solver",
+    "browser_action": {
+        "default_title": "NopeCHA: ReCAPTCHA & hCAPTCHA Solver",
+        "default_icon": "icon/16.png",
+        "default_popup": "popup.html"
+    },
+    "manifest_version": 2,
+    "version": "0.1.11",
+    "description": "Automatically solve CAPTCHAs using AI.",
+    "permissions": [
+        "storage",
+        "scripting",
+        "<all_urls>"
+    ],
+    "background": {"scripts": ["background.js"]},
+    "content_scripts": [
+        {
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "js": ["hcaptcha.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "js": ["hcaptcha_fast.js"],
+            "all_frames": true,
+            "run_at": "document_start"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["recaptcha.js", "recaptcha_voice.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "*://www.google.com/recaptcha/*",
+                "*://www.recaptcha.net/recaptcha/*",
+                "*://recaptcha.net/recaptcha/*"
+            ],
+            "js": ["recaptcha_fast.js"],
+            "all_frames": true,
+            "run_at": "document_start"
+        }
+    ],
+    "icons": {
+        "16": "icon/16.png",
+        "32": "icon/32.png",
+        "48": "icon/48.png",
+        "128": "icon/128.png"
+    },
+    "web_accessible_resources": ["utils.js"],
+    "gecko": {
+        "id": "noptcha@gpudrops.com",
+        "strict_min_version": "101.0"
+    }
+}
