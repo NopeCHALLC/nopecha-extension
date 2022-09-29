@@ -1,5 +1,19 @@
 /**
- * Enables drag select for hCAPTCHA.
+ * Sets the hCaptcha language to English.
+ */
+
+setTimeout(() => {
+    const s = document.createElement('script');
+    s.src = chrome.runtime.getURL('language.js');
+    s.onload = () => {
+        s.remove();
+    };
+    (document.head || document.documentElement).appendChild(s);
+}, 0);
+
+
+/**
+ * Enables drag select for hCaptcha.
  */
 
 (async () => {

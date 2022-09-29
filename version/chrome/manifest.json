@@ -10,7 +10,8 @@
     "description": "Automatically solve CAPTCHAs using AI.",
     "permissions": [
         "storage",
-        "scripting"
+        "scripting",
+        "declarativeNetRequest"
     ],
     "background": {"service_worker": "background.js"},
     "content_scripts": [
@@ -21,13 +22,17 @@
             "run_at": "document_end"
         },
         {
-            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "matches": ["<all_urls>"],
             "js": ["hcaptcha_fast.js"],
             "all_frames": true,
             "run_at": "document_start"
         },
         {
-            "matches": ["<all_urls>"],
+            "matches": [
+                "*://*.google.com/recaptcha/*",
+                "*://*.recaptcha.net/recaptcha/*",
+                "*://recaptcha.net/recaptcha/*"
+            ],
             "js": ["recaptcha.js", "recaptcha_voice.js"],
             "all_frames": true,
             "run_at": "document_end"
@@ -51,7 +56,7 @@
         "128": "icon/128.png"
     },
     "web_accessible_resources": [{
-        "resources": ["utils.js"],
+        "resources": ["utils.js", "language.js"],
         "matches": ["<all_urls>"]
     }]
 }

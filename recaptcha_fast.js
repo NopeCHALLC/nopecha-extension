@@ -5,7 +5,6 @@
 (async () => {
     const {Time} = await import(chrome.runtime.getURL('utils.js'));
 
-
     let $start = null;
     let is_mousedown = false;
     let is_selecting = false;
