@@ -6,7 +6,7 @@
         "default_popup": "popup.html"
     },
     "manifest_version": 3,
-    "version": "0.1.12",
+    "version": "0.1.13",
     "description": "Automatically solve CAPTCHAs using AI.",
     "permissions": [
         "declarativeNetRequest",
@@ -50,9 +50,5 @@
         "32": "icon/32.png",
         "48": "icon/48.png",
         "128": "icon/128.png"
-    },
-    "web_accessible_resources": [{
-        "resources": ["utils.js", "language.js"],
-        "matches": ["<all_urls>"]
-    }]
+    }
 }

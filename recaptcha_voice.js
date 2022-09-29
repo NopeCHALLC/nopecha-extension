@@ -1,8 +1,67 @@
 (async () => {
-    const DEFAULT_SLEEP = [200, 400];
+    class Time {
+        static time() {
+            if (!Date.now)
+                Date.now = () => new Date().getTime();
+            return Date.now();
+        }
+
+        static sleep(i=1000) {
+            return new Promise(resolve => setTimeout(resolve, i));
+        }
+
+        static async random_sleep(min, max) {
+            const duration = Math.floor(Math.random() * (max - min) + min);
+            return await Time.sleep(duration);
+        }
+
+        static pad(n) {
+            const len = 2 - String(n).length+1;
+            return len > 0 ? `${new Array(len).join('0')}${n}` : `${n}`;
+        }
+
+        static date() {
+            return new Date();
+        }
+
+        static string(d=null) {
+            if (!d) {
+                d = Time.date();
+            }
+            const month = Time.pad(d.getMonth() + 1);
+            const date = Time.pad(d.getDate());
+            const year = d.getFullYear();
+            const hours = Time.pad(d.getHours() % 12);
+            const minutes = Time.pad(d.getMinutes());
+            const seconds = Time.pad(d.getSeconds());
+            const period = d.getHours() >= 12 ? 'PM' : 'AM';
+            return `${month}/${date}/${year} ${hours}:${minutes}:${seconds} ${period}`;
+        }
+    }
 
 
-    const {Logger, Time, BG, Net} = await import(chrome.runtime.getURL('utils.js'));
+    class BG {
+        static exec(method, data) {
+            return new Promise(resolve => {
+                try {
+                    chrome.runtime.sendMessage({method, data}, resolve);
+                } catch (e) {
+                    console.log('exec failed', e);
+                    resolve();
+                }
+            });
+        }
+    }
+
+
+    class Net {
+        static async fetch(url, options) {
+            return await BG.exec('fetch', {url, options});
+        }
+    }
+
+
+    // const {Time, BG, Net} = await import(chrome.runtime.getURL('utils.js'));
 
 
     function is_widget_frame() {
@@ -87,15 +146,12 @@
         // Try again later error
         if (got_solve_error()) {
             // await BG.exec('set_settings', {id: 'solve_method', value: 'image'});
-            Logger.log('got solve error');
             await BG.exec('reset_recaptcha');
             return;
         }
 
         const dl_url = document.querySelector('.rc-audiochallenge-tdownload-link')?.href;
         const r = fetch(dl_url);
-
-        await Time.random_sleep(...DEFAULT_SLEEP);
 
         const src_url = document.querySelector('#audio-source')?.src?.replace('recaptcha.net', 'google.com');
 
@@ -117,8 +173,6 @@
         if (delta > 0) {
             await Time.sleep(delta);
         }
-
-        await Time.random_sleep(...DEFAULT_SLEEP);
 
         submit();
     }
@@ -153,7 +207,6 @@
         if (!settings || settings.recaptcha_solve_method !== 'voice') {
             continue;
         }
-        Logger.debug = settings.debug;
 
         check_image_frame_visibility();
 

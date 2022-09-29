@@ -2,14 +2,14 @@
  * Sets the hCaptcha language to English.
  */
 
-setTimeout(() => {
-    const s = document.createElement('script');
-    s.src = chrome.runtime.getURL('language.js');
-    s.onload = () => {
-        s.remove();
-    };
-    (document.head || document.documentElement).appendChild(s);
-}, 0);
+// setTimeout(() => {
+//     const s = document.createElement('script');
+//     s.src = chrome.runtime.getURL('language.js');
+//     s.onload = () => {
+//         s.remove();
+//     };
+//     (document.head || document.documentElement).appendChild(s);
+// }, 0);
 
 
 /**
@@ -17,9 +17,6 @@ setTimeout(() => {
  */
 
 (async () => {
-    const {Time} = await import(chrome.runtime.getURL('utils.js'));
-
-
     let $start = null;
     let is_mousedown = false;
     let is_selecting = false;
