@@ -6,7 +6,7 @@
         "default_popup": "popup.html"
     },
     "manifest_version": 2,
-    "version": "0.1.11",
+    "version": "0.1.12",
     "description": "Automatically solve CAPTCHAs using AI.",
     "permissions": [
         "storage",

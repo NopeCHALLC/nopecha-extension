@@ -1,5 +1,5 @@
 (async () => {
-    const DEFAULT_SLEEP = [400, 450];
+    const DEFAULT_SLEEP = [200, 250];
 
 
     const {Logger, Time, BG, Net, Image, NopeCHA} = await import(chrome.runtime.getURL('utils.js'));
@@ -273,22 +273,16 @@
         }
 
         const {task, task_url, cells, urls} = await on_task_ready();
-        const task_image = await Image.encode(task_url);
 
-        // Convert image url to blob
-        const images = [];
-        for (const url of urls) {
-            images.push(await Image.encode(url));
-        }
-
-        // await Time.sleep(settings.solve_delay);
         const solve_start = Time.time();
 
         // Detect images
-        const captcha_type = 'hcaptcha';
-        const key = settings.key;
-        // const {job_id, clicks} = await solve({key, task, task_image, images});
-        const {job_id, clicks} = await NopeCHA.post({captcha_type, task, task_image, images, key});
+        const {job_id, clicks} = await NopeCHA.post({
+            captcha_type: 'hcaptcha',
+            task: task,
+            image_urls: urls,
+            key: settings.key,
+        });
         if (!clicks) {
             return;
         }

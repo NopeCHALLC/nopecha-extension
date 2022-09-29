@@ -333,8 +333,7 @@
         // console.log(task, is_hard, cells, urls);
         const n = cells.length == 9 ? 3 : 4;
 
-        // Convert image urls to blobs
-        let images = [];
+        const image_urls = [];
         let grid;
         let clickable_cells = [];  // Variable number of clickable cells if secondary images appear
         if (background_url === null) {
@@ -343,30 +342,28 @@
                 const url = urls[i];
                 const cell = cells[i];
                 if (url && !solved_urls.includes(url)) {
-                    images.push(await Image.encode(url));
+                    image_urls.push(url);
                     clickable_cells.push(cell);
                 }
             }
         }
         else {
-            const background_image = await Image.encode(background_url);
-            images.push(background_image);
-            if (background_image === null) {
-                await BG.exec('reset_recaptcha');
-            }
+            image_urls.push(background_url);
             grid = `${n}x${n}`;
             clickable_cells = cells;
         }
         // Logger.log('images', images.length, j, g, urls, background_url);
 
-        // await Time.sleep(settings.solve_delay);
         const solve_start = Time.time();
 
         // Solve task
-        const captcha_type = 'recaptcha';
-        const key = settings.key;
-        // const {job_id, clicks} = await solve({task, images, grid});
-        const {job_id, clicks} = await NopeCHA.post({captcha_type, task, images, grid, key});
+        const {job_id, clicks} = await NopeCHA.post({
+            captcha_type: 'recaptcha',
+            task: task,
+            image_urls: image_urls,
+            grid: grid,
+            key: settings.key,
+        });
         // Logger.log(clicks);
         if (!clicks) {
             // Logger.log('no clicks', task, images, j, g, job_id, clicks);

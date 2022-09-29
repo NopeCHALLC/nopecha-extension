@@ -161,7 +161,7 @@ class NopeCHA {
         UPDATE_REQUIRED: 17,
     };
 
-    static async post({captcha_type, task, task_image, images, grid, key}) {
+    static async post({captcha_type, task, image_urls, grid, key}) {
         const start_time = Date.now();
 
         const info = await BG.exec('info_tab');
@@ -175,14 +175,11 @@ class NopeCHA {
             const data = {
                 type: captcha_type,
                 task: task,
-                images: images,
+                image_urls: image_urls,
                 v: chrome.runtime.getManifest().version,
                 key: key,
                 url: info.url,
             };
-            if (task_image) {
-                data.task_image = task_image;
-            }
             if (grid) {
                 data.grid = grid;
             }
@@ -209,8 +206,9 @@ class NopeCHA {
                     }
                 }
 
-                // await Time.sleep(500);
-                return await NopeCHA.get({job_id: r.data, key});
+                // API response format will change from {data} to {id} starting from v0.1.12
+                const job_id = ('id' in r) ? r.id : r.data;
+                return await NopeCHA.get({job_id, key});
             } catch (e) {
                 console.log('failed to parse post response', e);
                 break;
