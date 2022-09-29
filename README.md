@@ -6,4 +6,4 @@ To build for both Chrome and Firefox, simply run the following command:
 
 `python export.py`
 
-This will create `__debug__` and `__release__` directories in the project root directory, in which you will find `firefox` and `chrome` directories. Minified code for production can be found in the `__release__` directory.
+This will create a `__export__` directory in the project root directory, in which you will find `release` and `debug` directories then `chrome` and `firefox` within each of them. Minified code for production can be found in the `release` directory. Zip file is created in the `release` directory for convenience during submission to the webstores.
