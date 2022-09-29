@@ -11,6 +11,8 @@
     "permissions": [
         "storage",
         "scripting",
+        "webRequest",
+        "webRequestBlocking",
         "<all_urls>"
     ],
     "background": {"scripts": ["background.js"]},
@@ -50,9 +52,5 @@
         "48": "icon/48.png",
         "128": "icon/128.png"
     },
-    "web_accessible_resources": ["utils.js"],
-    "gecko": {
-        "id": "noptcha@gpudrops.com",
-        "strict_min_version": "101.0"
-    }
+    "web_accessible_resources": ["utils.js", "language.js"]
 }

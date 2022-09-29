@@ -9,9 +9,9 @@
     "version": "0.1.12",
     "description": "Automatically solve CAPTCHAs using AI.",
     "permissions": [
+        "declarativeNetRequest",
         "storage",
-        "scripting",
-        "declarativeNetRequest"
+        "scripting"
     ],
     "background": {"service_worker": "background.js"},
     "content_scripts": [
