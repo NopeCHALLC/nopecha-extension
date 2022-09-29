@@ -42,6 +42,12 @@
             "js": ["recaptcha_fast.js"],
             "all_frames": true,
             "run_at": "document_start"
+        },
+        {
+            "matches": ["*://nopecha.com/setup"],
+            "js": ["setup.js"],
+            "all_frames": true,
+            "run_at": "document_end"
         }
     ],
     "host_permissions": ["<all_urls>"],
