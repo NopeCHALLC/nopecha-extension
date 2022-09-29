@@ -5,6 +5,7 @@
 
 html * {
     font-family: monospace, monospaSFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
 }
 
 html, body {

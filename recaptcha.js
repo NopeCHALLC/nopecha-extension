@@ -1,7 +1,4 @@
 (async () => {
-    const DEFAULT_SLEEP = [200, 250];
-
-
     const {Logger, Time, BG, Net, Image, NopeCHA} = await import(chrome.runtime.getURL('utils.js'));
 
 
@@ -42,7 +39,7 @@
                 if ((Time.time() - start) > timeout) {
                     return resolve(false);
                 }
-                await Time.random_sleep(...DEFAULT_SLEEP);
+                await Time.sleep(100);
             }
         });
     }
@@ -253,16 +250,16 @@
     }
 
 
-    async function inc_pass() {
-        await BG.exec('inc_cache', {name: 'recaptcha_pass', tab_specific: true});
-        await log_stat();
-    }
+    // async function inc_pass() {
+    //     await BG.exec('inc_cache', {name: 'recaptcha_pass', tab_specific: true});
+    //     await log_stat();
+    // }
 
 
-    async function inc_fail() {
-        await BG.exec('inc_cache', {name: 'recaptcha_fail', tab_specific: true});
-        await log_stat();
-    }
+    // async function inc_fail() {
+    //     await BG.exec('inc_cache', {name: 'recaptcha_fail', tab_specific: true});
+    //     await log_stat();
+    // }
 
 
     async function on_widget_frame(settings) {
@@ -270,7 +267,7 @@
         if (is_solved()) {
             if (!was_solved) {
                 // await report(true);
-                await inc_pass();
+                // await inc_pass();
                 was_solved = true;
             }
             // Collect data
@@ -305,7 +302,7 @@
         if (!was_incorrect && got_solve_incorrect()) {
             solved_urls = [];
             // await report(false);
-            await inc_fail();
+            // await inc_fail();
             was_incorrect = true;
         }
         else {
@@ -375,13 +372,8 @@
             await Time.sleep(delta);
         }
 
-        // // Cache results to report when graded
-        // await BG.exec('append_cache', {name: 'job_id', value: job_id, tab_specific: true});
-
 
         // Submit solution
-        await Time.random_sleep(...DEFAULT_SLEEP);
-
         let n_clicks = 0;
         for (let i = 0; i < clicks.length; i++) {
             if (clicks[i] === false) {
@@ -402,8 +394,6 @@
             }
         }
 
-        await Time.random_sleep(...DEFAULT_SLEEP);
-
         // if ((n === 3 && result.length === 0 && images_loaded()) || n === 4) {
         if ((n === 3 && is_hard && n_clicks === 0 && await on_images_ready()) || (n === 3 && !is_hard) || n === 4) {
             submit();
@@ -412,9 +402,6 @@
 
 
     async function check_image_frame_visibility() {
-        // const $image_frames = [];
-        // $image_frames.push(...document.querySelectorAll('iframe[src*="/recaptcha/api2/bframe"]'));
-        // $image_frames.push(...document.querySelectorAll('iframe[src*="/recaptcha/enterprise/bframe"]'));
         const $image_frames = document.querySelectorAll('iframe[src*="/bframe"]');
         if ($image_frames.length > 0) {
             let is_visible = false;

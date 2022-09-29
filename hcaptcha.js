@@ -1,7 +1,4 @@
 (async () => {
-    const DEFAULT_SLEEP = [200, 250];
-
-
     const {Logger, Time, BG, Net, Image, NopeCHA} = await import(chrome.runtime.getURL('utils.js'));
 
 
@@ -292,8 +289,6 @@
             await Time.sleep(delta);
         }
 
-        await Time.random_sleep(...DEFAULT_SLEEP);
-
         // Solve
         for (let i = 0; i < clicks.length; i++) {
             if (clicks[i] === false) {
@@ -305,8 +300,6 @@
                 cells[i].click();
             }
         }
-
-        await Time.random_sleep(...DEFAULT_SLEEP);
 
         submit();
     }
