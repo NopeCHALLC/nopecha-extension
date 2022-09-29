@@ -22,17 +22,13 @@
             "run_at": "document_end"
         },
         {
-            "matches": ["<all_urls>"],
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
             "js": ["hcaptcha_fast.js"],
             "all_frames": true,
             "run_at": "document_start"
         },
         {
-            "matches": [
-                "*://*.google.com/recaptcha/*",
-                "*://*.recaptcha.net/recaptcha/*",
-                "*://recaptcha.net/recaptcha/*"
-            ],
+            "matches": ["<all_urls>"],
             "js": ["recaptcha.js", "recaptcha_voice.js"],
             "all_frames": true,
             "run_at": "document_end"
