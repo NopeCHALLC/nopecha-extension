@@ -101,6 +101,7 @@
                 if (grid) {
                     data.grid = grid;
                 }
+
                 const text = await Net.fetch(NopeCHA.INFERENCE_URL, {method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'}});
 
                 try {

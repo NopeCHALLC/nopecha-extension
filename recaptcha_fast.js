@@ -67,5 +67,6 @@
         sheet.insertRule(`.rc-imageselect-dynamic-selected {transition-duration: ${2/SPEED}s !important}`, 2);
         sheet.insertRule(`.rc-imageselect-progress {transition-duration: ${1/SPEED}s !important}`, 3);
         sheet.insertRule(`.rc-image-tile-overlay {transition-duration: ${1/SPEED}s !important}`, 4);
+        sheet.insertRule(`#rc-imageselect img {pointer-events: none !important}`, 5);
     });
 })();

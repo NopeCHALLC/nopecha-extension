@@ -1,19 +1,38 @@
+/**
+ * Sets the hCaptcha language to English.
+ */
 
-function scanHead() {
-    const currentLanguage = navigator.language.split('-')[0];
-    for(const element of document.querySelectorAll(`script[src*=".hcaptcha.com/1/api.js"]`)) {
-        const url = new URL(element.src);
-        const lang = url.searchParams.get('hl') || currentLanguage;
-        if(lang === "en") continue;
-        url.searchParams.set('hl', 'en');
-        element.src = url.toString();
+
+(() => {
+    const TARGET_LANG = 'en';
+    let observer;
+
+    function scan_head() {
+        const current_language = navigator.language.split('-')[0];
+        for (const $e of document.querySelectorAll(`script[src*=".hcaptcha.com/1/api.js"]`)) {
+            // observer.disconnect();
+            const url = new URL($e.src);
+            const lang = url.searchParams.get('hl') || current_language;
+            if (lang === TARGET_LANG) {
+                continue;
+            }
+            url.searchParams.set('hl', TARGET_LANG);
+            $e.src = url.toString();
+        }
     }
-}
 
-const observer = new MutationObserver(scanHead);
+    observer = new MutationObserver(scan_head);
 
-// head isnt ready yet
-setTimeout(() => {
-    scanHead();
-    observer.observe(document.head, { childList: true });
-}, 0);
+    // Wait for head
+    setTimeout(() => {
+        scan_head();
+        observer.observe(document.head, {childList: true});
+
+        // // Stop observer timeout
+        // setTimeout(() => {
+        //     observer.disconnect();
+        //     console.log('disconnected observer');
+        // }, 1000 * 60);
+    }, 0);
+
+})();
