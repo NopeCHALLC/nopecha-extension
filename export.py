@@ -56,6 +56,7 @@ COMMON_FILES = [
     'recaptcha.js',
     'utils.js',
     'hcaptcha_language.js',
+    'setup.js',
 ]
 
 VERSIONS = {
