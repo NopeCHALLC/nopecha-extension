@@ -34,6 +34,12 @@
             "run_at": "document_end"
         },
         {
+            "matches": ["<all_urls>"],
+            "js": ["hcaptcha_language.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
             "matches": [
                 "*://*.google.com/recaptcha/*",
                 "*://*.recaptcha.net/recaptcha/*",
