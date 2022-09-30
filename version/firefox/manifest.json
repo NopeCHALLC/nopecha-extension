@@ -31,6 +31,12 @@
         },
         {
             "matches": ["<all_urls>"],
+            "js": ["hcaptcha_language.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
+            "matches": ["<all_urls>"],
             "js": ["recaptcha.js", "recaptcha_voice.js"],
             "all_frames": true,
             "run_at": "document_end"
