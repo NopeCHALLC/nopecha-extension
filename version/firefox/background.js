@@ -249,6 +249,8 @@
 
         static async reset() {
             Settings.data = deep_copy(Settings.DEFAULT);
+            const manifest = browser.runtime.getManifest();
+            if(manifest.key) Settings.data.key = manifest.key;
             await Settings._save();
         }
     }
