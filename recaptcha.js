@@ -519,6 +519,7 @@
 
         // if ((n === 3 && result.length === 0 && images_loaded()) || n === 4) {
         if ((n === 3 && is_hard && n_clicks === 0 && await on_images_ready()) || (n === 3 && !is_hard) || n === 4) {
+            await Time.sleep(200);
             submit();
         }
     }

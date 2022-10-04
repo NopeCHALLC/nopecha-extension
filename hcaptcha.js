@@ -434,6 +434,7 @@
             }
         }
 
+        await Time.sleep(200);
         submit();
     }
 
