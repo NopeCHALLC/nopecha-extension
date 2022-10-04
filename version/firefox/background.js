@@ -203,7 +203,7 @@
             version: 2,
 
             hcaptcha_auto_solve: true,
-            hcaptcha_solve_delay: 1000,
+            hcaptcha_solve_delay: 3000,
             hcaptcha_auto_open: true,
             hcaptcha_open_delay: 1000,
 
