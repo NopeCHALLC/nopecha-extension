@@ -182,7 +182,7 @@ async function initialize_ui() {
 
     // Tech support
     document.querySelector('#footer').addEventListener('click', async () => {
-        await BG.exec('open_tab', {url: 'https://discord.gg/gpudrops'});
+        await BG.exec('open_tab', {url: 'https://nopecha.com/discord'});
     });
 
     // Subscription key changed
