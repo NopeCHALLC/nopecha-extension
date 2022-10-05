@@ -227,6 +227,7 @@ async function render_plan() {
     const $credit = document.querySelector('#credit');
     const $refills = document.querySelector('#refills');
     const $incorrect_key = document.querySelector('#incorrect_key');
+    const $ipbanned_warning = document.querySelector('#ipbanned_warning');
 
     const now = Date.now() / 1000;
     let secs_until_reset = null;
@@ -252,6 +253,11 @@ async function render_plan() {
         $plan.classList.add('green');
     }
 
+    if(plan.plan.includes("Banned")) {
+        $ipbanned_warning.classList.remove('hidden');
+    } else {
+        $ipbanned_warning.classList.add('hidden');
+    }
     // if (['Invalid', 'Banned'].includes(plan.plan)) {
     //     // Show loading icon for remaining credit while the server resets quota
     //     $credit.classList.remove('green');

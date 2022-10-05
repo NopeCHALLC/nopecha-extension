@@ -277,3 +277,13 @@ input:checked + .slider:before {
 .footer_group {
     width: 296px;
 }
+
+.warning_box {
+    border-color: #FCD62E;
+    border-radius: 0.25rem;
+    border-width: 0.125rem;
+    padding: 0 0.5rem;
+    margin: 0 4px;
+    background-color: #FEF9C3;
+    border-style: solid;
+}
