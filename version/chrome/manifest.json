@@ -6,7 +6,7 @@
         "default_popup": "popup.html"
     },
     "manifest_version": 3,
-    "version": "0.1.17",
+    "version": "0.1.18",
     "description": "Automatically solve reCAPTCHA and hCaptcha using AI.",
     "permissions": [
         "declarativeNetRequest",
