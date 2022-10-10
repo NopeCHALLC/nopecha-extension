@@ -11,6 +11,7 @@ html * {
 html, body {
     margin: 0;
     padding: 0;
+    width: 336px;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
