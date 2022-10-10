@@ -308,7 +308,7 @@ async function main() {
     await initialize_ui();
     await check_plan();
     await render_plan();
-    setInterval(render_plan, 250);
+    setInterval(render_plan, 500);
 }
 
 

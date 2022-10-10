@@ -1,13 +1,13 @@
 {
-    "name": "NopeCHA: ReCAPTCHA & hCAPTCHA Solver",
+    "name": "NopeCHA: CAPTCHA Solver",
     "action": {
-        "default_title": "NopeCHA: ReCAPTCHA & hCAPTCHA Solver",
+        "default_title": "NopeCHA: CAPTCHA Solver",
         "default_icon": "icon/16.png",
         "default_popup": "popup.html"
     },
     "manifest_version": 3,
-    "version": "0.1.16",
-    "description": "Automatically solve CAPTCHAs using AI.",
+    "version": "0.1.17",
+    "description": "Automatically solve reCAPTCHA and hCaptcha using AI.",
     "permissions": [
         "declarativeNetRequest",
         "storage",
