@@ -6,6 +6,6 @@
         "<all_urls>"
     ],
     "background": {
-        "scripts": ["version/firefox/background.js"]
+        "scripts": ["background.js"]
     }
 }

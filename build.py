@@ -107,10 +107,10 @@ with in_dir(dir_path):
 
                 extension_manifest = json.loads(BASE_MANIFEST.read_text())
 
-                version_files_to_include = filter(lambda f: f.is_file(), version.iterdir())
+                version_files_to_include = filter(lambda f: f.is_file() and f.name != 'manifest.json', version.iterdir())
 
                 for file_to_include in itertools.chain(files_to_include, version_files_to_include):
-                    exported_file = export_directory / file_to_include
+                    exported_file = export_directory / file_to_include.name
                     exported_file.parent.mkdir(parents=True, exist_ok=True)
                     try:
                         # hardlinks take a fraction of time related to copy&paste
