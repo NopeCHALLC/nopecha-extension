@@ -88,6 +88,46 @@ def in_dir(new_path):
         os.chdir(oldcwd)
 
 
+def process_file(source, dist_path, export_directory, zip):
+    target = export_directory / dist_path
+    target.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        # hardlinks take a fraction of time related to copy&paste
+        # Unfortunately, some platforms don't implement or allow them for regular users (E.g. windows)
+        target.hardlink_to(source)
+        # Don't show the user a hard link is tried when the feature is not implemented
+        printe("debug: hardlinked", source)
+    except NotImplementedError:  # Not implemented in windows
+        printe("debug: copy", source)
+        shutil.copy(source, target)
+    except Exception:
+        # Pretends the hardlink was tried but an error happened
+        printe("debug: hardlink", source)
+        raise
+
+    if zip:
+        if source.suffix == ".js":
+            printe("release: uglify js", source)
+            zip_content = subprocess.check_output(
+                [
+                    "uglifyjs",
+                    "--compress",
+                    "--mangle",
+                    "--no-annotations",
+                    "-c",
+                    "drop_console",
+                    "--",
+                    os.fspath(source.absolute()),
+                ]
+            )
+        else:
+            printe("release: include file", source)
+            zip_content = source.read_bytes()
+
+        zip.writestr(os.fspath(dist_path), zip_content)
+
+
 dir_path = Path(__file__).absolute().parent
 
 with in_dir(dir_path):
@@ -136,46 +176,16 @@ with in_dir(dir_path):
                     version.iterdir(),
                 )
 
-                for file_to_include in itertools.chain(
-                    files_to_include, version_files_to_include
-                ):
-                    exported_file = export_directory / file_to_include.name
-                    exported_file.parent.mkdir(parents=True, exist_ok=True)
-                    try:
-                        # hardlinks take a fraction of time related to copy&paste
-                        # Unfortunately, some platforms don't implement or allow them for regular users (E.g. windows)
-                        file_to_include.link_to(exported_file)
-                        # Don't show the user a hard link is tried when the feature is not implemented
-                        printe("debug: hardlinked", file_to_include)
-                    except NotImplementedError:  # Not implemented in windows
-                        printe("debug: copy", file_to_include)
-                        shutil.copy(file_to_include, exported_file)
-                    except Exception:
-                        printe(
-                            "debug: hardlink", file_to_include
-                        )  # Pretends the hardlink was tried but an error happened
-                        raise
+                for file_to_include in files_to_include:
+                    process_file(
+                        file_to_include, file_to_include, export_directory, zip
+                    )
 
-                    if zip:
-                        if file_to_include.suffix == ".js":
-                            printe("release: uglify js", file_to_include)
-                            zip_content = subprocess.check_output(
-                                [
-                                    "uglifyjs",
-                                    "--compress",
-                                    "--mangle",
-                                    "--no-annotations",
-                                    "-c",
-                                    "drop_console",
-                                    "--",
-                                    os.fspath(file_to_include.absolute()),
-                                ]
-                            )
-                        else:
-                            printe("release: include file", file_to_include)
-                            zip_content = file_to_include.read_bytes()
-
-                        zip.writestr(os.fspath(file_to_include), zip_content)
+                for version_file_to_include in version_files_to_include:
+                    target_path = version_file_to_include.relative_to(version)
+                    process_file(
+                        version_file_to_include, target_path, export_directory, zip
+                    )
 
                 version_manifest = version / "manifest.json"
 
