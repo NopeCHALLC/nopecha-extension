@@ -39,4 +39,4 @@ or
 
 Note: The watchdog option `-w` is also supported here: (`python build.py -pw`)
 
-Minified code for production can be found in the `.zip` files in the corresponding browser directory. The Zip files can be used for final testing/debugging before sending to webstores and are the same file as the ones individually submitted to each webstore.
+Minified code for production can be found in the `.zip` files in the corresponding browser directory. The zip files can be used for final testing/debugging before sending them to the webstores.
