@@ -116,7 +116,7 @@ with in_dir(dir_path):
             if program_args.production:
                 # Takes quite a while to make new zips. So better do it for final tests or when deploying
                 extension_archive = export_directory / OUTPUT_ARCHIVE_NAME.with_suffix(
-                    EXTENSION_SUFFIXES[version]
+                    EXTENSION_SUFFIXES[version.name]
                 )
                 zip_deploy = ZipFile(
                     extension_archive, "w", ZIP_DEFLATED, compresslevel=9
