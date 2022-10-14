@@ -69,6 +69,15 @@ if watchdog is None and program_args.watch:
     exit(2)
 
 
+## Polyfill Python will remove link_to in python 3.12
+if not hasattr(Path, "hardlink_to"):
+
+    def hardlink_to_polyfill(self, target):
+        return target.link_to(self)
+
+    Path.hardlink_to = hardlink_to_polyfill
+
+
 @contextlib.contextmanager
 def in_dir(new_path):
     oldcwd = os.getcwd()
