@@ -12,7 +12,7 @@ To build debug copy for both Chrome and Firefox, simply run the following comman
 
 `python build.py`
 
-This will create a `__export__` directory in the project root directory, in which you will find `firefox` and `chrome` directories each one with its version for testing and debugging.
+This will create a `dist` directory in the project root directory, in which you will find `firefox` and `chrome` directories for debugging purposes. If you use the `-p` argument, each debugging directory will have an additional xpi/crc archive for production usage.
 
 ### Actively listening for changes
 For development convenience, `build.py` also supports listening to changes so files are quickly updated.

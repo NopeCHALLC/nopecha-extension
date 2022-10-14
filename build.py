@@ -20,8 +20,11 @@ try:
 except ModuleNotFoundError:
     watchdog = None  # Not mandatory
 
-
-EXTENSION_ZIP_NAME = 'NopeCHA.zip'
+EXTENSION_SUFFIXES = {
+    'firefox': '.xpi',
+    'chrome': '.crc',
+}
+OUTPUT_ARCHIVE_NAME = Path('NopeCHA.zip')
 BASE_MANIFEST = Path('manifest.base.json')
 EXPORT_PATH = Path('__export__')
 VERSIONS_PATH = Path('version')
@@ -87,12 +90,13 @@ with in_dir(dir_path):
         shutil.rmtree(EXPORT_PATH, True)
 
         for version in versions:
-            export_directory = EXPORT_PATH / version
+            export_directory = EXPORT_PATH / version.name
             export_directory.mkdir(parents=True, exist_ok=True)
 
             if program_args.production:
                 # Takes quite a while to make new zips. So better do it for final tests or when deploying
-                zip_deploy = ZipFile(export_directory / EXTENSION_ZIP_NAME, 'w', ZIP_DEFLATED, compresslevel=9)
+                extension_archive = export_directory / OUTPUT_ARCHIVE_NAME.with_suffix(EXTENSION_SUFFIXES[version])
+                zip_deploy = ZipFile(extension_archive, 'w', ZIP_DEFLATED, compresslevel=9)
             else:
                 zip_deploy = contextlib.nullcontext()
 
