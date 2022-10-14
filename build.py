@@ -15,7 +15,6 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 printe = partial(print, file=sys.stderr)
 
-sys.path.append('./pylibs')
 try:
     import watchdog
 except ModuleNotFoundError:

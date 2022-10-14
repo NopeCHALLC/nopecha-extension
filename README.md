@@ -17,10 +17,9 @@ This will create a `__export__` directory in the project root directory, in whic
 ### Actively listening for changes
 For development convenience, `build.py` also supports listening to changes so files are quickly updated.
 
-For that, you need to install python's `watchdog` in your machine or in a `pylibs` directory (recommended).  
-To install in `pylibs` run:
+For that, you need to install python's `watchdog` in your machine:
 
-`python -m pip install -t pylibs watchdog`
+`python -m pip install watchdog`
 
 Then you can run `build.py` command with the `-w` option so your changes immediately apply:  
 
@@ -38,6 +37,6 @@ or
 
 `python build.py -p`
 
-Note: The `-w` is also supported here: (`python build.py -pw`)
+Note: The watchdog option `-w` is also supported here: (`python build.py -pw`)
 
 Minified code for production can be found in the `.zip` files in the corresponding browser directory. The Zip files can be used for final testing/debugging before sending to webstores and are the same file as the ones individually submitted to each webstore.
