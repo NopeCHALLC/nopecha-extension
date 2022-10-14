@@ -34,7 +34,7 @@ When changes exist, the corresponding file is updated in {EXPORT_PATH} for the e
 
 WATCHDOG_NOT_FOUND = f"""
     watchdog was not found. Execute the command below if you want to use the -w/--watch feature:
-    python -m pip install -t pylibs watchdog
+    python -m pip install watchdog
 """.strip()
 
 if watchdog is None:
