@@ -26,7 +26,7 @@ EXTENSION_SUFFIXES = {
 }
 OUTPUT_ARCHIVE_NAME = Path('NopeCHA.zip')
 BASE_MANIFEST = Path('manifest.base.json')
-EXPORT_PATH = Path('__export__')
+EXPORT_PATH = Path('dist')
 VERSIONS_PATH = Path('version')
 
 
