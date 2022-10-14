@@ -28,7 +28,7 @@ or
 `./build.py -w`
 
 
-## Build for deployment
+## Building for production
 ### Prerequisites
 
 `npm install uglify-js -g`

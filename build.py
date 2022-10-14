@@ -83,7 +83,7 @@ dir_path = Path(__file__).absolute().parent
 
 with in_dir(dir_path):
 
-    def deploy():
+    def build():
         here_path = Path(".")
 
         # This is slow but there should be very few files, so it should be OK
@@ -188,7 +188,7 @@ with in_dir(dir_path):
                         "manifest.json", json.dumps(extension_manifest).encode("UTF-8")
                     )
 
-    deploy()
+    build()
 
     if program_args.watch:
         # All watchdog content here to "encapsulate" and only keep if wanted
@@ -202,8 +202,8 @@ with in_dir(dir_path):
                     not event.is_directory
                     and not os.fspath(EXPORT_PATH) in event.src_path
                 ):
-                    deploy()
-                    printe("updated")
+                    build()
+                    printe("changes detected - rebuilt extension")
                     observer.event_queue.empty()
 
             on_created = on_modified
