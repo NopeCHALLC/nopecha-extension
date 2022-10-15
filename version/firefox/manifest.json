@@ -1,67 +1,11 @@
 {
-    "name": "NopeCHA: CAPTCHA Solver",
-    "browser_action": {
-        "default_title": "NopeCHA: CAPTCHA Solver",
-        "default_icon": "icon/16.png",
-        "default_popup": "popup.html"
-    },
     "manifest_version": 2,
-    "version": "0.1.18",
-    "description": "Automatically solve reCAPTCHA and hCaptcha using AI.",
     "permissions": [
-        "storage",
-        "scripting",
         "webRequest",
         "webRequestBlocking",
         "<all_urls>"
     ],
-    "background": {"scripts": ["background.js"]},
-    "content_scripts": [
-        {
-            "matches": ["*://*.hcaptcha.com/captcha/*"],
-            "js": ["hcaptcha.js"],
-            "all_frames": true,
-            "run_at": "document_end"
-        },
-        {
-            "matches": ["*://*.hcaptcha.com/captcha/*"],
-            "js": ["hcaptcha_fast.js"],
-            "all_frames": true,
-            "run_at": "document_start"
-        },
-        {
-            "matches": ["<all_urls>"],
-            "js": ["hcaptcha_language.js"],
-            "all_frames": true,
-            "run_at": "document_end"
-        },
-        {
-            "matches": ["<all_urls>"],
-            "js": ["recaptcha.js", "recaptcha_voice.js"],
-            "all_frames": true,
-            "run_at": "document_end"
-        },
-        {
-            "matches": [
-                "*://www.google.com/recaptcha/*",
-                "*://www.recaptcha.net/recaptcha/*",
-                "*://recaptcha.net/recaptcha/*"
-            ],
-            "js": ["recaptcha_fast.js"],
-            "all_frames": true,
-            "run_at": "document_start"
-        },
-        {
-            "matches": ["*://nopecha.com/setup"],
-            "js": ["setup.js"],
-            "all_frames": true,
-            "run_at": "document_end"
-        }
-    ],
-    "icons": {
-        "16": "icon/16.png",
-        "32": "icon/32.png",
-        "48": "icon/48.png",
-        "128": "icon/128.png"
+    "background": {
+        "scripts": ["background.js"]
     }
 }
