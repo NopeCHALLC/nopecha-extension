@@ -52,21 +52,21 @@
     }
 
     let listeners = {};
-
     while (true) {
         await sleep(1000);
 
         try {
-            // // const $success = document.querySelector('#victoryImage');
-            // const $success = document.querySelector('body.victory');
-            // if ($success) {
-            //     console.log('$success', $success);
-            //     window.location.reload();
-            // }
+            // const $success = document.querySelector('#victoryImage');
+            const $success = document.querySelector('body.victory');
+            if ($success) {
+                console.log('$success', $success);
+                window.location.reload();
+            }
 
             const $timeout = document.querySelector('#timeout_widget');
             if ($timeout?.style?.display === 'block') {
                 console.log('$timeout', $timeout);
+                await sleep(3000);
                 window.location.reload();
             }
 
@@ -77,7 +77,7 @@
             }
 
             const $btns = document.querySelectorAll('#game_children_challenge ul > li > a');
-            console.log('$btns', $btns);
+            // console.log('$btns', $btns);
             for (const i in $btns) {
                 const $e = $btns[i];
                 if (i in listeners) {
