@@ -62,11 +62,20 @@
             <div class="tab_btn_row">
                 <div class="tab_btn active" data-target="#hcaptcha_tab">hCaptcha</div>
                 <div class="tab_btn" data-target="#recaptcha_tab">reCAPTCHA</div>
+                <div class="tab_btn" data-target="#ocr_tab">OCR</div>
             </div>
 
             <div class="tab_content bordered">
 
                 <div id="hcaptcha_tab" class="tab">
+                    <div class="settings_group">
+                        <div class="label">Auto Open</div>
+                        <label class="switch">
+                            <input id="hcaptcha_auto_open" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
                     <div class="settings_group">
                         <div class="label">Auto Solve</div>
                         <label class="switch">
@@ -80,21 +89,21 @@
                         <input id="hcaptcha_solve_delay" type="text" class="number">
                     </div>
 
+                    <!-- <div class="settings_group">
+                        <div class="label">Open Delay <span class="light">(ms)</span></div>
+                        <input id="hcaptcha_open_delay" type="text" class="number">
+                    </div> -->
+                </div>
+
+                <div id="recaptcha_tab" class="tab hidden">
                     <div class="settings_group">
                         <div class="label">Auto Open</div>
                         <label class="switch">
-                            <input id="hcaptcha_auto_open" type="checkbox" data-disables="hcaptcha_open_delay">
+                            <input id="recaptcha_auto_open" type="checkbox">
                             <span class="slider"></span>
                         </label>
                     </div>
 
-                    <div class="settings_group">
-                        <div class="label">Open Delay <span class="light">(ms)</span></div>
-                        <input id="hcaptcha_open_delay" type="text" class="number">
-                    </div>
-                </div>
-
-                <div id="recaptcha_tab" class="tab hidden">
                     <div class="settings_group">
                         <div class="label">Auto Solve</div>
                         <label class="switch">
@@ -108,18 +117,10 @@
                         <input id="recaptcha_solve_delay" type="text" class="number">
                     </div>
 
-                    <div class="settings_group">
-                        <div class="label">Auto Open</div>
-                        <label class="switch">
-                            <input id="recaptcha_auto_open" type="checkbox" data-disables="recaptcha_open_delay">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-
-                    <div class="settings_group">
+                    <!-- <div class="settings_group">
                         <div class="label">Open Delay <span class="light">(ms)</span></div>
                         <input id="recaptcha_open_delay" type="text" class="number">
-                    </div>
+                    </div> -->
 
                     <div class="settings_group">
                         <div class="label">ReCAPTCHA Method</div>
@@ -127,6 +128,26 @@
                             <option value="image" selected>Image</option>
                             <option value="voice">Voice</option>
                         </select>
+                    </div>
+                </div>
+
+                <div id="ocr_tab" class="tab hidden">
+                    <div class="settings_group">
+                        <div class="label">Auto Solve</div>
+                        <label class="switch">
+                            <input id="ocr_auto_solve" type="checkbox" data-disables="ocr_image_selector,ocr_input_selector">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Image Selector</div>
+                        <input id="ocr_image_selector" type="text" class="text" placeholder='CSS Selector'>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Input Selector</div>
+                        <input id="ocr_input_selector" type="text" class="text" placeholder='CSS Selector'>
                     </div>
                 </div>
 

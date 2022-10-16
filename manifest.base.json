@@ -56,6 +56,12 @@
             "js": ["setup.js"],
             "all_frames": true,
             "run_at": "document_end"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["ocr.js"],
+            "all_frames": true,
+            "run_at": "document_end"
         }
     ],
     "icons": {

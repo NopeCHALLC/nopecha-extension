@@ -94,12 +94,12 @@ html, body {
 }
 .settings_group > .label {
     flex-grow: 1;
-    font-size: 1.2em;
+    font-size: 1.1em;
     line-height: calc(34px * var(--input_scale_y));
     padding-right: 16px;
 }
 .settings_group > .value {
-    font-size: 1.2em;
+    font-size: 1.1em;
     line-height: calc(34px * var(--input_scale_y));
 }
 .settings_group > input {
@@ -121,6 +121,9 @@ html, body {
 }
 .settings_group > input[type="button"]:hover {
     background-color: #fff;
+}
+.settings_group > input[type="text"].text {
+    width: calc(120px * var(--input_scale_x));
 }
 
 .switch {
@@ -234,13 +237,14 @@ input:checked + .slider:before {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    border-radius: 4px 4px 0 0;
 }
 .tab_btn_row .tab_btn {
     flex-grow: 1;
     padding: 4px 8px;
     border-top: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
+    border-left: 1px solid #f4f4f4;
+    border-right: 1px solid #f4f4f4;
     border-bottom: 1px solid #ccc;
     border-radius: 4px 4px 0 0;
     text-align: center;
@@ -267,7 +271,8 @@ input:checked + .slider:before {
     border-bottom: 1px solid #ccc;
 }
 .tab_content.bordered {
-    padding: 16px 8px 8px 8px;
+    min-height: 160px;
+    padding: 8px 8px 8px 8px;
     border-top: 1px solid transparent;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -287,4 +292,7 @@ input:checked + .slider:before {
     margin: 0 4px;
     background-color: #FEF9C3;
     border-style: solid;
+}
+.warning_box * {
+    font-size: 10px;
 }

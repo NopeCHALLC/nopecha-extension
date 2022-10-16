@@ -109,7 +109,7 @@
         if (is_solved()) {
             return;
         }
-        await Time.sleep(settings.recaptcha_open_delay);
+        await Time.sleep(500);
         open_image_frame();
     }
 
@@ -126,7 +126,7 @@
             return;
         }
         // Switch to voice
-        await Time.sleep(settings.recaptcha_open_delay);
+        await Time.sleep(500);
         document.querySelector('#recaptcha-audio-button')?.click();
     }
 

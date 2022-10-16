@@ -125,8 +125,7 @@
                         }
                     }
 
-                    // API response format will change from {data} to {id} starting from v0.1.12
-                    const job_id = ('id' in r) ? r.id : r.data;
+                    const job_id = r.data;
                     return await NopeCHA.get({job_id, key});
                 } catch (e) {
                     console.log('failed to parse post response', e);
@@ -224,10 +223,13 @@
             '0430': 'a',
             '0441': 'c',
             '0501': 'd',
+            '0065': 'e',
             '0435': 'e',
             '04bb': 'h',
+            '0069': 'i',
             '0456': 'i',
             '0458': 'j',
+            '03f3': 'j',
             '04cf': 'l',
             '03bf': 'o',
             '043e': 'o',
@@ -235,21 +237,7 @@
             '0455': 's',
             '0445': 'x',
             '0443': 'y',
-
-            '03bf': 'o',
-            '04bb': 'h',
-            '0065': 'e',
-            '0069': 'i',
-            '0430': 'a',
-            '0435': 'e',
-            '0440': 'p',
-            '0441': 'c',
-            '0443': 'y',
-            '0455': 's',
-            '0456': 'i',
-            '0501': 'd',
-            '30fc': '一',
-            '571f': '士',
+            '0335': '-',
         };
 
         function pad_left(s, char, n) {
@@ -385,7 +373,7 @@
             return;
         }
         was_solved = false;
-        await Time.sleep(settings.hcaptcha_open_delay);
+        await Time.sleep(500);
         open_image_frame();
     }
 

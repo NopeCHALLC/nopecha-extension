@@ -124,8 +124,7 @@
                         }
                     }
 
-                    // API response format will change from {data} to {id} starting from v0.1.12
-                    const job_id = ('id' in r) ? r.id : r.data;
+                    const job_id = r.data;
                     return await NopeCHA.get({job_id, key});
                 } catch (e) {
                     console.log('failed to parse post response', e);
@@ -407,7 +406,7 @@
             return;
         }
         was_solved = false;
-        await Time.sleep(settings.recaptcha_open_delay);
+        await Time.sleep(500);
         open_image_frame();
     }
 
