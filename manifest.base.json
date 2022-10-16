@@ -62,6 +62,13 @@
             "js": ["ocr.js"],
             "all_frames": true,
             "run_at": "document_end"
+        },
+        {
+            "matches": ["*://*.arkoselabs.com/fc/*"],
+            "js": ["funcaptcha.js"],
+            "all_frames": true,
+            "run_at": "document_end",
+            "match_about_blank": true
         }
     ],
     "icons": {
