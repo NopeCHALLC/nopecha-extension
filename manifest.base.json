@@ -64,7 +64,10 @@
             "run_at": "document_end"
         },
         {
-            "matches": ["*://*.arkoselabs.com/fc/*"],
+            "matches": [
+                "*://*.arkoselabs.com/fc/*",
+                "*://*.funcaptcha.com/fc/*"
+            ],
             "js": ["funcaptcha.js"],
             "all_frames": true,
             "run_at": "document_end",

@@ -51,12 +51,27 @@
         }
     }
 
+    let listeners = {};
 
     while (true) {
         await sleep(1000);
 
         try {
-            const $verify = document.querySelector('#home_children_button');
+            // // const $success = document.querySelector('#victoryImage');
+            // const $success = document.querySelector('body.victory');
+            // if ($success) {
+            //     console.log('$success', $success);
+            //     window.location.reload();
+            // }
+
+            const $timeout = document.querySelector('#timeout_widget');
+            if ($timeout?.style?.display === 'block') {
+                console.log('$timeout', $timeout);
+                window.location.reload();
+            }
+
+            // const $verify = document.querySelector('#home_children_button');
+            const $verify = document.querySelector('button[aria-describedby="descriptionVerify"]');
             if ($verify) {
                 $verify.click();
             }
@@ -65,8 +80,11 @@
             console.log('$btns', $btns);
             for (const i in $btns) {
                 const $e = $btns[i];
-                $e.removeEventListener('click', on_click);
-                $e.addEventListener('click', on_click.bind(this, parseInt(i)));
+                if (i in listeners) {
+                    $e.removeEventListener('click', listeners[i]);
+                }
+                listeners[i] = on_click.bind(this, parseInt(i));
+                $e.addEventListener('click', listeners[i]);
             }
         } catch (e) {
             // console.log('error', e);
