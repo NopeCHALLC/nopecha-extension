@@ -200,7 +200,7 @@
 
     class Settings {
         static DEFAULT = {
-            version: 4,
+            version: 3,
 
             key: '',
 
@@ -214,7 +214,7 @@
             recaptcha_solve_method: 'image',
 
             funcaptcha_auto_solve: true,
-            funcaptcha_solve_delay: 3000,
+            funcaptcha_solve_delay: 1000,
             funcaptcha_auto_open: true,
 
             ocr_auto_solve: true,
@@ -242,6 +242,10 @@
                             await Settings.reset();
                             Settings.data.key = key;
                         }
+                    }
+                    // Temporary fix
+                    if (Settings.data.key?.startsWith('MIIBI')) {
+                        Settings.data.key = '';
                     }
                     resolve();
                 });

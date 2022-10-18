@@ -204,7 +204,7 @@
 
     function get_task() {
         const $task = document.querySelector('#game_children_text > h2');
-        return $task?.innerText;
+        return $task?.innerText?.trim();
     }
 
 
@@ -216,7 +216,12 @@
 
     let last_url = null;
     function on_task_ready(settings, i=100) {
+        const TIMEOUT = 1000 * 120;
         return new Promise(resolve => {
+            const timeout = setTimeout(() => {
+                return resolve({task: null, cells: null, url: null});
+            }, TIMEOUT);
+
             let checking = false;
             const check_interval = setInterval(async () => {
                 if (checking) {
@@ -237,7 +242,7 @@
 
                 const cells = document.querySelectorAll('#game_children_challenge ul > li > a');
                 if (cells.length !== 6) {
-                    console.log('invalid number of cells', cells);
+                    // console.log('invalid number of cells', cells);
                     checking = false;
                     return;
                 }
@@ -251,6 +256,7 @@
                 }
                 last_url = url;
 
+                clearTimeout(timeout);
                 clearInterval(check_interval);
                 checking = false;
                 return resolve({task, cells, url});
@@ -261,6 +267,23 @@
 
     async function on_image_frame(settings) {
         const {task, cells, url} = await on_task_ready(settings);
+
+        if (task === null || cells === null || url === null) {
+            return;
+        }
+
+        const UNSUPPORTED_TASKS = [
+            'Pick the image that is the correct way up',
+            'Pick the animal looking',
+            'Pick one square that shows two identical objects',
+            "Pick the mouse that can't reach the cheese",
+            'Pick the dice pair whose top sides add up to',
+        ];
+        for (const e of UNSUPPORTED_TASKS) {
+            if (task.startsWith(e)) {
+                return;
+            }
+        }
 
         const solve_start = Time.time();
 
