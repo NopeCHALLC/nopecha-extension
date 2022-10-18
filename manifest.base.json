@@ -64,6 +64,12 @@
             "run_at": "document_end"
         },
         {
+            "matches": ["*://challenges.cloudflare.com/cdn-cgi/challenge-platform/turnstile/*"],
+            "js": ["turnstile.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+        {
             "matches": [
                 "*://*.arkoselabs.com/fc/*",
                 "*://*.funcaptcha.com/fc/*"
