@@ -200,7 +200,7 @@
 
     class Settings {
         static DEFAULT = {
-            version: 3,
+            version: 4,
 
             key: '',
 
@@ -212,6 +212,10 @@
             recaptcha_solve_delay: 1000,
             recaptcha_auto_open: true,
             recaptcha_solve_method: 'image',
+
+            funcaptcha_auto_solve: true,
+            funcaptcha_solve_delay: 3000,
+            funcaptcha_auto_open: true,
 
             ocr_auto_solve: true,
             ocr_image_selector: '',

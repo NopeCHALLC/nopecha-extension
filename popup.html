@@ -62,6 +62,7 @@
             <div class="tab_btn_row">
                 <div class="tab_btn active" data-target="#hcaptcha_tab">hCaptcha</div>
                 <div class="tab_btn" data-target="#recaptcha_tab">reCAPTCHA</div>
+                <div class="tab_btn" data-target="#funcaptcha_tab">FunCAPTCHA</div>
                 <div class="tab_btn" data-target="#ocr_tab">OCR</div>
             </div>
 
@@ -88,11 +89,6 @@
                         <div class="label">Solve Delay <span class="light">(ms)</span></div>
                         <input id="hcaptcha_solve_delay" type="text" class="number">
                     </div>
-
-                    <!-- <div class="settings_group">
-                        <div class="label">Open Delay <span class="light">(ms)</span></div>
-                        <input id="hcaptcha_open_delay" type="text" class="number">
-                    </div> -->
                 </div>
 
                 <div id="recaptcha_tab" class="tab hidden">
@@ -117,17 +113,35 @@
                         <input id="recaptcha_solve_delay" type="text" class="number">
                     </div>
 
-                    <!-- <div class="settings_group">
-                        <div class="label">Open Delay <span class="light">(ms)</span></div>
-                        <input id="recaptcha_open_delay" type="text" class="number">
-                    </div> -->
-
                     <div class="settings_group">
                         <div class="label">ReCAPTCHA Method</div>
                         <select id="recaptcha_solve_method">
                             <option value="image" selected>Image</option>
                             <option value="voice">Voice</option>
                         </select>
+                    </div>
+                </div>
+
+                <div id="funcaptcha_tab" class="tab">
+                    <div class="settings_group">
+                        <div class="label">Auto Open</div>
+                        <label class="switch">
+                            <input id="funcaptcha_auto_open" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Auto Solve</div>
+                        <label class="switch">
+                            <input id="funcaptcha_auto_solve" type="checkbox" data-disables="funcaptcha_solve_delay">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings_group">
+                        <div class="label">Solve Delay <span class="light">(ms)</span></div>
+                        <input id="funcaptcha_solve_delay" type="text" class="number">
                     </div>
                 </div>
 

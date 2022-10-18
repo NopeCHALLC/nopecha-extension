@@ -248,7 +248,7 @@ input:checked + .slider:before {
     border-bottom: 1px solid #ccc;
     border-radius: 4px 4px 0 0;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1em;
     transition: 200ms all;
 }
 .tab_btn:not(.active):hover {
