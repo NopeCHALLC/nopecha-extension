@@ -52,6 +52,11 @@
     while (true) {
         await sleep(1000);
 
+        const settings = await BG.exec('get_settings');
+        if (!settings || settings.funcaptcha_auto_solve) {
+            continue;
+        }
+
         try {
             const $success = document.querySelector('body.victory');
             if ($success) {

@@ -42,9 +42,11 @@
     // load_captcha(KEYS['roblox'], 'https://www.roblox.com', '#frames0', n);
     // load_captcha(KEYS['twitch'], 'https://www.twitch.com', '#frames0', n);
     // load_captcha(KEYS['paypal'], 'https://www.paypal.com', '#frames1', n);
-    load_captcha(KEYS['demo'], 'https://www.funcaptcha.com', '#frames2', n);
-    // load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames3', n);
-    load_captcha(KEYS['linkedin'], 'https://linkedin-api.arkoselabs.com', '#frames4', n);
+    load_captcha(KEYS['demo'], 'https://www.funcaptcha.com', '#frames2', n);  // Clipart
+    load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames3', n);  // Maze
+    load_captcha(KEYS['linkedin'], 'https://linkedin-api.arkoselabs.com', '#frames4', n);  // Upright
+
+    // Outlook; penguin
     for (let i = 0; i < n; i++) {
         const src = 'https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html';
         const $frame = create_frame(src);

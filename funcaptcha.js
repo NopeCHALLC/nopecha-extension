@@ -78,7 +78,7 @@
             UPDATE_REQUIRED: 17,
         };
 
-        static async post({captcha_type, task, images, grid, key}) {
+        static async post({captcha_type, task, image_data, grid, key}) {
             const start_time = Date.now();
 
             const info = await BG.exec('info_tab');
@@ -92,7 +92,7 @@
                 const data = {
                     type: captcha_type,
                     task: task,
-                    images: images,
+                    image_data: image_data,
                     v: chrome.runtime.getManifest().version,
                     key: key,
                     url: info.url,
@@ -214,12 +214,12 @@
     }
 
 
-    let last_url = null;
+    let last_image_data = null;
     function on_task_ready(settings, i=100) {
         const TIMEOUT = 1000 * 120;
         return new Promise(resolve => {
             const timeout = setTimeout(() => {
-                return resolve({task: null, cells: null, url: null});
+                return resolve({task: null, cells: null, image_data: null});
             }, TIMEOUT);
 
             let checking = false;
@@ -247,28 +247,28 @@
                     return;
                 }
 
-                const url = get_image();
+                const image_data = get_image();
 
-                if (last_url === url) {
+                if (last_image_data === image_data) {
                     // console.log('task unchanged');
                     checking = false;
                     return;
                 }
-                last_url = url;
+                last_image_data = image_data;
 
                 clearTimeout(timeout);
                 clearInterval(check_interval);
                 checking = false;
-                return resolve({task, cells, url});
+                return resolve({task, cells, image_data});
             }, i);
         });
     }
 
 
     async function on_image_frame(settings) {
-        const {task, cells, url} = await on_task_ready(settings);
+        const {task, cells, image_data} = await on_task_ready(settings);
 
-        if (task === null || cells === null || url === null) {
+        if (task === null || cells === null || image_data === null) {
             return;
         }
 
@@ -291,7 +291,7 @@
         const {job_id, clicks} = await NopeCHA.post({
             captcha_type: 'funcaptcha',
             task: task,
-            images: [url],
+            image_data: [image_data],
             key: settings.key,
         });
         if (!clicks) {
