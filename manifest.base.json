@@ -18,8 +18,14 @@
     ],
     "content_scripts": [
         {
-            "matches": ["*://*.hcaptcha.com/captcha/*"],
-            "js": ["hcaptcha.js"],
+            "matches": ["<all_urls>"],
+            "js": ["utils.js", "content_scripts.js"],
+            "all_frames": true,
+            "run_at": "document_start"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["hcaptcha_language.js"],
             "all_frames": true,
             "run_at": "document_end"
         },
@@ -30,8 +36,8 @@
             "run_at": "document_start"
         },
         {
-            "matches": ["<all_urls>"],
-            "js": ["hcaptcha_language.js"],
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "js": ["hcaptcha.js"],
             "all_frames": true,
             "run_at": "document_end"
         },

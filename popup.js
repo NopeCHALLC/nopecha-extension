@@ -9,51 +9,6 @@
 // }
 
 
-if (!Date.now) {
-    Date.now = function () {return new Date().getTime()};
-}
-
-
-class BG {
-    static exec(method, data) {
-        return new Promise(resolve => {
-            try {
-                chrome.runtime.sendMessage({method, data}, resolve)
-            } catch {
-                resolve();
-            }
-        });
-    }
-}
-
-
-class Util {
-    static sleep(t) {
-        return new Promise(resolve => setTimeout(resolve, t));
-    }
-
-    static pad_left(s, char, n) {
-        while (`${s}`.length < n) {
-            s = `${char}${s}`;
-        }
-        return s;
-    }
-
-    static time_to_hms(t) {
-        t = Math.max(0, t);
-        const hours = Math.floor(t / 3600);
-        t %= 3600;
-        const minutes = Math.floor(t / 60);
-        const seconds = Math.floor(t % 60);
-        const hms = `${Util.pad_left(hours, '0', 2)}:${Util.pad_left(minutes, '0', 2)}:${Util.pad_left(seconds, '0', 2)}`;
-        return hms;
-    }
-
-    static capitalize(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-}
-
 
 let plan = null;
 let checking_server_plan = false;
@@ -62,6 +17,7 @@ let rendering_server_plan = false;
 
 async function check_plan() {
     const settings = await BG.exec('get_settings');
+    console.log("got settings", settings);
     if (!settings) {
         return;
     }
@@ -288,7 +244,7 @@ async function render_plan() {
 
     // Display time until reset
     if (secs_until_reset) {
-        const hms = Util.time_to_hms(secs_until_reset);
+        const hms = Time.seconds_as_hms(secs_until_reset);
         $refills.innerHTML = `${hms}`;
     }
     else {

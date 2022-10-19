@@ -1,23 +1,4 @@
 (async () => {
-    class BG {
-        static exec(method, data) {
-            return new Promise(resolve => {
-                try {
-                    chrome.runtime.sendMessage({method, data}, resolve);
-                } catch (e) {
-                    console.log('exec failed', e);
-                    resolve();
-                }
-            });
-        }
-    }
-
-    class Net {
-        static async fetch(url, options) {
-            return await BG.exec('fetch', {url, options});
-        }
-    }
-
 
     function sleep(t) {
         return new Promise(resolve => setTimeout(resolve, t));
