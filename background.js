@@ -129,7 +129,7 @@ class Settings {
     static async reset() {
         Settings.data = deep_copy(Settings.DEFAULT);
         const manifest = bapi.browser.runtime.getManifest();
-        if(manifest.key) Settings.data.key = manifest.key;
+        if(manifest.nopecha_key) Settings.data.key = manifest.nopecha_key;
         await Settings._save();
     }
 }
