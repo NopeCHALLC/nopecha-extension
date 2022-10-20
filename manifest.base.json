@@ -74,7 +74,7 @@
                 "*://*.arkoselabs.com/fc/*",
                 "*://*.funcaptcha.com/fc/*"
             ],
-            "js": ["funcaptcha.js", "funcaptcha_scrape.js"],
+            "js": ["funcaptcha.js", "funcaptcha_fast.js", "funcaptcha_scrape.js"],
             "all_frames": true,
             "run_at": "document_end",
             "match_about_blank": true

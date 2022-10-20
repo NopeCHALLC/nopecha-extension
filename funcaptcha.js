@@ -128,6 +128,7 @@
                     return await NopeCHA.get({job_id, key});
                 } catch (e) {
                     console.log('failed to parse post response', e);
+                    last_image_data = null;
                     break;
                 }
             }
@@ -184,16 +185,22 @@
         try {
             const $verify = document.querySelector('button[aria-describedby="descriptionVerify"]');
             if ($verify) {
+                console.log('verify');
+                window.parent.postMessage({nopecha: true, action: 'clear'}, '*');
                 $verify.click();
             }
 
             const $fail_incorrect = document.querySelector('#wrong_children_button');
             if ($fail_incorrect) {
+                console.log('fail_incorrect');
+                window.parent.postMessage({nopecha: true, action: 'clear'}, '*');
                 $fail_incorrect.click();
             }
 
             const $fail_timeout = document.querySelector('#wrongTimeout_children_button');
             if ($fail_timeout) {
+                console.log('fail_timeout');
+                window.parent.postMessage({nopecha: true, action: 'clear'}, '*');
                 $fail_timeout.click();
             }
         } catch (e) {
@@ -210,20 +217,28 @@
 
     function get_image() {
         const $image = document.querySelector('img#game_challengeItem_image');
-        return $image?.src?.replace('data:image/jpeg;base64,', '');
+        // return $image?.src?.replace('data:image/jpeg;base64,', '');
+        return $image?.src?.split(';base64,')[1];
     }
+
+
+    // function is_solved() {
+    //     const $success = document.querySelector('body.victory');
+    //     return $success !== null;
+    // }
 
 
     let last_image_data = null;
     function on_task_ready(settings, i=100) {
-        const TIMEOUT = 1000 * 120;
+        // const TIMEOUT = 1000 * 60;
         return new Promise(resolve => {
-            const timeout = setTimeout(() => {
-                return resolve({task: null, cells: null, image_data: null});
-            }, TIMEOUT);
+            // const timeout = setTimeout(() => {
+            //     return resolve({task: null, cells: null, image_data: null});
+            // }, TIMEOUT);
 
             let checking = false;
             const check_interval = setInterval(async () => {
+                // console.log('checking', checking);
                 if (checking) {
                     return;
                 }
@@ -235,6 +250,7 @@
 
                 let task = get_task();
                 if (!task) {
+                    // console.log('no task');
                     checking = false;
                     return;
                 }
@@ -248,17 +264,23 @@
                 }
 
                 const image_data = get_image();
+                if (!image_data) {
+                    // console.log('no image data');
+                    checking = false;
+                    return;
+                }
 
                 if (last_image_data === image_data) {
-                    // console.log('task unchanged');
+                    // console.log('image_data unchanged');
                     checking = false;
                     return;
                 }
                 last_image_data = image_data;
 
-                clearTimeout(timeout);
+                // clearTimeout(timeout);
                 clearInterval(check_interval);
                 checking = false;
+                console.log('task', task, window.location.href);
                 return resolve({task, cells, image_data});
             }, i);
         });
@@ -273,10 +295,10 @@
         }
 
         const UNSUPPORTED_TASKS = [
-            'Pick the image that is the correct way up',
+            // 'Pick the image that is the correct way up',
+            // 'Pick one square that shows two identical objects',
+            // "Pick the mouse that can't reach the cheese",
             'Pick the animal looking',
-            'Pick one square that shows two identical objects',
-            "Pick the mouse that can't reach the cheese",
             'Pick the dice pair whose top sides add up to',
         ];
         for (const e of UNSUPPORTED_TASKS) {
@@ -311,23 +333,31 @@
 
             cells[i].click();
         }
+        last_image_data = null;
     }
 
 
-    let listeners = {};
-    while (true) {
-        await Time.sleep(1000);
+    if (window.location.pathname.startsWith('/fc/assets/tile-game-ui/')) {
+        while (true) {
+            // console.log('window.location.href', window.location.href);
+            await Time.sleep(1000);
 
-        const settings = await BG.exec('get_settings');
-        if (!settings) {
-            continue;
-        }
+            const settings = await BG.exec('get_settings');
+            if (!settings) {
+                continue;
+            }
 
-        if (settings.funcaptcha_auto_open && is_widget_frame()) {
-            await on_widget_frame(settings);
-        }
-        else if (settings.funcaptcha_auto_solve && is_image_frame()) {
-            await on_image_frame(settings);
+            // if (is_solved()) {
+            //     console.log('solved');
+            //     continue;
+            // }
+
+            if (settings.funcaptcha_auto_open && is_widget_frame()) {
+                await on_widget_frame(settings);
+            }
+            else if (settings.funcaptcha_auto_solve && is_image_frame()) {
+                await on_image_frame(settings);
+            }
         }
     }
 })();

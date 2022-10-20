@@ -29,29 +29,64 @@
         'github': '20782B4C-05D0-45D7-97A0-41641055B6F6',
         // 'roblox': 'A2A14B1D-1AF3-C791-9BBC-EE33CC7A0A6F',
         // 'roblox': '9F35E182-C93C-EBCC-A31D-CF8ED317B996',
-        'roblox': '476068BF-9607-4799-B53D-966BE98E2B81',
+        // 'roblox': '476068BF-9607-4799-B53D-966BE98E2B81',
         'paypal': '9409E63B-D2A5-9CBD-DBC0-5095707D0090',
         'blizzard': 'E8A75615-1CBA-5DFF-8032-D16BCF234E10',
         'linkedin': '3117BF26-4762-4F5A-8ED9-A85E69209A46',
         'twitch': 'E5554D43-23CC-1982-971D-6A2262A2CA24',
-        // 'outlook': 'B7D8911C-5CC8-A9A3-35B0-554ACEE604DA',
+        'outlook': 'B7D8911C-5CC8-A9A3-35B0-554ACEE604DA',
     };
 
-    const n = 3;
-    // load_captcha(KEYS['github'], 'https://www.github.com', '#frames0', n);
+    const n = 7;
     // load_captcha(KEYS['roblox'], 'https://www.roblox.com', '#frames0', n);
-    // load_captcha(KEYS['twitch'], 'https://www.twitch.com', '#frames0', n);
-    // load_captcha(KEYS['paypal'], 'https://www.paypal.com', '#frames1', n);
-    load_captcha(KEYS['demo'], 'https://www.funcaptcha.com', '#frames2', n);  // Clipart
-    load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames3', n);  // Maze
-    load_captcha(KEYS['linkedin'], 'https://linkedin-api.arkoselabs.com', '#frames4', n);  // Upright
 
-    // Outlook; penguin
-    for (let i = 0; i < n; i++) {
-        const src = 'https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html';
-        const $frame = create_frame(src);
-        document.querySelector('#frames5').append($frame);
-    }
+    /**
+    Pick the spiral galaxy
+     */
+    // load_captcha(KEYS['github'], 'https://www.github.com', '#frames0', n);
+
+    /**
+    Pick the dice pair whose top sides add up to 8
+    Timeout after ~1min inactivity
+     */
+    // load_captcha(KEYS['twitch'], 'https://www.twitch.com', '#frames0', n);
+
+    /**
+    Pick one square that shows two identical objects.
+     */
+    // load_captcha(KEYS['paypal'], 'https://www.paypal.com', '#frames0', n);
+    // load_captcha(KEYS['paypal'], 'https://www.paypal.com', '#frames1', n);
+    // load_captcha(KEYS['paypal'], 'https://www.paypal.com', '#frames2', n);
+    // load_captcha(KEYS['paypal'], 'https://www.paypal.com', '#frames3', n);
+
+    /**
+    Pick the clipart object
+     */
+    // load_captcha(KEYS['demo'], 'https://www.funcaptcha.com', '#frames2', n);
+
+    /**
+    Pick the mouse that can't reach the cheese
+    */
+    load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames0', n);
+    load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames1', n);
+    load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames2', n);
+    load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames3', n);
+    // load_captcha(KEYS['blizzard'], 'https://account.battle.net', '#frames0', 3);
+
+    /**
+    Pick the image that is the correct way up
+    */
+    // load_captcha(KEYS['linkedin'], 'https://linkedin-api.arkoselabs.com', '#frames4', n);
+
+    /**
+    Pick the penguin
+     */
+    // for (let i = 0; i < n; i++) document.querySelector('#frames5').append(create_frame(`https://iframe.arkoselabs.com/${KEYS['outlook']}/index.html`));
+
+    /**
+    Pick one square that shows two identical objects.
+     */
+    // for (let i = 0; i < n; i++) document.querySelector('#frames6').append(create_frame(`https://iframe-auth.arkoselabs.com/${KEYS['outlook']}/index.html?mkt=en`));
 
     function create_frame(src) {
         const $frame = document.createElement('iframe');

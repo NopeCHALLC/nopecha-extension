@@ -33,7 +33,7 @@
 
     function get_image() {
         const $image = document.querySelector('img#game_challengeItem_image');
-        return $image?.src?.replace('data:image/jpeg;base64,', '');
+        return $image?.src?.split(';base64,')[1];
     }
 
 
@@ -43,17 +43,43 @@
         console.log('clicked', index);
         if (task && image) {
             const data = {task, image, index};
-            await BG.exec('append_cache', {name: 'funcaptcha', value: data, tab_specific: false});
+            window.parent.postMessage({nopecha: true, action: 'append', data: data}, '*');
         }
     }
+
+    window.nopecha = [];
+    const eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent';
+    const eventer = window[eventMethod];
+    const messageEvent = eventMethod == 'attachEvent' ? 'onmessage' : 'message';
+    eventer(messageEvent, async e => {
+        const key = e.message ? 'message' : 'data';
+        const data = e[key];
+        if (data && data.nopecha === true) {
+            // console.log('message', key, data);
+            if (data.action === 'append') {
+                console.log('append', data);
+                window.nopecha.push(data.data);
+            }
+            else if (data.action === 'clear') {
+                console.log('clear');
+                window.nopecha = [];
+            }
+            else if (data.action === 'reload') {
+                console.log('reload');
+                window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
+                window.location.reload(true);
+            }
+        }
+    },false);
 
 
     let listeners = {};
     while (true) {
-        await sleep(1000);
+        await sleep(500);
 
         const settings = await BG.exec('get_settings');
-        if (!settings || settings.funcaptcha_auto_solve) {
+        // if (!settings || settings.funcaptcha_auto_solve) {
+        if (!settings) {
             continue;
         }
 
@@ -61,11 +87,10 @@
             const $success = document.querySelector('body.victory');
             if ($success) {
                 console.log('$success', $success);
-
-                const answers = await BG.exec('get_cache', {name: 'funcaptcha', tab_specific: false});
-                console.log('answers.length', answers.length);
+                // const nopecha = document.querySelector('#CaptchaFrame').contentWindow.nopecha || [];
+                // console.log('nopecha.length', nopecha.length);
                 const proms = [];
-                for (const data of answers) {
+                for (const data of window.nopecha) {
                     console.log('submitting', data);
                     const prom = Net.fetch('https://api.nopecha.com/upload', {
                         method: 'POST',
@@ -75,16 +100,17 @@
                     proms.push(prom);
                 }
                 await Promise.all(proms);
-                await BG.exec('empty_cache', {name: 'funcaptcha', tab_specific: false});
-                window.location.reload();
+                window.nopecha = [];
+                window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
+                window.location.reload(true);
             }
 
-            // const $timeout = document.querySelector('#timeout_widget');
-            // if ($timeout?.style?.display === 'block') {
-            //     console.log('$timeout', $timeout);
-            //     await sleep(3000);
-            //     window.location.reload();
-            // }
+            const $timeout = document.querySelector('#timeout_widget');
+            if ($timeout?.style?.display === 'block') {
+                console.log('$timeout', $timeout);
+                window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
+                window.location.reload(true);
+            }
 
             const $btns = document.querySelectorAll('#game_children_challenge ul > li > a');
             // console.log('$btns', $btns);
