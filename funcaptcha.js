@@ -298,8 +298,8 @@
             // 'Pick the image that is the correct way up',
             // 'Pick one square that shows two identical objects',
             // "Pick the mouse that can't reach the cheese",
+            // 'Pick the dice pair whose top sides add up to',
             'Pick the animal looking',
-            'Pick the dice pair whose top sides add up to',
         ];
         for (const e of UNSUPPORTED_TASKS) {
             if (task.startsWith(e)) {

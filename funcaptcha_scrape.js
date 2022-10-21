@@ -43,7 +43,13 @@
         console.log('clicked', index);
         if (task && image) {
             const data = {task, image, index};
-            window.parent.postMessage({nopecha: true, action: 'append', data: data}, '*');
+            // window.parent.postMessage({nopecha: true, action: 'append', data: data}, '*');
+
+            // await Net.fetch('https://api.nopecha.com/upload', {
+            //     method: 'POST',
+            //     headers: {'Content-Type': 'application/json'},
+            //     body: JSON.stringify(data),
+            // });
         }
     }
 
