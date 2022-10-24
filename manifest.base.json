@@ -78,13 +78,6 @@
             "match_about_blank": true
         },
         {
-            "matches": ["*://www.roblox.com/*"],
-            "js": ["funcaptcha_scrape.js"],
-            "all_frames": true,
-            "run_at": "document_end",
-            "match_about_blank": true
-        },
-        {
             "matches": ["*://nopecha.com/demo/funcaptcha"],
             "js": ["funcaptcha_demo.js"],
             "all_frames": false,

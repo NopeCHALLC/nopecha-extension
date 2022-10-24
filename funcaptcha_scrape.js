@@ -1,5 +1,5 @@
 (async () => {
-    const SCRAPE_ROBLOX = false;  // If true, SUBMISSION_STRATEGY should be 'eager' to allow scraping
+    const RELOAD_ON_SOLVED = false;  // If true, restart captcha to scrape more data
     const SUBMISSION_STRATEGY = 'lazy';  // One of: eager, lazy, or none
     window.nopecha = [];  // Lazy cache
     const listeners = {};  // Click listeners
@@ -17,16 +17,6 @@
     }
 
 
-    async function reload_if_roblox() {
-        // Scrape roblox by reopening modal before verification
-        if (SCRAPE_ROBLOX) {
-            await Time.sleep(5000);
-            window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
-            // window.location.reload(true);
-        }
-    }
-
-
     async function on_click(index) {
         // console.log('clicked', index);
         const task = get_task();
@@ -34,23 +24,22 @@
         if (task && image) {
             // Ignore learned tasks
             if (task.replace('Pick the ', '').split(' ').length <= 2) {
-                return await reload_if_roblox();
+                return;
             }
             if (task === 'Pick one square that shows two identical objects.') {
-                return await reload_if_roblox();
+                return;
             }
             if (task === 'Pick the image that is the correct way up') {
-                return await reload_if_roblox();
+                return;
             }
             if (task === "Pick the mouse that can't reach the cheese") {
-                return await reload_if_roblox();
+                return;
             }
             // if (task.startsWith('Pick the dice pair whose top sides add up to ')) {
             //     return await reload_if_roblox();
             // }
 
             const data = {task, image, index};
-            console.log('submission', SUBMISSION_STRATEGY, data);
 
             if (SUBMISSION_STRATEGY === 'lazy') {
                 // Lazy submission
@@ -78,11 +67,6 @@
             if (data.action === 'append') {
                 // console.log('append', data, window.location.href);
                 window.nopecha.push(data.data);
-
-                // Scrape roblox
-                if (SCRAPE_ROBLOX && window.location.host === 'roblox-api.arkoselabs.com') {
-                    document.querySelector('.fc_meta_reload_btn')?.click();
-                }
             }
             else if (data.action === 'clear') {
                 // console.log('clear');
@@ -90,15 +74,8 @@
             }
             else if (data.action === 'reload') {
                 // console.log('reload');
-                if (SCRAPE_ROBLOX && window.location.host === 'www.roblox.com') {
-                    document.querySelector('.challenge-captcha-close-button')?.click();
-                    document.querySelector('#signup-button')?.click();
-                }
-                else {
-                    // document.querySelector('.fc_meta_reload_btn')?.click();
-                    window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
-                    window.location.reload(true);
-                }
+                window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
+                window.location.reload(true);
             }
         }
     }, false);
@@ -123,8 +100,11 @@
                 }
                 await Promise.all(proms);
                 window.nopecha = [];
-                window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
-                window.location.reload(true);
+
+                if (RELOAD_ON_SOLVED) {
+                    window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
+                    window.location.reload(true);
+                }
             }
 
             const $timeout = document.querySelector('#timeout_widget');
