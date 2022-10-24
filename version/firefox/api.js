@@ -4,9 +4,7 @@ export const browser = globalThis.browser;
 
 export function register_language() {
     // Reconnect existing scripts on upgrade
-    // https://stackoverflow.com/questions/10994324/chrome-extension-content-script-re-injection-after-upgrade-or-install/11598753#11598753
     browser.runtime.onInstalled.addListener(async () => {
-        console.log('reconnect');
         for (const cs of browser.runtime.getManifest().content_scripts) {
             browser.tabs.query({url: cs.matches}, tabs => {
                 for (const tab of tabs) {

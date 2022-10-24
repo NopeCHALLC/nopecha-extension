@@ -69,7 +69,7 @@ class Tab {
 
 class Settings {
     static DEFAULT = {
-        version: 3,
+        version: 4,
 
         key: '',
 
@@ -139,7 +139,7 @@ class Settings {
         Settings.data = deep_copy(Settings.DEFAULT);
 
         // Set key from manifest
-        const manifest = chrome.runtime.getManifest();
+        const manifest = bapi.browser.runtime.getManifest();
         if (manifest.nopecha_key) {
             Settings.data.key = manifest.nopecha_key;
         }
@@ -176,7 +176,7 @@ class Recaptcha {
 
 
 class Server {
-    static ENDPOINT = `https://api.nopecha.com/status?v=${chrome.runtime.getManifest().version}`;
+    static ENDPOINT = `https://api.nopecha.com/status?v=${bapi.browser.runtime.getManifest().version}`;
     static in_progress = false;
 
     static async get_plan({data: {key}}) {
@@ -234,6 +234,7 @@ const FN = {
 
     // await Settings.reset();
     await Settings.load();
+    // console.log('Settings.data', Settings.data);
 
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
         // Chrome doesn't support async event listeners yet
