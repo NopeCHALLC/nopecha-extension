@@ -1,6 +1,4 @@
 (async () => {
-
-
     function is_widget_frame() {
         return document.querySelector('.recaptcha-checkbox') !== null;
     }
@@ -49,17 +47,6 @@
     }
 
 
-    function get_lang() {
-        let lang = window.navigator.userLanguage || window.navigator.language;
-        if (!lang) {
-            return null;
-        }
-        lang = lang.toLowerCase();
-        lang = lang.split('-')[0];
-        return lang;
-    }
-
-
     async function get_task(task_lines) {
         let task = null;
         if (task_lines.length > 1) {
@@ -74,12 +61,6 @@
             console.log('error getting task', task);
             return null;
         }
-
-        const lang = get_lang();
-        if (lang && lang !== 'en') {
-            task = await BG.exec('translate', {from: lang, to: 'en', text: task});
-        }
-
         return task;
     }
 
@@ -96,21 +77,6 @@
                 }
                 checking = true;
 
-                // let task = null;
-                // const task_lines = document.querySelector('.rc-imageselect-instructions')?.innerText?.split('\n');
-                // if (task_lines.length > 1) {
-                //     // task = task_lines[1];
-                //     task = task_lines.slice(0, 2).join(' ');
-                //     task = task.replace(/\s+/g, ' ')?.trim();
-                // }
-                // // const task = document.querySelector('.rc-imageselect-instructions')?.innerText?.replace(/\s+/g, ' ')?.trim();
-                // if (!task) {
-                //     console.log('no task');
-                //     checking = false;
-                //     return;
-                // }
-                // console.log('task', task);
-
                 const task_lines = document.querySelector('.rc-imageselect-instructions')?.innerText?.split('\n');
                 let task = await get_task(task_lines);
                 if (!task) {
@@ -119,7 +85,6 @@
                 }
                 console.log('task', task);
 
-                // const task_lines = document.querySelector('.rc-imageselect-instructions')?.innerText?.split('\n');
                 const is_hard = (task_lines.length === 3) ? true : false;
 
                 const $cells = document.querySelectorAll('table tr td');
@@ -309,14 +274,14 @@
         const solve_start = Time.time();
 
         // Solve task
-        const {job_id, clicks} = await NopeCHA.post({
+        const {job_id, data} = await NopeCHA.post({
             captcha_type: 'recaptcha',
             task: task,
             image_urls: image_urls,
             grid: grid,
             key: settings.key,
         });
-        if (!clicks) {
+        if (!data) {
             return;
         }
 
@@ -327,12 +292,12 @@
 
 
         // Submit solution
-        let n_clicks = 0;
-        for (let i = 0; i < clicks.length; i++) {
-            if (clicks[i] === false) {
+        let clicks = 0;
+        for (let i = 0; i < data.length; i++) {
+            if (data[i] === false) {
                 continue;
             }
-            n_clicks++;
+            clicks++;
 
             // Click if not already selected
             if (!is_cell_selected(clickable_cells[i])) {
@@ -348,7 +313,7 @@
         }
 
         // if ((n === 3 && result.length === 0 && images_loaded()) || n === 4) {
-        if ((n === 3 && is_hard && n_clicks === 0 && await on_images_ready()) || (n === 3 && !is_hard) || n === 4) {
+        if ((n === 3 && is_hard && clicks === 0 && await on_images_ready()) || (n === 3 && !is_hard) || n === 4) {
             await Time.sleep(200);
             submit();
         }

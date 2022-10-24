@@ -1,9 +1,10 @@
-import { Cache, deep_copy, Time  } from './utils.mjs'
+import {Cache, deep_copy, Time} from './utils.mjs'
 import * as bapi from './api.js'
 
-console.clear();
 
+console.clear();
 console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
+
 
 class Net {
     static async fetch({data: {url, options}}) {
@@ -81,7 +82,11 @@ class Settings {
         recaptcha_auto_open: true,
         recaptcha_solve_method: 'image',
 
-        ocr_auto_solve: true,
+        funcaptcha_auto_solve: true,
+        funcaptcha_solve_delay: 1000,
+        funcaptcha_auto_open: true,
+
+        ocr_auto_solve: false,
         ocr_image_selector: '',
         ocr_input_selector: '',
 
@@ -96,7 +101,7 @@ class Settings {
     static load() {
         return new Promise(resolve => {
             let storage = bapi.browser.storage;
-            if(!storage){  // Browsers such as chromium
+            if (!storage) {  // Browsers such as chromium
                 resolve();
                 return;
             }
@@ -111,6 +116,10 @@ class Settings {
                         await Settings.reset();
                         Settings.data.key = key;
                     }
+                }
+                // Temporary fix
+                if (Settings.data.key?.startsWith('MIIBI')) {
+                    Settings.data.key = '';
                 }
                 resolve();
             });
@@ -128,8 +137,13 @@ class Settings {
 
     static async reset() {
         Settings.data = deep_copy(Settings.DEFAULT);
-        const manifest = bapi.browser.runtime.getManifest();
-        if(manifest.nopecha_key) Settings.data.key = manifest.nopecha_key;
+
+        // Set key from manifest
+        const manifest = chrome.runtime.getManifest();
+        if (manifest.nopecha_key) {
+            Settings.data.key = manifest.nopecha_key;
+        }
+
         await Settings._save();
     }
 }
@@ -154,160 +168,34 @@ class Recaptcha {
     static async reset({tab_id}) {
         function func() {
             try {window.grecaptcha?.reset();} catch {}
-            // try {window.RefreshCaptcha();} catch {}
         }
         await Injector.inject({tab_id, data: {func, args: []}});
         return true;
-    }
-
-    static fetch({tab_id}) {
-        return new Promise(async resolve => {
-            function func(name) {
-                if (window.grecaptcha) {
-                    window.postMessage({method: 'set_cache', data: {name: name, value: window.grecaptcha.getResponse()}});
-                }
-            }
-
-            const name = 'recaptcha_response';
-            await Injector.inject({tab_id, data: {func, args: [name]}});
-
-            const interval = setInterval(async () => {
-                const value = await Cache.get({data: {name}});
-                console.log('fetched value', name, value);
-                if (value) {
-                    clearInterval(interval);
-                    await Cache.remove({data: {name}});
-                    return resolve(value);
-                }
-            }, 1000);
-        });
-    }
-}
-
-
-class Translator {
-    static base_url = 'https://translate.googleapis.com/translate_a/single';
-
-    static async translate({tab_id, data: {from, to, text}}) {
-        let body = await fetch(`${Translator.base_url}?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURI(text)}`).then(r => r.json());
-        body = body && body[0] && body[0][0] && body[0].map(s => s[0]).join('');
-        return body;
     }
 }
 
 
 class Server {
-    static STATUS_URL = `https://api.nopecha.com/status?v=${bapi.browser.runtime.getManifest().version}`;
-    static STATUS_CHECK_INTERVAL = 10000;
-    static status = 'Online';
-    static checking_status = false;
+    static ENDPOINT = `https://api.nopecha.com/status?v=${chrome.runtime.getManifest().version}`;
+    static in_progress = false;
 
-    static async run_status_check() {
-        setInterval(() => {
-            Server.check_status();
-        }, Server.STATUS_CHECK_INTERVAL);
-        return true;
-    }
-
-    static async check_status() {
-        if (Server.checking_status) {
+    static async get_plan({data: {key}}) {
+        if (Server.in_progress) {
             return false;
         }
-        Server.checking_status = true;
-        let status = 'Offline';
-        try {
-            const r = await fetch(Server.STATUS_URL);
-            status = await r.text();
-        } catch {}
-        await Server.set_status({data: {status}});
-        Server.checking_status = false;
-        return status;
-    }
-
-    static async set_status({data: {status}}) {
-        if (Server.status === status) {
-            return;
-        }
-
-        Server.status = status;
-        let path;
-        let color = [0, 0, 0, 0];
-        let text = '';
-        if (status === 'Online') {
-            path = {
-                '16': 'icon/16.png',
-                '32': 'icon/32.png',
-                '48': 'icon/48.png',
-                '128': 'icon/128.png',
-            };
-        }
-        else if (status === 'Offline') {
-            path = {
-                '16': 'icon/16.png',
-                '32': 'icon/32.png',
-                '48': 'icon/48.png',
-                '128': 'icon/128.png',
-            };
-            text = 'Off';
-            color = '#a44';
-        }
-        else if (status === 'Slow') {
-            path = {
-                '16': 'icon/16.png',
-                '32': 'icon/32.png',
-                '48': 'icon/48.png',
-                '128': 'icon/128.png',
-            };
-            text = 'Slow';
-            color = '#f8d66d';
-        }
-        else if (status === 'Update Required') {
-            path = {
-                '16': 'icon/16.png',
-                '32': 'icon/32.png',
-                '48': 'icon/48.png',
-                '128': 'icon/128.png',
-            };
-            text = 'Update';
-            color = '#f8d66d';
-        }
-        else {
-            console.log('invalid status', status);
-            return false;
-        }
-        bapi.browser.action.setIcon({path});
-        bapi.browser.action.setBadgeText({text});
-        bapi.browser.action.setBadgeBackgroundColor({color});
-        return true;
-    }
-
-    static async get_status() {
-        await Server.check_status();
-        return Server.status;
-    }
-
-    static async check_plan({data: {key}}) {
-        if (Server.checking_plan) {
-            return false;
-        }
-        Server.checking_plan = true;
+        Server.in_progress = true;
         let plan = {
-            plan: 'free',
+            plan: 'Unknown',
             credit: 0,
         };
         try {
             if (key === 'undefined') {
                 key = '';
             }
-            const r = await fetch(`${Server.STATUS_URL}&k=${key}`);
+            const r = await fetch(`${Server.ENDPOINT}&k=${key}`);
             plan = JSON.parse(await r.text());
         } catch {}
-        Server.checking_plan = false;
-        return plan;
-    }
-
-    static async get_plan({data: {key}}) {
-        const plan = await Server.check_plan({data: {key}});
+        Server.in_progress = false;
         return plan;
     }
 }
@@ -335,28 +223,18 @@ const FN = {
     reset_settings: Settings.reset,
 
     reset_recaptcha: Recaptcha.reset,
-    fetch_recaptcha: Recaptcha.fetch,
 
-    translate: Translator.translate,
-
-    // set_server_status: Server.set_status,
-    // get_server_status: Server.get_status,
     get_server_plan: Server.get_plan,
 };
 
 
 (async () => {
-
-    bapi.registerHlFilter();
-
-    // await Server.check_status();
-    // Server.run_status_check();
+    // Force language for reCAPTCHA and FunCAPTCHA
+    bapi.register_language();
 
     // await Settings.reset();
     await Settings.load();
-    // console.log('loaded settings', Settings.data);
 
-    // async would not a problem because this is the only listener
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
         // Chrome doesn't support async event listeners yet
         (async () => {
@@ -367,19 +245,18 @@ const FN = {
             }
 
             try{
-                let result = await FN[req.method]({tab_id: sender?.tab?.id, data: req.data});
-
+                const result = await FN[req.method]({tab_id: sender?.tab?.id, data: req.data});
                 if (verbose){
                     console.log('result', result);
                 }
                 return result;
             } catch (e){
-                console.error("Failed while executting ", req, "exception happened", e);
+                console.error('Failed while executting ', req, 'exception happened', e);
                 throw e;
             }
         })().then(send).catch((s) => {console.error(s); send(s)});
+
         // Will respond using the send callback
         return true;
     });
-
 })();

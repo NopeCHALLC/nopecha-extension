@@ -10,8 +10,8 @@
         "default_icon": "icon/16.png",
         "default_popup": "popup.html"
     },
-    "version": "0.1.19",
-    "description": "Automatically solve reCAPTCHA and hCaptcha using AI.",
+    "version": "0.2.0",
+    "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, and text-based CAPTCHA using AI.",
     "permissions": [
         "storage",
         "scripting"
@@ -19,13 +19,21 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["utils.js", "content_scripts.js"],
+            "js": ["utils.js", "content.js"],
             "all_frames": true,
             "run_at": "document_start"
         },
+
         {
-            "matches": ["<all_urls>"],
-            "js": ["hcaptcha_language.js"],
+            "matches": ["*://nopecha.com/setup"],
+            "js": ["setup.js"],
+            "all_frames": true,
+            "run_at": "document_end"
+        },
+
+        {
+            "matches": ["*://*.hcaptcha.com/captcha/*"],
+            "js": ["hcaptcha.js"],
             "all_frames": true,
             "run_at": "document_end"
         },
@@ -36,11 +44,12 @@
             "run_at": "document_start"
         },
         {
-            "matches": ["*://*.hcaptcha.com/captcha/*"],
-            "js": ["hcaptcha.js"],
+            "matches": ["<all_urls>"],
+            "js": ["hcaptcha_language.js"],
             "all_frames": true,
             "run_at": "document_end"
         },
+
         {
             "matches": ["<all_urls>"],
             "js": ["recaptcha.js", "recaptcha_voice.js"],
@@ -48,33 +57,45 @@
             "run_at": "document_end"
         },
         {
-            "matches": [
-                "*://*.google.com/recaptcha/*",
-                "*://*.recaptcha.net/recaptcha/*",
-                "*://recaptcha.net/recaptcha/*"
-            ],
+            "matches": ["*://*.google.com/recaptcha/*", "*://*.recaptcha.net/recaptcha/*", "*://recaptcha.net/recaptcha/*"],
             "js": ["recaptcha_fast.js"],
             "all_frames": true,
             "run_at": "document_start"
         },
+
         {
-            "matches": ["*://nopecha.com/setup"],
-            "js": ["setup.js"],
+            "matches": ["*://*.arkoselabs.com/fc/*", "*://*.funcaptcha.com/fc/*"],
+            "js": ["funcaptcha.js", "funcaptcha_scrape.js"],
             "all_frames": true,
+            "run_at": "document_end",
+            "match_about_blank": true
+        },
+        {
+            "matches": ["*://*.arkoselabs.com/fc/*", "*://*.funcaptcha.com/fc/*"],
+            "js": ["funcaptcha_fast.js"],
+            "all_frames": true,
+            "run_at": "document_start",
+            "match_about_blank": true
+        },
+        {
+            "matches": ["*://nopecha.com/demo/funcaptcha"],
+            "js": ["funcaptcha_demo.js"],
+            "all_frames": false,
             "run_at": "document_end"
         },
+
         {
             "matches": ["<all_urls>"],
             "js": ["ocr.js"],
             "all_frames": true,
             "run_at": "document_end"
         },
+
         {
-            "matches": ["*://*.arkoselabs.com/fc/*"],
-            "js": ["funcaptcha.js"],
+            "matches": ["*://challenges.cloudflare.com/cdn-cgi/challenge-platform/turnstile/*"],
+            "js": ["turnstile.js"],
             "all_frames": true,
-            "run_at": "document_end",
-            "match_about_blank": true
+            "run_at": "document_end"
         }
     ],
     "icons": {

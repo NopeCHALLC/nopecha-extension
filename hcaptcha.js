@@ -1,5 +1,4 @@
 (async () => {
-
     function is_widget_frame() {
         return document.querySelector('div.check') !== null;
     }
@@ -27,17 +26,6 @@
             return null;
         }
         return matches[0].replaceAll('"', '');
-    }
-
-
-    function get_lang() {
-        let lang = document.querySelector('.display-language .text').innerText || window.navigator.userLanguage || window.navigator.language;
-        if (!lang) {
-            return null;
-        }
-        lang = lang.toLowerCase();
-        lang = lang.split('-')[0];
-        return lang;
     }
 
 
@@ -86,14 +74,7 @@
                 new_task.push(e);
             }
         }
-        task = new_task.join('');
-
-        const lang = get_lang();
-        if (lang && lang !== 'en') {
-            task = await BG.exec('translate', {from: lang, to: 'en', text: task});
-        }
-
-        return task;
+        return new_task.join('');
     }
 
 
@@ -107,9 +88,6 @@
                 }
                 checking = true;
 
-                // let task = document.querySelector('h2.prompt-text')?.innerText?.replace('Please click each image containing', '')?.trim();
-                // const task = document.querySelector('h2.prompt-text')?.innerText.trim();
-                // let task = document.querySelector('h2.prompt-text')?.innerText?.replace(/\s+/g, ' ')?.trim();
                 let task = await get_task();
                 if (!task) {
                     checking = false;
@@ -195,10 +173,6 @@
             if (!was_solved) {
                 was_solved = true;
             }
-            // Refresh page to collect samples
-            if (settings.debug) {
-                window.location.reload();
-            }
             return;
         }
         was_solved = false;
@@ -208,29 +182,18 @@
 
 
     async function on_image_frame(settings) {
-        // Failed stat
-        if (!was_incorrect && got_solve_incorrect()) {
-            was_incorrect = true;
-            // // window.location.reload();
-            // document.querySelector('.refresh')?.click();
-            // await Time.sleep(500);
-        }
-        else {
-            was_incorrect = false;
-        }
-
         const {task, task_url, cells, urls} = await on_task_ready();
 
         const solve_start = Time.time();
 
         // Detect images
-        const {job_id, clicks} = await NopeCHA.post({
+        const {job_id, data} = await NopeCHA.post({
             captcha_type: 'hcaptcha',
             task: task,
             image_urls: urls,
             key: settings.key,
         });
-        if (!clicks) {
+        if (!data) {
             return;
         }
 
@@ -240,8 +203,8 @@
         }
 
         // Solve
-        for (let i = 0; i < clicks.length; i++) {
-            if (clicks[i] === false) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i] === false) {
                 continue;
             }
 
@@ -257,7 +220,6 @@
 
 
     let was_solved = false;
-    let was_incorrect = false;
 
 
     while (true) {

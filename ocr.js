@@ -1,8 +1,9 @@
 (async () => {
-
-
     function is_present(settings) {
-        return document.querySelector(settings.ocr_image_selector) !== null && document.querySelector(settings.ocr_input_selector) !== null;
+        try {
+            return document.querySelector(settings.ocr_image_selector) !== null && document.querySelector(settings.ocr_input_selector) !== null;
+        } catch (e) {}
+        return false;
     }
 
 
@@ -63,23 +64,21 @@
     async function on_present(settings) {
         const {image_url} = await on_task_ready(settings);
 
-        const solve_start = Time.time();
-
         // Detect images
-        const {job_id, results} = await NopeCHA.post({
+        const {job_id, data} = await NopeCHA.post({
             captcha_type: 'ocr',
             image_urls: [image_url],
             key: settings.key,
         });
-        if (!results) {
+        if (!data) {
             return;
         }
 
         // Fill input
-        if (results && results.length > 0) {
+        if (data && data.length > 0) {
             const $input = document.querySelector(settings.ocr_input_selector);
             if ($input && !$input.value) {
-                $input.value = results[0];
+                $input.value = data[0];
             }
         }
     }
