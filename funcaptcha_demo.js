@@ -20,10 +20,10 @@
         'outlook': 'https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick the penguin
         'outlook auth': 'https://iframe-auth.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick one square that shows two identical objects.
     }
-    let nframes = 14;
+    let nframes = 7;
 
     reset();
-    // open_frame_token('ea signup', 0, nframes);
+    open_frame_token('ea signup', 0, nframes);
 
     function reset() {
         document.body.innerHTML = '';
@@ -170,8 +170,8 @@
         open_frame_token('demo2', 1, 1);
         // open_frame_token('demo3', 1, 1);
         open_frame_src('outlook', 1, 1);
-        open_frame_src('ea signup', 1, 1);
-        open_frame_src('ea signin', 1, 1);
+        open_frame_token('ea signup', 1, 1);
+        open_frame_token('ea signin', 1, 1);
     }
 
     function open_frame_token(k, row, n) {

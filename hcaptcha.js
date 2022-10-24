@@ -182,6 +182,11 @@
 
 
     async function on_image_frame(settings) {
+        if (document.querySelector('.display-language .text').textContent !== 'EN') {
+            document.querySelector('.language-selector .option:nth-child(23)').click();
+            await Time.sleep(500);
+        }
+
         const {task, task_url, cells, urls} = await on_task_ready();
 
         const solve_start = Time.time();

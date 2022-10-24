@@ -120,7 +120,7 @@
             // 'Pick the image of the striped cone and the checkered cube',
             // 'Pick the image of the striped cube and the checkered cube',
             // cone, cube, heart, ball
-            'Pick the animal looking',
+            // 'Pick the animal looking',
         ];
         for (const e of UNSUPPORTED_TASKS) {
             if (task.startsWith(e)) {
