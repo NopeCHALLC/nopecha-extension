@@ -23,18 +23,18 @@
         const image = get_image();
         if (task && image) {
             // Ignore learned tasks
-            if (task.replace('Pick the ', '').split(' ').length <= 2) {
-                return;
-            }
-            if (task === 'Pick one square that shows two identical objects.') {
-                return;
-            }
-            if (task === 'Pick the image that is the correct way up') {
-                return;
-            }
-            if (task === "Pick the mouse that can't reach the cheese") {
-                return;
-            }
+            // if (task.replace('Pick the ', '').split(' ').length <= 2) {
+            //     return;
+            // }
+            // if (task === 'Pick one square that shows two identical objects.') {
+            //     return;
+            // }
+            // if (task === "Pick the mouse that can't reach the cheese") {
+            //     return;
+            // }
+            // if (task === 'Pick the image that is the correct way up') {
+            //     return;
+            // }
             // if (task.startsWith('Pick the dice pair whose top sides add up to ')) {
             //     return await reload_if_roblox();
             // }

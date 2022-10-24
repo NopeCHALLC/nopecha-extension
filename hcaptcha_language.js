@@ -8,7 +8,7 @@
 
     function scan_head() {
         const current_language = navigator.language.split('-')[0];
-        for (const $e of document.querySelectorAll(`script[src*=".hcaptcha.com/1/api.js"]`)) {
+        for (const $e of document.querySelectorAll(`script[src*="hcaptcha.com/1/api.js"]`)) {
             // observer.disconnect();
             const url = new URL($e.src);
             const lang = url.searchParams.get('hl') || current_language;

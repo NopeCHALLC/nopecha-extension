@@ -10,7 +10,7 @@
         "default_icon": "icon/16.png",
         "default_popup": "popup.html"
     },
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, and text-based CAPTCHA using AI.",
     "permissions": [
         "storage",

@@ -133,6 +133,7 @@
         // Detect images
         const {job_id, data} = await NopeCHA.post({
             captcha_type: 'funcaptcha',
+            // captcha_type: 'test',
             task: task,
             image_data: [image_data],
             key: settings.key,

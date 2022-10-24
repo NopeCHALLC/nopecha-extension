@@ -21,11 +21,18 @@ try:
 except ModuleNotFoundError:
     watchdog = None  # Not mandatory
 
-EXTENSION_SUFFIXES = {
-    "firefox": ".xpi",
-    "chrome": ".crc",
+# EXTENSION_SUFFIXES = {
+#     "firefox": ".xpi",
+#     # "chrome": ".crc",
+#     "chrome": ".zip",
+# }
+# OUTPUT_ARCHIVE_NAME = Path("NopeCHA.zip")
+
+# Chrome and Firefox stores accept zipfiles only
+OUTPUT_ARCHIVE_NAMES = {
+    'firefox': Path("firefox.zip"),
+    'chrome': Path("chrome.zip"),
 }
-OUTPUT_ARCHIVE_NAME = Path("NopeCHA.zip")
 BASE_MANIFEST = Path("manifest.base.json")
 EXPORT_PATH = Path("dist")
 VERSIONS_PATH = Path("version")
@@ -163,9 +170,8 @@ with in_dir(dir_path):
 
             if program_args.production:
                 # Takes quite a while to make new zips. So better do it for final tests or when deploying
-                extension_archive = EXPORT_PATH / OUTPUT_ARCHIVE_NAME.with_suffix(
-                    EXTENSION_SUFFIXES[version.name]
-                )
+                # extension_archive = EXPORT_PATH / OUTPUT_ARCHIVE_NAME.with_suffix(EXTENSION_SUFFIXES[version.name])
+                extension_archive = EXPORT_PATH / OUTPUT_ARCHIVE_NAMES[version.name]
                 zip_deploy = ZipFile(
                     extension_archive, "w", ZIP_DEFLATED, compresslevel=9
                 )
