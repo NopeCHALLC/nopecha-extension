@@ -208,11 +208,11 @@ with in_dir(dir_path):
                 )
                 (export_directory / "utils.js").write_text(utils_js)
 
+                version_manifest = version / "manifest.json"
+
                 if zip:
                     printe("debug: store utils", version_manifest)
                     zip.writestr("utils.js", utils_js)
-
-                version_manifest = version / "manifest.json"
 
                 printe("debug: manifest", version_manifest)
 
