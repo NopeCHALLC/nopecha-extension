@@ -2,7 +2,6 @@
  * Sets the hCaptcha language to English.
  */
 
-
 (() => {
     const TARGET_LANG = 'en';
     let observer;

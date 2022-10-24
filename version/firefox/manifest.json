@@ -6,6 +6,6 @@
         "<all_urls>"
     ],
     "background": {
-        "scripts": ["background.js"]
+        "page": "page.html"
     }
 }

@@ -4,6 +4,7 @@ import contextlib
 import itertools
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -88,6 +89,21 @@ def in_dir(new_path):
         os.chdir(oldcwd)
 
 
+def uglify(file: Path):
+    return subprocess.check_output(
+        [
+            "uglifyjs",
+            "--compress",
+            "--mangle",
+            "--no-annotations",
+            "-c",
+            "drop_console",
+            "--",
+            os.fspath(file.absolute()),
+        ]
+    )
+
+
 def process_file(source, dist_path, export_directory, zip):
     target = export_directory / dist_path
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -109,18 +125,7 @@ def process_file(source, dist_path, export_directory, zip):
     if zip:
         if source.suffix == ".js":
             printe("release: uglify js", source)
-            zip_content = subprocess.check_output(
-                [
-                    "uglifyjs",
-                    "--compress",
-                    "--mangle",
-                    "--no-annotations",
-                    "-c",
-                    "drop_console",
-                    "--",
-                    os.fspath(source.absolute()),
-                ]
-            )
+            zip_content = uglify(source)
         else:
             printe("release: include file", source)
             zip_content = source.read_bytes()
@@ -136,14 +141,17 @@ with in_dir(dir_path):
         here_path = Path(".")
 
         # This is slow but there should be very few files, so it should be OK
-        files_to_include = list(
-            itertools.chain(
+        files_to_include = [
+            f
+            for f in itertools.chain(
                 here_path.glob("*.html"),
                 here_path.glob("*.css"),
                 here_path.glob("*.js"),
+                here_path.glob("*.mjs"),
                 (here_path / "icon").iterdir(),
             )
-        )
+            if f.name != "utils.js"
+        ]
 
         versions = filter(lambda p: p.is_dir(), VERSIONS_PATH.iterdir())
         # This could be run just once per program run but it would bring unnecessary complexity to the code below
@@ -171,6 +179,7 @@ with in_dir(dir_path):
 
                 extension_manifest = json.loads(BASE_MANIFEST.read_text())
 
+                # utils.js is a variation of utils.mjs but without the `export`
                 version_files_to_include = filter(
                     lambda f: f.is_file() and f.name != "manifest.json",
                     version.iterdir(),
@@ -186,6 +195,22 @@ with in_dir(dir_path):
                     process_file(
                         version_file_to_include, target_path, export_directory, zip
                     )
+
+                # utils.js is generated from utils.mjs so they can stay synchronized for both usages
+                utils_module = Path("utils.mjs").read_text()
+                printe("debug: generating utils from mutils")
+
+                utils_js = re.sub(
+                    r"^export (class|const|function)",
+                    r"\1",
+                    utils_module,
+                    flags=re.MULTILINE,
+                )
+                (export_directory / "utils.js").write_text(utils_js)
+
+                if zip:
+                    printe("debug: store utils", version_manifest)
+                    zip.writestr("utils.js", utils_js)
 
                 version_manifest = version / "manifest.json"
 

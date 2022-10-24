@@ -1,60 +1,3 @@
-// const $log = document.querySelector('#log');
-// const logs = [];
-// function log(s) {
-//     if (!$log)
-//         return;
-//     logs.push(s);
-//     $log.innerHTML = logs.join('\n');
-//     $log.scrollTop = $log.scrollHeight;
-// }
-
-
-if (!Date.now) {
-    Date.now = function () {return new Date().getTime()};
-}
-
-
-class BG {
-    static exec(method, data) {
-        return new Promise(resolve => {
-            try {
-                chrome.runtime.sendMessage({method, data}, resolve)
-            } catch {
-                resolve();
-            }
-        });
-    }
-}
-
-
-class Util {
-    static sleep(t) {
-        return new Promise(resolve => setTimeout(resolve, t));
-    }
-
-    static pad_left(s, char, n) {
-        while (`${s}`.length < n) {
-            s = `${char}${s}`;
-        }
-        return s;
-    }
-
-    static time_to_hms(t) {
-        t = Math.max(0, t);
-        const hours = Math.floor(t / 3600);
-        t %= 3600;
-        const minutes = Math.floor(t / 60);
-        const seconds = Math.floor(t % 60);
-        const hms = `${Util.pad_left(hours, '0', 2)}:${Util.pad_left(minutes, '0', 2)}:${Util.pad_left(seconds, '0', 2)}`;
-        return hms;
-    }
-
-    static capitalize(s) {
-        return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-}
-
-
 let plan = null;
 let checking_server_plan = false;
 let rendering_server_plan = false;
@@ -75,6 +18,7 @@ async function check_plan() {
 
     if (plan.error) {
         plan = {
+            error: true,
             plan: plan.message,
             credit: 0,
             quota: 0,
@@ -89,25 +33,26 @@ async function check_plan() {
 
 async function initialize_ui() {
     const settings = await BG.exec('get_settings');
-    // log(JSON.stringify(settings));
 
     async function set_switch(id, enabled) {
         const $switch = document.querySelector(`input#${id}[type="checkbox"]`);
-        if (!$switch)
+        if (!$switch) {
             return;
+        }
 
         const disables = $switch.dataset?.disables?.split(',');
         if (disables) {
             for (const disable_id of disables) {
                 const $e = document.querySelector(`#${disable_id}`);
-                if (enabled)
+                if (enabled) {
                     $e.disabled = false;
-                else
+                }
+                else {
                     $e.disabled = true;
+                }
             }
         }
 
-        // log(`set_switch ${id} ${enabled}`);
         $switch.checked = enabled;
         await BG.exec('set_settings', {id: id, value: enabled});
     }
@@ -129,25 +74,27 @@ async function initialize_ui() {
                 value = 0;
             }
 
-            if (isNaN(value))
+            if (isNaN(value)) {
                 value = 0;
-            if (value < 0)
+            }
+            if (value < 0) {
                 value = 0;
-            if (value > 999999)
+            }
+            if (value > 999999) {
                 value = 999999;
+            }
         }
 
-        // log(`set_field ${id} ${value}`);
         $field.value = value;
         await BG.exec('set_settings', {id: id, value: value});
     }
 
     async function set_select(id, value) {
         const $select = document.querySelector(`select#${id}`);
-        if (!$select)
+        if (!$select) {
             return;
+        }
 
-        // log(`set_select ${id} ${value}`);
         $select.value = value;
         await BG.exec('set_settings', {id: id, value: value});
     }
@@ -208,16 +155,15 @@ async function initialize_ui() {
     }
 }
 
+
 async function render_plan() {
     const settings = await BG.exec('get_settings');
     if (!settings) {
         return;
     }
-
     if (!plan) {
         return;
     }
-
     if (rendering_server_plan) {
         return;
     }
@@ -226,7 +172,6 @@ async function render_plan() {
     const $plan = document.querySelector('#plan');
     const $credit = document.querySelector('#credit');
     const $refills = document.querySelector('#refills');
-    const $incorrect_key = document.querySelector('#incorrect_key');
     const $ipbanned_warning = document.querySelector('#ipbanned_warning');
 
     const now = Date.now() / 1000;
@@ -237,35 +182,22 @@ async function render_plan() {
 
     // Display plan name
     $plan.innerHTML = plan.plan;
-    if (plan.plan === 'free') {
-        if (settings.key !== '') {
-            $incorrect_key.classList.remove('hidden');
-        }
-        else {
-            $incorrect_key.classList.add('hidden');
-        }
+    if (plan.error) {
+    // if (plan.plan === 'Invalid key') {
         $plan.classList.remove('green');
         $plan.classList.add('red');
     }
     else {
-        $incorrect_key.classList.add('hidden');
         $plan.classList.remove('red');
         $plan.classList.add('green');
     }
 
-    if(plan.plan.includes("Banned")) {
+    if (plan.plan === 'Banned IP') {
         $ipbanned_warning.classList.remove('hidden');
-    } else {
+    }
+    else {
         $ipbanned_warning.classList.add('hidden');
     }
-    // if (['Invalid', 'Banned'].includes(plan.plan)) {
-    //     // Show loading icon for remaining credit while the server resets quota
-    //     $credit.classList.remove('green');
-    //     $credit.classList.remove('red');
-    //     $credit.innerHTML = document.querySelector('#template > .loading').cloneNode(true);
-    //     $refills.innerHTML = document.querySelector('#template > .loading').cloneNode(true);
-    //     return;
-    // }
 
     // Display remaining credits
     if (secs_until_reset === 0) {
@@ -288,7 +220,7 @@ async function render_plan() {
 
     // Display time until reset
     if (secs_until_reset) {
-        const hms = Util.time_to_hms(secs_until_reset);
+        const hms = Time.seconds_as_hms(secs_until_reset);
         $refills.innerHTML = `${hms}`;
     }
     else {

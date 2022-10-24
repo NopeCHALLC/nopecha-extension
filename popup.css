@@ -1,6 +1,6 @@
 :root {
     --input_scale_x: 1;
-    --input_scale_y: 0.8;
+    --input_scale_y: 0.7;
 }
 
 html * {
@@ -31,7 +31,6 @@ html, body {
     opacity: 0.5;
 }
 .green {
-    /* color: #8cd47e; */
     color: #1a73e8;
 }
 .red {
@@ -87,7 +86,7 @@ html, body {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    padding: 6px 4px;
+    padding: 4px;
 }
 .settings_group.vertical {
     flex-direction: column;
@@ -174,6 +173,8 @@ input:checked + .slider:before {
 #key {
     padding: 4px;
     border-radius: 2px;
+    max-width: 50%;
+    text-align: right;
 }
 
 .loading {
@@ -271,7 +272,7 @@ input:checked + .slider:before {
     border-bottom: 1px solid #ccc;
 }
 .tab_content.bordered {
-    min-height: 160px;
+    min-height: 130px;
     padding: 8px 8px 8px 8px;
     border-top: 1px solid transparent;
     border-left: 1px solid #ccc;
@@ -285,14 +286,13 @@ input:checked + .slider:before {
 }
 
 .warning_box {
-    border-color: #FCD62E;
-    border-radius: 0.25rem;
-    border-width: 0.125rem;
-    padding: 0 0.5rem;
-    margin: 0 4px;
     background-color: #FEF9C3;
-    border-style: solid;
+    border: 1px solid #FCD62E;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin: 0 4px;
 }
 .warning_box * {
     font-size: 10px;
+    text-align: center;
 }
