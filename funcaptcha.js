@@ -8,7 +8,7 @@
 
 
     function is_image_frame() {
-        return get_task() !== null && get_image() !== null;
+        return get_task() !== null && get_image_data() !== null;
     }
 
 
@@ -46,7 +46,7 @@
     }
 
 
-    function get_image() {
+    function get_image_data() {
         const $image = document.querySelector('img#game_challengeItem_image');
         // return $image?.src?.replace('data:image/jpeg;base64,', '');
         return $image?.src?.split(';base64,')[1];
@@ -83,7 +83,7 @@
                     return;
                 }
 
-                const image_data = get_image();
+                const image_data = get_image_data();
                 if (!image_data) {
                     // console.log('no image data');
                     checking = false;
@@ -132,8 +132,7 @@
 
         // Detect images
         const {job_id, data} = await NopeCHA.post({
-            captcha_type: 'funcaptcha',
-            // captcha_type: 'test',
+            captcha_type: IS_DEVELOPMENT ? 'funcaptcha_dev' : 'funcaptcha',
             task: task,
             image_data: [image_data],
             key: settings.key,

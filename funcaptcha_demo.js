@@ -20,7 +20,7 @@
         'outlook': 'https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick the penguin
         'outlook auth': 'https://iframe-auth.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick one square that shows two identical objects.
     }
-    let nframes = 14;
+    let nframes = 21;
 
     reset();
     open_frame_token('ea signup', 0, nframes);

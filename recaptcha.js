@@ -275,7 +275,7 @@
 
         // Solve task
         const {job_id, data} = await NopeCHA.post({
-            captcha_type: 'recaptcha',
+            captcha_type: IS_DEVELOPMENT ? 'recaptcha_dev' : 'recaptcha',
             task: task,
             image_urls: image_urls,
             grid: grid,

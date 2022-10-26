@@ -1,5 +1,5 @@
 (async () => {
-    const RELOAD_ON_SOLVED = false;  // If true, restart captcha to scrape more data
+    const RELOAD_ON_SOLVED = IS_DEVELOPMENT;  // If true, restart captcha to scrape more data
     const SUBMISSION_STRATEGY = 'lazy';  // One of: eager, lazy, or none
     window.nopecha = [];  // Lazy cache
     const listeners = {};  // Click listeners
@@ -39,7 +39,8 @@
             //     return await reload_if_roblox();
             // }
 
-            const data = {task, image, index};
+            const url = (await BG.exec('info_tab'))?.url;
+            const data = {task, image, index, url};
 
             if (SUBMISSION_STRATEGY === 'lazy') {
                 // Lazy submission
@@ -65,7 +66,7 @@
         if (data && data.nopecha === true) {
             // console.log('message', key, data);
             if (data.action === 'append') {
-                // console.log('append', data, window.location.href);
+                // console.log('append', data);
                 window.nopecha.push(data.data);
             }
             else if (data.action === 'clear') {

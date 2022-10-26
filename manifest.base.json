@@ -10,7 +10,7 @@
         "default_icon": "icon/16.png",
         "default_popup": "popup.html"
     },
-    "version": "0.2.3",
+    "version": "0.2.4",
     "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, and text-based CAPTCHA using AI.",
     "permissions": [
         "storage",
@@ -21,7 +21,8 @@
             "matches": ["<all_urls>"],
             "js": ["utils.js", "content.js"],
             "all_frames": true,
-            "run_at": "document_start"
+            "run_at": "document_start",
+            "match_about_blank": true
         },
 
         {

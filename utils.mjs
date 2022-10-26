@@ -2,6 +2,14 @@
 
 
 /**
+ * Set to true for the following behavior:
+ * - Request server to recognize using bleeding-edge models
+ * - Reload FunCAPTCHA on verification
+ */
+export const IS_DEVELOPMENT = false;
+
+
+/**
  * Trying to be an Enum but javascript doesn't have enums
  */
 export class RunningAs {

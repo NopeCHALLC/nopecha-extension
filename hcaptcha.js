@@ -193,7 +193,7 @@
 
         // Detect images
         const {job_id, data} = await NopeCHA.post({
-            captcha_type: 'hcaptcha',
+            captcha_type: IS_DEVELOPMENT ? 'hcaptcha_dev' : 'hcaptcha',
             task: task,
             image_urls: urls,
             key: settings.key,
