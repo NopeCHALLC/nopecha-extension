@@ -6,7 +6,7 @@
  * - Request server to recognize using bleeding-edge models
  * - Reload FunCAPTCHA on verification
  */
-export const IS_DEVELOPMENT = false;
+export const IS_DEVELOPMENT = true;
 
 
 /**

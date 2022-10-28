@@ -87,7 +87,7 @@
 
         {
             "matches": ["<all_urls>"],
-            "js": ["ocr.js"],
+            "js": ["ocr.js", "autodetect.js"],
             "all_frames": true,
             "run_at": "document_end"
         },

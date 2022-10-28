@@ -64,12 +64,34 @@ class Tab {
             }
         });
     }
+
+    static active() {
+        // TODO: Implement MV2
+        // https://developer.chrome.com/docs/extensions/reference/tabs/#get-the-current-tab
+
+        // `tab` will either be a `tabs.Tab` instance or `undefined`
+        return new Promise(async resolve => {
+            // MV3
+            const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+            return resolve(tab);
+
+            // MV2
+            // chrome.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
+            //     if (chrome.runtime.lastError) {
+            //         console.error(chrome.runtime.lastError);
+            //     }
+            //     resolve(tab);
+            // });
+        });
+    }
 }
 
 
 class Settings {
     static DEFAULT = {
-        version: 4,
+        version: 5,
+
+        active_tab: '#hcaptcha_tab',
 
         key: '',
 
@@ -150,8 +172,20 @@ class Settings {
 
 
 class Injector {
-    static inject({tab_id, data: {func, args}}) {
-        // console.log('injecting', tab_id, func);
+    static async _inject(options) {
+        // Inject into active tab if target tabId is undefined
+        if (!options.target.tabId) {
+            const tab = await Tab.active();
+            options.target.tabId = tab.id;
+        }
+
+        // Convert callback to promise
+        console.log('inject', options);
+        const prom = new Promise(resolve => bapi.browser.scripting.executeScript(options, resolve));
+        return await prom;
+    }
+
+    static async inject_func({tab_id, data: {func, args}}) {
         const options = {
             target: {tabId: tab_id, allFrames: true},
             world: 'MAIN',
@@ -159,17 +193,26 @@ class Injector {
             func: func,
             args: args,
         };
-        return new Promise(resolve => bapi.browser.scripting.executeScript(options, resolve));
+        // return new Promise(resolve => bapi.browser.scripting.executeScript(options, resolve));
+        return await Injector._inject(options);
+    }
+
+    static async inject_files({tab_id, data: {files}}) {
+        const options = {
+            target: {tabId: tab_id, allFrames: true},
+            world: 'MAIN',
+            injectImmediately: true,
+            files: files,
+        };
+        return await Injector._inject(options);
     }
 }
+// Injector.inject_files({tab_id: null, data: {files: ['autodetect.js']}});
 
 
 class Recaptcha {
     static async reset({tab_id}) {
-        function func() {
-            try {window.grecaptcha?.reset();} catch {}
-        }
-        await Injector.inject({tab_id, data: {func, args: []}});
+        await Injector.inject_func({tab_id, data: {func: () => {try {window.grecaptcha?.reset();} catch {}}, args: []}});
         return true;
     }
 }
@@ -201,6 +244,36 @@ class Server {
 }
 
 
+class Image {
+    static b64({data: {url}}) {
+        return new Promise(resolve => {
+            fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+        });
+    }
+}
+
+
+class Relay {
+    static async send({tab_id, data}) {
+        // Send to active tab if tab_id is undefined
+        if (!tab_id) {
+            const tab = await Tab.active();
+            tab_id = tab.id;
+        }
+        bapi.browser.tabs.sendMessage(tab_id, data);
+    }
+}
+// setInterval(() => {
+//     Relay.send({tab_id: undefined, data: {testing: 'hello world!'}});
+// }, 1000);
+
+
 const FN = {
     set_cache: Cache.set,
     get_cache: Cache.get,
@@ -217,14 +290,21 @@ const FN = {
     close_tab: Tab.close,
     open_tab: Tab.open,
     info_tab: Tab.info,
+    active_tab: Tab.active,
 
     get_settings: Settings.get,
     set_settings: Settings.set,
     reset_settings: Settings.reset,
 
+    inject_files: Injector.inject_files,
+
     reset_recaptcha: Recaptcha.reset,
 
     get_server_plan: Server.get_plan,
+
+    b64_image: Image.b64,
+
+    relay: Relay.send,
 };
 
 

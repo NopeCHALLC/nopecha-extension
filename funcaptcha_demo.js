@@ -22,8 +22,10 @@
     }
     let nframes = 21;
 
+
     reset();
-    open_frame_token('ea signup', 0, nframes);
+    // open_frame_token('ea signup', 0, nframes);
+
 
     function reset() {
         document.body.innerHTML = '';

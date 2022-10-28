@@ -7,7 +7,8 @@
         <div id="main">
             <div class="content">
                 <div class="settings_group">
-                    <div id="manage" class="clickable">Manage Subscription</div>
+                    <!-- <div id="manage" class="clickable">Manage Subscription</div> -->
+                    <a id="manage" class="clickable" href="https://nopecha.com/manage" target="_blank">Manage Subscription</a>
                 </div>
 
                 <div id="ipbanned_warning" class="warning_box hidden">
@@ -144,13 +145,17 @@
                     </div>
 
                     <div class="settings_group">
-                        <div class="label">Image Selector</div>
-                        <input id="ocr_image_selector" type="text" class="text" placeholder='CSS Selector'>
+                        <div class="label">Image</div>
+                        <input type="button" class="button autodetect" data-key="ocr_image_selector" value="Autodetect">
+                        <div style="width: 8px;"></div>
+                        <input id="ocr_image_selector" type="text" class="text" placeholder="CSS Selector">
                     </div>
 
                     <div class="settings_group">
-                        <div class="label">Input Selector</div>
-                        <input id="ocr_input_selector" type="text" class="text" placeholder='CSS Selector'>
+                        <div class="label">Input</div>
+                        <input type="button" class="button autodetect" data-key="ocr_input_selector" value="Autodetect">
+                        <div style="width: 8px;"></div>
+                        <input id="ocr_input_selector" type="text" class="text" placeholder="CSS Selector">
                     </div>
 
                     <div class="settings_group">
@@ -168,8 +173,8 @@
                 </label>
             </div> -->
 
-            <div class="settings_group footer_group">
-                <div id="footer" class="clickable">Join us on Discord for free credits!</div>
+            <div id="footer" class="clickable">
+                <a href="https://nopecha.com/discord" target="_blank">Join us on Discord for free credits!</a>
             </div>
         </div>
 

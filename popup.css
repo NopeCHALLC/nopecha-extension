@@ -55,11 +55,15 @@ html, body {
     margin-top: 8px;
     width: 100%;
     text-align: center;
-    color: #999;
     height: 20px;
+}
+#footer > a {
+    color: #999;
+    text-decoration: none;
 }
 
 #manage {
+    text-decoration: none;
     width: 100%;
     text-align: center;
     background-color: #1a73e8;
@@ -122,7 +126,16 @@ html, body {
     background-color: #fff;
 }
 .settings_group > input[type="text"].text {
-    width: calc(120px * var(--input_scale_x));
+    /* width: calc(120px * var(--input_scale_x)); */
+    width: calc(100px * var(--input_scale_x));
+}
+.settings_group > input[type="button"].button {
+    width: calc(80px * var(--input_scale_x));
+    padding: 0;
+    background-color: #fff;
+    border-radius: 0;
+    border: 1px solid #eee;
+    outline: none;
 }
 
 .switch {
@@ -279,10 +292,6 @@ input:checked + .slider:before {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-radius: 0 0 4px 4px;
-}
-
-.footer_group {
-    width: 296px;
 }
 
 .warning_box {

@@ -110,7 +110,7 @@
 
             const $timeout = document.querySelector('#timeout_widget');
             if ($timeout?.style?.display === 'block') {
-                console.log('$timeout', $timeout);
+                // console.log('$timeout', $timeout);
                 window.parent.postMessage({nopecha: true, action: 'reload'}, '*');
                 window.location.reload(true);
             }

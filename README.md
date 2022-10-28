@@ -1,5 +1,12 @@
 ## NopeCHA Chrome Extension & Firefox Add-on
 
+[Official Website](https://www.nopecha.com)
+
+[Chrome Extension](https://www.nopecha.com/chrome)
+
+[Firefox Add-on](https://www.nopecha.com/firefox)
+
+[API Reference](https://www.nopecha.com/api)
 
 ## Development
 ### Prerequisites
@@ -21,10 +28,10 @@ For that, you need to install python's `watchdog` in your machine:
 
 `python -m pip install watchdog`
 
-Then you can run `build.py` command with the `-w` option so your changes immediately apply:  
+Then you can run `build.py` command with the `-w` option so your changes immediately apply:
 
-`python build.py -w`  
-or  
+`python build.py -w`
+or
 `./build.py -w`
 
 

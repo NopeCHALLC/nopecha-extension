@@ -1,5 +1,8 @@
 (async () => {
     function is_widget_frame() {
+        if (document.body.getBoundingClientRect()?.width === 0 || document.body.getBoundingClientRect()?.height === 0) {
+            return false;
+        }
         return document.querySelector('div.check') !== null;
     }
 

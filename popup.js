@@ -34,6 +34,23 @@ async function check_plan() {
 async function initialize_ui() {
     const settings = await BG.exec('get_settings');
 
+    async function set_active_tab(id) {
+        // Deactivate all tab buttons
+        for (const $tab_btn of document.querySelectorAll('.tab_btn')) {
+            $tab_btn.classList.remove('active');
+        }
+        // Hide all tabs
+        for (const $tab of document.querySelectorAll('.tab')) {
+            $tab.classList.add('hidden');
+        }
+        // Activate selected tab button
+        document.querySelector(`.tab_btn[data-target="${id}"]`).classList.add('active');
+        // Show selected tab
+        document.querySelector(id).classList.remove('hidden');
+
+        await BG.exec('set_settings', {id: 'active_tab', value: id});
+    }
+
     async function set_switch(id, enabled) {
         const $switch = document.querySelector(`input#${id}[type="checkbox"]`);
         if (!$switch) {
@@ -99,6 +116,14 @@ async function initialize_ui() {
         await BG.exec('set_settings', {id: id, value: value});
     }
 
+    /**
+     * Initialize GUI elements from settings
+     */
+
+    // Active tab
+    await set_active_tab(settings.active_tab);
+
+    // Inputs
     for (const k in settings) {
         try {
             await set_switch(k, settings[k]);
@@ -107,30 +132,9 @@ async function initialize_ui() {
         } catch {}
     }
 
-    const $switches = document.querySelectorAll('.settings_group input[type="checkbox"]');
-    for (const $e of $switches) {
-        $e.addEventListener('change', () => set_switch($e.id, $e.checked));
-    }
-
-    const $fields = document.querySelectorAll('.settings_group input[type="text"]');
-    for (const $e of $fields) {
-        $e.addEventListener('input', () => set_field($e.id, $e.value));
-    }
-
-    const $selects = document.querySelectorAll('.settings_group select');
-    for (const $e of $selects) {
-        $e.addEventListener('change', () => set_select($e.id, $e.value));
-    }
-
-    // Manage subscription
-    document.querySelector('#manage').addEventListener('click', async () => {
-        await BG.exec('open_tab', {url: 'https://nopecha.com/manage'});
-    });
-
-    // Tech support
-    document.querySelector('#footer').addEventListener('click', async () => {
-        await BG.exec('open_tab', {url: 'https://nopecha.com/discord'});
-    });
+    /**
+     * Listeners for GUI elements which sets settings
+     */
 
     // Subscription key changed
     let change_delay_timer = null;
@@ -142,15 +146,31 @@ async function initialize_ui() {
     // Tab switching
     for (const $e of document.querySelectorAll('.tab_btn')) {
         const target = $e.dataset.target;
-        $e.addEventListener('click', () => {
-            for (const $tab of document.querySelectorAll('.tab')) {
-                $tab.classList.add('hidden');
-            }
-            for (const $tab_btn of document.querySelectorAll('.tab_btn')) {
-                $tab_btn.classList.remove('active');
-            }
-            $e.classList.add('active');
-            document.querySelector($e.dataset.target).classList.remove('hidden');
+        $e.addEventListener('click', async () => set_active_tab(target));
+    }
+
+    // Toggles
+    for (const $e of document.querySelectorAll('.settings_group input[type="checkbox"]')) {
+        $e.addEventListener('change', () => set_switch($e.id, $e.checked));
+    }
+
+    // Texts
+    for (const $e of document.querySelectorAll('.settings_group input[type="text"]')) {
+        $e.addEventListener('input', () => set_field($e.id, $e.value));
+    }
+
+    // Dropdowns
+    for (const $e of document.querySelectorAll('.settings_group select')) {
+        $e.addEventListener('change', () => set_select($e.id, $e.value));
+    }
+
+    // Autodetect
+    for (const $e of document.querySelectorAll('.autodetect')) {
+        // const files = $e.dataset.inject.split(',');
+        $e.addEventListener('click', async () => {
+            // BG.exec('inject_files', {files});
+            const key = $e.dataset.key;
+            BG.exec('relay', {autodetect: key});
         });
     }
 }
