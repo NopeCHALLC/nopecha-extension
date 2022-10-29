@@ -6,7 +6,7 @@
  * - Request server to recognize using bleeding-edge models
  * - Reload FunCAPTCHA on verification
  */
-export const IS_DEVELOPMENT = true;
+export const IS_DEVELOPMENT = false;
 
 
 /**
@@ -49,6 +49,33 @@ export class Util {
 
     static capitalize(s) {
         return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    static parse_int(s, fallback) {
+        if (!s) {
+            s = fallback;
+        }
+        return parseInt(s);
+    }
+
+    static parse_bool(s, fallback) {
+        if (s === 'true') {
+            s = true;
+        }
+        else if (s === 'false') {
+            s = false;
+        }
+        else {
+            s = fallback;
+        }
+        return s;
+    }
+
+    static parse_string(s, fallback) {
+        if (!s) {
+            s = fallback;
+        }
+        return s;
     }
 }
 
@@ -185,4 +212,115 @@ export class Cache {
         Cache.cache[name] = 0;
         return Cache.cache[name];
     }
+}
+
+
+export class SettingsManager {
+    static DEFAULT = {
+        version: 6,
+
+        key: '',
+
+        enabled: true,
+
+        hcaptcha_auto_open: true,
+        hcaptcha_auto_solve: true,
+        hcaptcha_solve_delay: true,
+
+        recaptcha_auto_open: true,
+        recaptcha_auto_solve: true,
+        recaptcha_solve_delay: true,
+        recaptcha_solve_method: 'Image',
+
+        funcaptcha_auto_open: true,
+        funcaptcha_auto_solve: true,
+        funcaptcha_solve_delay: true,
+
+        ocr_auto_solve: false,
+        ocr_image_selector: '',
+        ocr_input_selector: '',
+    };
+
+    static ENCODE_FIELDS = {
+        enabled: {parse: Util.parse_bool},
+
+        hcaptcha_auto_open: {parse: Util.parse_bool},
+        hcaptcha_auto_solve: {parse: Util.parse_bool},
+        hcaptcha_solve_delay: {parse: Util.parse_bool},
+
+        recaptcha_auto_open: {parse: Util.parse_bool},
+        recaptcha_auto_solve: {parse: Util.parse_bool},
+        recaptcha_solve_delay: {parse: Util.parse_bool},
+        recaptcha_solve_method: {parse: Util.parse_string},
+
+        funcaptcha_auto_open: {parse: Util.parse_bool},
+        funcaptcha_auto_solve: {parse: Util.parse_bool},
+        funcaptcha_solve_delay: {parse: Util.parse_bool},
+
+        ocr_auto_solve: {parse: Util.parse_bool},
+        ocr_image_selector: {parse: Util.parse_string},
+        ocr_input_selector: {parse: Util.parse_string},
+    };
+
+    static IMPORT_URL = 'https://nopecha.com/setup';
+    static DELIMITER = '|';
+
+    static export(settings) {
+        if (!settings.key) {
+            return false;
+        }
+
+        const fields = [settings.key];
+        for (const k in SettingsManager.ENCODE_FIELDS) {
+            fields.push(`${k}=${encodeURIComponent(settings[k])}`);
+        }
+
+        const encoded_hash = `#${fields.join(SettingsManager.DELIMITER)}`;
+
+        return `${SettingsManager.IMPORT_URL}${encoded_hash}`;
+    }
+
+    static import(encoded_hash) {
+        const settings = {};
+
+        // Split by delimiter
+        const fields = encoded_hash.split(SettingsManager.DELIMITER);
+        if (fields.length === 0) {
+            return settings;
+        }
+
+        // Parse key
+        const key = fields.shift();
+        if (key.length <= 1) {
+            console.error('invalid key for settings', key);
+            return settings;
+        }
+        settings.key = key.substring(1);
+
+        // Parse additional fields
+        for (const field of fields) {
+            const kv = field.split('=');
+            const k = kv.shift();
+            const v_raw = kv.join('=');
+
+            if (!(k in SettingsManager.ENCODE_FIELDS)) {
+                console.error('invalid field for settings', field);
+                continue;
+            }
+
+            const v = decodeURIComponent(v_raw);
+            settings[k] = SettingsManager.ENCODE_FIELDS[k].parse(v, SettingsManager.DEFAULT[k]);
+        }
+
+        return settings;
+    }
+
+    // static update(base_settings, new_settings) {
+    //     // In-place mutation of base_settings
+    //     for (const k in new_settings) {
+    //         base_settings[k] = new_settings[k];
+    //     }
+
+    //     return base_settings;
+    // }
 }

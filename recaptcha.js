@@ -66,9 +66,7 @@
 
 
     let last_urls_hash = null;
-    function on_task_ready(i=100) {
-        // Returns urls = [null|url] * 9 if 3x3
-        // Returns urls = [null] * 16 if 4x4
+    function on_task_ready(i=200) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -83,13 +81,11 @@
                     checking = false;
                     return;
                 }
-                console.log('task', task);
 
                 const is_hard = (task_lines.length === 3) ? true : false;
 
                 const $cells = document.querySelectorAll('table tr td');
                 if ($cells.length !== 9 && $cells.length !== 16) {
-                    console.log('invalid number of cells', $cells);
                     checking = false;
                     return;
                 }
@@ -102,14 +98,12 @@
                 for (const $e of $cells) {
                     const $img = $e?.querySelector('img');
                     if (!$img) {
-                        console.log('no cell image', $e);
                         checking = false;
                         return;
                     }
 
                     const url = get_image_url($img);
                     if (!url || url === '') {
-                        console.log('no cell image url', $e);
                         checking = false;
                         return;
                     }
@@ -134,7 +128,6 @@
 
                 const urls_hash = JSON.stringify([background_url, urls]);
                 if (last_urls_hash === urls_hash) {
-                    console.log('task unchanged');
                     checking = false;
                     return;
                 }
@@ -207,11 +200,7 @@
     }
 
 
-    async function on_image_frame(settings) {
-        if (settings.debug) {
-            await BG.exec('reload_tab', {delay: 300 * 1000, overwrite: true});
-        }
-
+    async function on_image_frame() {
         // Check if parent frame marked this frame as visible on screen
         const is_visible = await BG.exec('get_cache', {name: 'recaptcha_visible', tab_specific: true});
         if (is_visible !== true) {
@@ -248,7 +237,12 @@
 
         // Wait for task to be available
         const {task, is_hard, cells, background_url, urls} = await on_task_ready();
-        // console.log(task, is_hard, cells, urls);
+
+        const settings = await BG.exec('get_settings');
+        if (!settings.enabled || !settings.recaptcha_auto_solve) {
+            return;
+        }
+
         const n = cells.length == 9 ? 3 : 4;
 
         const image_urls = [];
@@ -285,11 +279,10 @@
             return;
         }
 
-        const delta = settings.recaptcha_solve_delay - (Time.time() - solve_start);
+        const delta = settings.recaptcha_solve_delay ? (1000 - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }
-
 
         // Submit solution
         let clicks = 0;
@@ -351,7 +344,7 @@
         const settings = await BG.exec('get_settings');
 
         // Using another solve method
-        if (!settings || settings.recaptcha_solve_method !== 'image') {
+        if (!settings || !settings.enabled || settings.recaptcha_solve_method !== 'Image') {
             continue;
         }
 
@@ -361,7 +354,7 @@
             await on_widget_frame(settings);
         }
         else if (settings.recaptcha_auto_solve && is_image_frame()) {
-            await on_image_frame(settings);
+            await on_image_frame();
         }
     }
 })();

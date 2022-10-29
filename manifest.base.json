@@ -53,7 +53,7 @@
 
         {
             "matches": ["<all_urls>"],
-            "js": ["recaptcha.js", "recaptcha_voice.js"],
+            "js": ["recaptcha.js", "recaptcha_speech.js"],
             "all_frames": true,
             "run_at": "document_end"
         },
@@ -87,7 +87,7 @@
 
         {
             "matches": ["<all_urls>"],
-            "js": ["ocr.js", "autodetect.js"],
+            "js": ["ocr.js", "locate.js"],
             "all_frames": true,
             "run_at": "document_end"
         },

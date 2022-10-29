@@ -156,6 +156,7 @@ with in_dir(dir_path):
                 here_path.glob("*.js"),
                 here_path.glob("*.mjs"),
                 (here_path / "icon").iterdir(),
+                (here_path / "font").iterdir(),
             )
             if f.name != "utils.js"
         ]

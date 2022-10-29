@@ -1,4 +1,4 @@
-import {Cache, deep_copy, Time} from './utils.mjs'
+import {Cache, deep_copy, SettingsManager, Time} from './utils.mjs'
 import * as bapi from './api.js'
 
 
@@ -88,32 +88,6 @@ class Tab {
 
 
 class Settings {
-    static DEFAULT = {
-        version: 5,
-
-        active_tab: '#hcaptcha_tab',
-
-        key: '',
-
-        hcaptcha_auto_solve: true,
-        hcaptcha_solve_delay: 3000,
-        hcaptcha_auto_open: true,
-
-        recaptcha_auto_solve: true,
-        recaptcha_solve_delay: 1000,
-        recaptcha_auto_open: true,
-        recaptcha_solve_method: 'image',
-
-        funcaptcha_auto_solve: true,
-        funcaptcha_solve_delay: 1000,
-        funcaptcha_auto_open: true,
-
-        ocr_auto_solve: false,
-        ocr_image_selector: '',
-        ocr_input_selector: '',
-
-        debug: false,
-    };
     static data = {};
 
     static _save() {
@@ -133,7 +107,7 @@ class Settings {
                 }
                 else {
                     Settings.data = settings;
-                    if (Settings.data.version !== Settings.DEFAULT.version) {
+                    if (Settings.data.version !== SettingsManager.DEFAULT.version) {
                         const key = Settings.data.key;
                         await Settings.reset();
                         Settings.data.key = key;
@@ -158,7 +132,7 @@ class Settings {
     }
 
     static async reset() {
-        Settings.data = deep_copy(Settings.DEFAULT);
+        Settings.data = deep_copy(SettingsManager.DEFAULT);
 
         // Set key from manifest
         const manifest = bapi.browser.runtime.getManifest();
@@ -269,9 +243,75 @@ class Relay {
         bapi.browser.tabs.sendMessage(tab_id, data);
     }
 }
-// setInterval(() => {
-//     Relay.send({tab_id: undefined, data: {testing: 'hello world!'}});
-// }, 1000);
+
+
+class Icon {
+    static set_icon({data}) {
+        return new Promise(resolve => {
+            if (data === 'on') {
+                bapi.browser.action.setIcon({
+                    path: {
+                        '16': '/icon/16.png',
+                        '32': '/icon/32.png',
+                        '48': '/icon/48.png',
+                        '128': '/icon/128.png',
+                    },
+                }, resolve);
+            }
+            else if (data === 'off') {
+                bapi.browser.action.setIcon({
+                    path: {
+                        '16': '/icon/16g.png',
+                        '32': '/icon/32g.png',
+                        '48': '/icon/48g.png',
+                        '128': '/icon/128g.png',
+                    },
+                }, resolve);
+            }
+            else {
+                console.error('unknown icon mode', data);
+                resolve(false);
+            }
+        });
+    }
+
+    static set_badge_text({tab_id, data}) {
+        return new Promise(resolve => {
+            const options = {text: data};
+            if (tab_id) {
+                options.tabId = tab_id;
+            }
+            bapi.browser.action.setBadgeText(options, resolve);
+        });
+    }
+
+    static set_badge_color({tab_id, data}) {
+        return new Promise(resolve => {
+            const options = {color: data};
+            if (tab_id) {
+                options.tabId = tab_id;
+            }
+            bapi.browser.action.setBadgeBackgroundColor(options, resolve);
+        });
+    }
+
+    static async set_badge({tab_id, data: {global, text, color}}) {
+        if (!tab_id && !global) {
+            const tab = await Tab.active();
+            tab_id = tab.id;
+        }
+
+        if (global) {
+            tab_id = null;
+        }
+
+        const proms = [Icon.set_badge_text({tab_id, data: text})];
+        if (color) {
+            proms.push(Icon.set_badge_color({tab_id, data: color}));
+        }
+        return await Promise.all(proms);
+    }
+}
 
 
 const FN = {
@@ -305,6 +345,9 @@ const FN = {
     b64_image: Image.b64,
 
     relay: Relay.send,
+
+    set_icon: Icon.set_icon,
+    set_badge: Icon.set_badge,
 };
 
 
@@ -315,6 +358,8 @@ const FN = {
     // await Settings.reset();
     await Settings.load();
     // console.log('Settings.data', Settings.data);
+
+    await Icon.set({data: Settings.data.enabled ? 'on' : 'off'});
 
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
         // Chrome doesn't support async event listeners yet

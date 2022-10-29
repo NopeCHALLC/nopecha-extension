@@ -3,43 +3,47 @@
 
 
     class NopechaSelector {
-        constructor() {
-            this.NAMESPACE = 'nopecha_selector';
+        constructor(locate) {
+            this.NAMESPACE = '__NOPECHA__';
+            this.MARK_RADIUS = 5;
 
-            this.create_style(`
-                #${this.NAMESPACE}_wrapper {
+            this.locate = locate;
+            this.update_timer;
+
+            this.initialize_style();
+            this.initialize_elements();
+
+        }
+
+        initialize_style() {
+            const CSS = [
+                `#${this.NAMESPACE}_wrapper {
                     position: fixed;
                     top: 0;
                     bottom: 0;
                     left: 0;
                     right: 0;
                     background-color: transparent;
-                    opacity: 0.4;
                     pointer-events: none;
                     z-index: 10000000;
-                }
-                .${this.NAMESPACE} {
-                    position: absolute;
-                }
-                .${this.NAMESPACE}.margin {
-                    background-color: rgba(230, 165, 18, 1);
-                }
-                .${this.NAMESPACE}.border {
-                    background-color: rgba(255, 204, 128, 1);
-                }
-                .${this.NAMESPACE}.padding {
-                    background-color: rgba(50, 255, 50, 1);
-                }
-                .${this.NAMESPACE}.content {
-                    background-color: rgba(0, 153, 204, 1);
-                }
-                .${this.NAMESPACE}_label {
+                }`,
+                `.${this.NAMESPACE}_shadow {
+                    position: fixed;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background-color: rgba(0, 0, 0, 0.1);
+                    pointer-events: none;
+                    z-index: 1;
+                }`,
+                // Header & footer
+                `.${this.NAMESPACE}_textbox {
                     display: flex;
                     flex-direction: row;
                     flex-wrap: wrap;
 
                     position: absolute;
-                    bottom: 0;
                     left: 0;
                     right: 0;
 
@@ -47,80 +51,114 @@
                     color: #fff;
                     font: normal 12px/12px Helvetica, sans-serif;
                     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-                    border-radius: 4px;
+                    border: 1px solid #fff;
                     overflow: hidden;
-                }
-                .${this.NAMESPACE}_label > div {
+                }`,
+                // Header
+                `.${this.NAMESPACE}_textbox.${this.NAMESPACE}_header {
+                    top: 0;
+                }`,
+                `.${this.NAMESPACE}_textbox.${this.NAMESPACE}_header > div {
                     padding: 4px 8px;
-                }
-                .${this.NAMESPACE}_label > div:first-child {
+                }`,
+                `.${this.NAMESPACE}_textbox.${this.NAMESPACE}_header > div:first-child {
                     flex-grow: 1;
-                }
-
-                .${this.NAMESPACE}_mark {
+                }`,
+                // Footer
+                `.${this.NAMESPACE}_textbox.${this.NAMESPACE}_footer {
+                    bottom: 0;
+                }`,
+                `.${this.NAMESPACE}_textbox.${this.NAMESPACE}_footer > div {
+                    padding: 4px 8px;
+                }`,
+                `.${this.NAMESPACE}_textbox.${this.NAMESPACE}_footer > div:first-child {
+                    flex-grow: 1;
+                }`,
+                // Highlight
+                `.${this.NAMESPACE}_highlight {
+                    position: absolute;
+                    opacity: 0.4;
+                }`,
+                `.${this.NAMESPACE}_highlight.${this.NAMESPACE}_margin {
+                    background-color: rgb(230, 165, 18);
+                }`,
+                `.${this.NAMESPACE}_highlight.${this.NAMESPACE}_border {
+                    background-color: rgb(255, 204, 121);
+                }`,
+                `.${this.NAMESPACE}_highlight.${this.NAMESPACE}_padding {
+                    background-color: rgb(50, 255, 50);
+                }`,
+                `.${this.NAMESPACE}_highlight.${this.NAMESPACE}_content {
+                    background-color: rgb(0, 153, 201);
+                }`,
+                // Center mark
+                `.${this.NAMESPACE}_mark {
                     position: absolute;
                     top: 0;
                     left: 0;
                     right: 0;
 
-                    width: 10px;
-                    height: 10px;
+                    width: ${parseInt(this.MARK_RADIUS*2)}px;
+                    height: ${parseInt(this.MARK_RADIUS*2)}px;
                     background-color: #f44;
                     border-radius: 50%;
                     z-index: 2;
-                }
-            `);
+                }`,
+            ].join('\n');
 
-            this.create_overlay();
-            this.create_elements();
-
-            this.update_timer;
-        }
-
-        create_style(css) {
-            const $s = document.createElement('style');
-            $s.type = 'text/css';
-            if ($s.styleSheet) {
-                $s.styleSheet.cssText = css;  // IE
+            this.$style = document.createElement('style');
+            this.$style.type = 'text/css';
+            if (this.$style.styleSheet) {
+                this.$style.styleSheet.cssText = CSS;  // IE
             }
             else {
-                $s.innerHTML = css;
+                this.$style.innerHTML = CSS;
             }
-            document.getElementsByTagName('head')[0].appendChild($s);
+            document.getElementsByTagName('head')[0].appendChild(this.$style);
         }
 
-        create_overlay() {
+        initialize_elements() {
             this.$wrapper = document.createElement('div');
             this.$wrapper.id = `${this.NAMESPACE}_wrapper`;
             document.body.append(this.$wrapper);
-        }
 
-        create_elements() {
-            // this.remove_elements();
+            this.$shadow = document.createElement('div');
+            this.$shadow.classList.add(`${this.NAMESPACE}_shadow`);
+            this.$wrapper.append(this.$shadow);
 
             this.$margin_box = document.createElement('div');
-            this.$margin_box.classList.add(`${this.NAMESPACE}`);
-            this.$margin_box.classList.add('margin');
+            this.$margin_box.classList.add(`${this.NAMESPACE}_highlight`, `${this.NAMESPACE}_margin`);
             this.$wrapper.append(this.$margin_box);
 
             this.$border_box = document.createElement('div');
-            this.$border_box.classList.add(`${this.NAMESPACE}`);
-            this.$border_box.classList.add('border');
+            this.$border_box.classList.add(`${this.NAMESPACE}_highlight`, `${this.NAMESPACE}_border`);
             this.$wrapper.append(this.$border_box);
 
             this.$padding_box = document.createElement('div');
-            this.$padding_box.classList.add(`${this.NAMESPACE}`);
-            this.$padding_box.classList.add('padding');
+            this.$padding_box.classList.add(`${this.NAMESPACE}_highlight`, `${this.NAMESPACE}_padding`);
             this.$wrapper.append(this.$padding_box);
 
             this.$content_box = document.createElement('div');
-            this.$content_box.classList.add(`${this.NAMESPACE}`);
-            this.$content_box.classList.add('content');
+            this.$content_box.classList.add(`${this.NAMESPACE}_highlight`, `${this.NAMESPACE}_content`);
             this.$wrapper.append(this.$content_box);
 
-            this.$label = document.createElement('div');
-            this.$label.classList.add(`${this.NAMESPACE}_label`);
-            this.$wrapper.append(this.$label);
+            this.$header = document.createElement('div');
+            this.$header.classList.add(`${this.NAMESPACE}_textbox`, `${this.NAMESPACE}_header`);
+            const etype = this.locate === 'ocr_image_selector' ? '<b>Image</b>' : '<b>Input</b>';
+            this.$header.innerHTML = `
+                <div>
+                    <div>Click on the CAPTCHA ${etype} element to generate a CSS selector.</div>
+                    <div>Press <b>ESC</b> to cancel.</div>
+                </div>
+                <div>
+                    <b>NopeCHA</b>
+                </div>
+            `;
+            this.$wrapper.append(this.$header);
+
+            this.$footer = document.createElement('div');
+            this.$footer.classList.add(`${this.NAMESPACE}_textbox`, `${this.NAMESPACE}_footer`);
+            this.$wrapper.append(this.$footer);
 
             this.$mark = document.createElement('div');
             this.$mark.classList.add(`${this.NAMESPACE}_mark`);
@@ -197,25 +235,17 @@
             $t.style.height = `${p.height}px`;
         }
 
-        terminate() {
-            document.querySelector(`#${this.NAMESPACE}_wrapper`).remove();
+        get_center($t) {
+            const p = $t.getBoundingClientRect();
+            const center = {
+                x: p.left + p.width/2,
+                y: p.top + p.height/2,
+            };
+            return center;
         }
 
-        clear() {
-            this.$label.innerHTML = '';
-            const no_box = {
-                top: 0,
-                left: 0,
-                width: 0,
-                height: 0,
-            };
-            this.set_dim(this.$margin_box, no_box);
-            this.set_dim(this.$border_box, no_box);
-            this.set_dim(this.$padding_box, no_box);
-            this.set_dim(this.$content_box, no_box);
-
-            this.$mark.style.top = '0px';
-            this.$mark.style.left = '0px';
+        get_css() {
+            return window.CssSelectorGenerator.getCssSelector(this.$t);
         }
 
         update($t, delay=0) {
@@ -255,47 +285,42 @@
                 self.set_dim(self.$padding_box, padding_box);
                 self.set_dim(self.$content_box, content_box);
 
+                const css_selector = self.get_css(self.$t);
                 const dimensions = `[${box.width.toFixed(0)}, ${box.height.toFixed(0)}]`;
-                const node_str = self.get_css(self.$t);
-                self.$label.innerHTML = `
-                    <div>${node_str}</div>
-                    <div>${dimensions}</div>
+                self.$footer.innerHTML = `
+                    <div>${css_selector}</div>
+                    <div><b>${dimensions}</b></div>
                 `;
 
                 const center = self.get_center($t);
-                self.$mark.style.top = `${center.y-5}px`;
-                self.$mark.style.left = `${center.x-5}px`;
+                self.$mark.style.top = `${parseInt(center.y-self.MARK_RADIUS)}px`;
+                self.$mark.style.left = `${parseInt(center.x-self.MARK_RADIUS)}px`;
             }, delay);
         }
 
-        get_center($t) {
-            const p = $t.getBoundingClientRect();
-            const center = {
-                x: p.left + p.width/2,
-                y: p.top + p.height/2,
-            };
-            return center;
-        }
-
-        get_css() {
-            return window.CssSelectorGenerator.getCssSelector(this.$t);
+        terminate() {
+            clearTimeout(this.update_timer);
+            this.$style.remove();
+            this.$wrapper.remove();
         }
     }
+
 
     let nopecha_selector = null;
     let $last = null;
-    let autodetect = null;  // Settings key for selector (ocr_image_selector / ocr_input_selector)
+
 
     function on_click(event) {
+        // Save the selected element
         const $e = event.target;
         const selector = nopecha_selector.get_css($e);
-        console.log('selector', selector);
+        // console.log('selector', selector);
+        BG.exec('set_settings', {id: nopecha_selector.locate, value: selector});
         stop();
-
-        BG.exec('set_settings', {id: autodetect, value: selector});
     }
 
     function on_mousemove(event) {
+        // Update highlight overlay when new element is targeted
         const $e = event.target;
         if ($e === $last) {
             return;
@@ -305,28 +330,49 @@
     }
 
     function on_mousewheel(event) {
+        // Update highlight overlay when page is scrolled
         nopecha_selector.update();
     }
 
-    function start() {
-        nopecha_selector = new NopechaSelector();
+    function on_keydown(event) {
+        // Stop on escape
+        event = event || window.event;
+
+        let is_esc = false;
+        if ('key' in event) {
+            is_esc = (event.key === 'Escape' || event.key === 'Esc');
+        }
+        else {
+            is_esc = (event.keyCode === 27);
+        }
+
+        if (is_esc) {
+            stop();
+        }
+    }
+
+    function start(locate) {
+        nopecha_selector = new NopechaSelector(locate);
         document.body.addEventListener('click', on_click);
         document.body.addEventListener('mousemove', on_mousemove);
         document.body.addEventListener('mousewheel', on_mousewheel);
+        document.body.addEventListener('keydown', on_keydown);
     }
 
     function stop() {
         document.body.removeEventListener('click', on_click);
         document.body.removeEventListener('mousemove', on_mousemove);
         document.body.removeEventListener('mousewheel', on_mousewheel);
+        document.body.removeEventListener('keydown', on_keydown);
         nopecha_selector.terminate();
+        nopecha_selector = null;
+        $last = null;
     }
 
     chrome.runtime.onMessage.addListener((req, sender, send) => {
         console.log('message', req, sender, send);
-        if (req.autodetect) {
-            autodetect = req.autodetect;
-            start();
+        if (req.locate) {
+            start(req.locate);
         }
     });
 })();

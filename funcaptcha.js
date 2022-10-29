@@ -54,7 +54,7 @@
 
 
     let last_image_data = null;
-    function on_task_ready(settings, i=100) {
+    function on_task_ready(i=200) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -63,6 +63,11 @@
                     return;
                 }
                 checking = true;
+
+                const settings = await BG.exec('get_settings');
+                if (!settings.enabled || !settings.funcaptcha_auto_solve) {
+                    return;
+                }
 
                 if (settings.funcaptcha_auto_open && is_widget_frame()) {
                     await on_widget_frame(settings);
@@ -105,27 +110,16 @@
     }
 
 
-    async function on_image_frame(settings) {
-        const {task, cells, image_data} = await on_task_ready(settings);
+    async function on_image_frame() {
+        const {task, cells, image_data} = await on_task_ready();
 
         if (task === null || cells === null || image_data === null) {
             return;
         }
 
-        const UNSUPPORTED_TASKS = [
-            // 'Pick the image that is the correct way up',
-            // 'Pick one square that shows two identical objects',
-            // "Pick the mouse that can't reach the cheese",
-            // 'Pick the dice pair whose top sides add up to',
-            // 'Pick the image of the striped cone and the checkered cube',
-            // 'Pick the image of the striped cube and the checkered cube',
-            // cone, cube, heart, ball
-            // 'Pick the animal looking',
-        ];
-        for (const e of UNSUPPORTED_TASKS) {
-            if (task.startsWith(e)) {
-                return;
-            }
+        const settings = await BG.exec('get_settings');
+        if (!settings.enabled || !settings.funcaptcha_auto_solve) {
+            return;
         }
 
         const solve_start = Time.time();
@@ -142,7 +136,7 @@
             return;
         }
 
-        const delta = settings.hcaptcha_solve_delay - (Time.time() - solve_start);
+        const delta = settings.funcaptcha_solve_delay ? (1000 - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }
@@ -165,7 +159,7 @@
             await Time.sleep(1000);
 
             const settings = await BG.exec('get_settings');
-            if (!settings) {
+            if (!settings || !settings.enabled) {
                 continue;
             }
 
@@ -173,7 +167,7 @@
                 await on_widget_frame(settings);
             }
             else if (settings.funcaptcha_auto_solve && is_image_frame()) {
-                await on_image_frame(settings);
+                await on_image_frame();
             }
         }
     }

@@ -20,11 +20,12 @@
         'outlook': 'https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick the penguin
         'outlook auth': 'https://iframe-auth.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick one square that shows two identical objects.
     }
-    let nframes = 21;
+    let nframes = 14;
 
 
     reset();
     // open_frame_token('ea signup', 0, nframes);
+    open_all();
 
 
     function reset() {
@@ -275,9 +276,8 @@
     /**
     Manually get the iframe src from roblox.com
      */
-//     const roblox_src = `
-// https://roblox-api.arkoselabs.com/fc/gc/?token=48263546ccc8f8b12.6587031401&r=us-east-1&metabgclr=transparent&guitextcolor=%23474747&maintxtclr=%23b8b8b8&metaiconclr=%23757575&meta=3&pk=A2A14B1D-1AF3-C791-9BBC-EE33CC7A0A6F&at=40&ag=101&cdn_url=https%3A%2F%2Froblox-api.arkoselabs.com%2Fcdn%2Ffc&lurl=https%3A%2F%2Faudio-us-east-1.arkoselabs.com&surl=https%3A%2F%2Froblox-api.arkoselabs.com&smurl=https%3A%2F%2Froblox-api.arkoselabs.com%2Fcdn%2Ffc%2Fassets%2Fstyle-manager
-//     `.trim();
-//     for (let i = 0; i < n; i++) create_frame('roblox', 0, roblox_src);
+    // const TOKEN = '945635c4051b7b638.9142447501';
+    // const roblox_src = `https://roblox-api.arkoselabs.com/fc/gc/?token=${TOKEN}&r=us-east-1&metabgclr=transparent&guitextcolor=%23474747&maintxtclr=%23b8b8b8&metaiconclr=%23757575&meta=3&lang=en&pk=A2A14B1D-1AF3-C791-9BBC-EE33CC7A0A6F&at=40&ht=1&ag=101&cdn_url=https%3A%2F%2Froblox-api.arkoselabs.com%2Fcdn%2Ffc&lurl=https%3A%2F%2Faudio-us-east-1.arkoselabs.com&surl=https%3A%2F%2Froblox-api.arkoselabs.com&smurl=https%3A%2F%2Froblox-api.arkoselabs.com%2Fcdn%2Ffc%2Fassets%2Fstyle-manager`;
+    // for (let i = 0; i < nframes; i++) create_frame('roblox', 0, roblox_src);
 
 })();

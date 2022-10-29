@@ -3,19 +3,19 @@ export const VERSION = 'firefox';
 export const browser = globalThis.browser;
 
 export function register_language() {
-    // Reconnect existing scripts on upgrade
-    browser.runtime.onInstalled.addListener(async () => {
-        for (const cs of browser.runtime.getManifest().content_scripts) {
-            browser.tabs.query({url: cs.matches}, tabs => {
-                for (const tab of tabs) {
-                    browser.scripting.executeScript({
-                        target: {tabId: tab.id},
-                        files: cs.js,
-                    });
-                }
-            });
-        }
-    });
+    // // Reconnect existing scripts on upgrade
+    // browser.runtime.onInstalled.addListener(async () => {
+    //     for (const cs of browser.runtime.getManifest().content_scripts) {
+    //         browser.tabs.query({url: cs.matches}, tabs => {
+    //             for (const tab of tabs) {
+    //                 browser.scripting.executeScript({
+    //                     target: {tabId: tab.id},
+    //                     files: cs.js,
+    //                 });
+    //             }
+    //         });
+    //     }
+    // });
 
     // Force set language to English for reCAPTCHA
     browser.webRequest.onBeforeSendHeaders.addListener(e => {
