@@ -287,7 +287,7 @@ async function init_ui() {
             $power_spinning.classList.remove('hidden');
             await BG.exec('set_settings', {id: 'enabled', value: true});
             await BG.exec('set_icon', 'on');
-            await BG.exec('set_badge', {global: true, text: 'ON', color: '#00FF00'});
+            // await BG.exec('set_badge', {global: true, text: 'ON', color: '#00FF00'});
             last_anim = setTimeout(() => {
                 $power_spinning.classList.add('hidden');
                 $power_static.classList.remove('hidden');
@@ -296,7 +296,7 @@ async function init_ui() {
         else {
             await BG.exec('set_settings', {id: 'enabled', value: false});
             await BG.exec('set_icon', 'off');
-            await BG.exec('set_badge', {global: true, text: 'OFF', color: '#FF0000'});
+            // await BG.exec('set_badge', {global: true, text: 'OFF', color: '#FF0000'});
             $power_btn.classList.add('off');
         }
     });
