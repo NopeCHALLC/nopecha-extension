@@ -359,7 +359,7 @@ const FN = {
     await Settings.load();
     // console.log('Settings.data', Settings.data);
 
-    await Icon.set({data: Settings.data.enabled ? 'on' : 'off'});
+    await Icon.set_icon({data: Settings.data.enabled ? 'on' : 'off'});
 
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
         // Chrome doesn't support async event listeners yet
