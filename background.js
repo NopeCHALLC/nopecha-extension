@@ -2,8 +2,8 @@ import {Cache, deep_copy, SettingsManager, Time} from './utils.mjs'
 import * as bapi from './api.js'
 
 
-console.clear();
-console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
+// console.clear();
+// console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
 
 
 class Net {
@@ -66,22 +66,22 @@ class Tab {
     }
 
     static active() {
-        // TODO: Implement MV2
-        // https://developer.chrome.com/docs/extensions/reference/tabs/#get-the-current-tab
-
         // `tab` will either be a `tabs.Tab` instance or `undefined`
         return new Promise(async resolve => {
-            // MV3
-            const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-            return resolve(tab);
-
-            // MV2
-            // chrome.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
-            //     if (chrome.runtime.lastError) {
-            //         console.error(chrome.runtime.lastError);
-            //     }
-            //     resolve(tab);
-            // });
+            if (bapi.VERSION === 'firefox') {
+                // MV2
+                bapi.browser.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
+                    if (bapi.browser.runtime.lastError) {
+                        console.error(bapi.browser.runtime.lastError);
+                    }
+                    resolve(tab);
+                });
+            }
+            else {
+                // MV3
+                const [tab] = await bapi.browser.tabs.query({active: true, lastFocusedWindow: true});
+                return resolve(tab);
+            }
         });
     }
 }
@@ -181,7 +181,6 @@ class Injector {
         return await Injector._inject(options);
     }
 }
-// Injector.inject_files({tab_id: null, data: {files: ['autodetect.js']}});
 
 
 class Recaptcha {
@@ -248,8 +247,9 @@ class Relay {
 class Icon {
     static set_icon({data}) {
         return new Promise(resolve => {
+            const ba = bapi.VERSION === 'firefox' ? bapi.browser.browserAction : bapi.browser.action;
             if (data === 'on') {
-                bapi.browser.action.setIcon({
+                ba.setIcon({
                     path: {
                         '16': '/icon/16.png',
                         '32': '/icon/32.png',
@@ -259,7 +259,7 @@ class Icon {
                 }, resolve);
             }
             else if (data === 'off') {
-                bapi.browser.action.setIcon({
+                ba.setIcon({
                     path: {
                         '16': '/icon/16g.png',
                         '32': '/icon/32g.png',
@@ -347,7 +347,7 @@ const FN = {
     relay: Relay.send,
 
     set_icon: Icon.set_icon,
-    set_badge: Icon.set_badge,
+    // set_badge: Icon.set_badge,
 };
 
 
@@ -376,7 +376,7 @@ const FN = {
                     console.log('result', result);
                 }
                 return result;
-            } catch (e){
+            } catch (e) {
                 console.error('Failed while executting ', req, 'exception happened', e);
                 throw e;
             }
@@ -385,4 +385,5 @@ const FN = {
         // Will respond using the send callback
         return true;
     });
+
 })();

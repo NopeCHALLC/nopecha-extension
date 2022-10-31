@@ -1,7 +1,16 @@
 (async () => {
     function is_present(settings) {
         try {
-            return document.querySelector(settings.ocr_image_selector) !== null && document.querySelector(settings.ocr_input_selector) !== null;
+            const $image = document.querySelector(settings.textcaptcha_image_selector);
+            if (!$image) {
+                return false;
+            }
+            const $input = document.querySelector(settings.textcaptcha_input_selector);
+            if (!$input || $input.value) {
+                return false;
+            }
+
+            return true;
         } catch (e) {}
         return false;
     }
@@ -73,12 +82,12 @@
                 checking = true;
 
                 const settings = await BG.exec('get_settings');
-                if (!settings.ocr_auto_solve) {
+                if (!settings.textcaptcha_auto_solve) {
                     checking = false;
                     return;
                 }
 
-                const image_data = await get_image_data(settings.ocr_image_selector);
+                const image_data = await get_image_data(settings.textcaptcha_image_selector);
                 if (!image_data) {
                     checking = false;
                     return;
@@ -102,7 +111,7 @@
         const {image_data} = await on_task_ready();
 
         const settings = await BG.exec('get_settings');
-        if (!settings.enabled || !settings.ocr_auto_solve) {
+        if (!settings.enabled || !settings.textcaptcha_auto_solve) {
             return;
         }
 
@@ -118,7 +127,7 @@
 
         // Fill input
         if (data && data.length > 0) {
-            const $input = document.querySelector(settings.ocr_input_selector);
+            const $input = document.querySelector(settings.textcaptcha_input_selector);
             if ($input && !$input.value) {
                 $input.value = data[0];
             }
@@ -134,7 +143,7 @@
             continue;
         }
 
-        if (settings.ocr_auto_solve && is_present(settings)) {
+        if (settings.textcaptcha_auto_solve && is_present(settings)) {
             await on_present();
         }
     }

@@ -10,7 +10,7 @@
         "default_icon": "icon/16.png",
         "default_popup": "popup.html"
     },
-    "version": "0.2.4",
+    "version": "0.2.5",
     "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, and text-based CAPTCHA using AI.",
     "permissions": [
         "storage",
@@ -78,24 +78,26 @@
             "run_at": "document_start",
             "match_about_blank": true
         },
-        {
-            "matches": ["*://nopecha.com/demo/funcaptcha"],
-            "js": ["funcaptcha_demo.js"],
-            "all_frames": false,
-            "run_at": "document_end"
-        },
 
         {
             "matches": ["<all_urls>"],
-            "js": ["ocr.js", "locate.js"],
+            "js": ["textcaptcha.js", "locate.js"],
             "all_frames": true,
-            "run_at": "document_end"
+            "run_at": "document_end",
+            "match_about_blank": true
         },
 
         {
             "matches": ["*://challenges.cloudflare.com/cdn-cgi/challenge-platform/turnstile/*"],
             "js": ["turnstile.js"],
             "all_frames": true,
+            "run_at": "document_end"
+        },
+
+        {
+            "matches": ["*://nopecha.com/demo/funcaptcha"],
+            "js": ["funcaptcha_demo.js"],
+            "all_frames": false,
             "run_at": "document_end"
         }
     ],

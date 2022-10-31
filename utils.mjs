@@ -40,6 +40,8 @@ export function deep_copy(obj) {
 
 
 export class Util {
+    static CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
     static pad_left(s, char, n) {
         while (`${s}`.length < n) {
             s = `${char}${s}`;
@@ -76,6 +78,14 @@ export class Util {
             s = fallback;
         }
         return s;
+    }
+
+    static generate_id(n) {
+        let result = '';
+        for (let i = 0; i < n; i++) {
+            result += Util.CHARS.charAt(Math.floor(Math.random() * Util.CHARS.length));
+        }
+        return result;
     }
 }
 
@@ -217,7 +227,7 @@ export class Cache {
 
 export class SettingsManager {
     static DEFAULT = {
-        version: 6,
+        version: 7,
 
         key: '',
 
@@ -236,9 +246,9 @@ export class SettingsManager {
         funcaptcha_auto_solve: true,
         funcaptcha_solve_delay: true,
 
-        ocr_auto_solve: false,
-        ocr_image_selector: '',
-        ocr_input_selector: '',
+        textcaptcha_auto_solve: false,
+        textcaptcha_image_selector: '',
+        textcaptcha_input_selector: '',
     };
 
     static ENCODE_FIELDS = {
@@ -257,9 +267,9 @@ export class SettingsManager {
         funcaptcha_auto_solve: {parse: Util.parse_bool},
         funcaptcha_solve_delay: {parse: Util.parse_bool},
 
-        ocr_auto_solve: {parse: Util.parse_bool},
-        ocr_image_selector: {parse: Util.parse_string},
-        ocr_input_selector: {parse: Util.parse_string},
+        textcaptcha_auto_solve: {parse: Util.parse_bool},
+        textcaptcha_image_selector: {parse: Util.parse_string},
+        textcaptcha_input_selector: {parse: Util.parse_string},
     };
 
     static IMPORT_URL = 'https://nopecha.com/setup';

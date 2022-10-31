@@ -8,24 +8,29 @@
         'twitch': 'E5554D43-23CC-1982-971D-6A2262A2CA24',  // Pick the dice pair whose top sides add up to 5/6/7/8
         'demo1': '804380F4-6844-FFA1-ED4E-5877CA1F1EA4',  // Pick the image that is the correct way up
         'demo2': 'D39B0EE3-2973-4147-98EF-C92F93451E2D',  // Pick the clipart object
-        // 'demo3': '69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',  // Pick the clipart object
+        // 'octocaptcha': '69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',  // Pick the clipart object
         // 'outlook': 'B7D8911C-5CC8-A9A3-35B0-554ACEE604DA',
         // 'roblox': 'A2A14B1D-1AF3-C791-9BBC-EE33CC7A0A6F',
         // 'roblox': '9F35E182-C93C-EBCC-A31D-CF8ED317B996',
         // 'roblox': '476068BF-9607-4799-B53D-966BE98E2B81',
         'ea signup': '73BEC076-3E53-30F5-B1EB-84F494D43DBA',  // Pick one square that shows two identical objects. / Pick the mouse that can reach all the cheese in the maze / Pick the matching cards
         'ea signin': '0F5FE186-B3CA-4EDB-A39B-9B9A3397D01D',
+        'myprepaidcenter': '0F941BF0-7303-D94B-B76A-EAA2E2048124',  // Pick the image where all animals are walking in the same direction as the arrow
+        'twitter': '2CB16598-CB82-4CF7-B332-5990DB66F3AB',  // Pick the shadow with a different object silhouette
     };
     const SRCS = {
         'outlook': 'https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick the penguin
         'outlook auth': 'https://iframe-auth.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en',  // Pick one square that shows two identical objects.
-    }
-    let nframes = 14;
+    };
+    const MAX_BTNS_PER_ROW = 7;
+
+    let nframes = 10;
 
 
     reset();
+    // open_all();
     // open_frame_token('ea signup', 0, nframes);
-    open_all();
+    open_frame_token('twitter', 0, nframes);
 
 
     function reset() {
@@ -76,6 +81,17 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }`,
+            // `.iframe_wrap {
+            //     background-color: #eee;
+            //     width: 350px;
+            //     height: 300px;
+            //     padding: 0;
+            //     overflow: hidden;
+            // }`,
+            // `iframe {
+            //     width: 350px;
+            //     height: 300px;
+            // }`,
             `.iframe_wrap {
                 background-color: #eee;
                 width: 175px;
@@ -84,16 +100,16 @@
                 overflow: hidden;
             }`,
             `iframe {
-                width: 350px;
-                height: 300px;
-                border: none;
-                -ms-zoom: 0.5;
-                -moz-transform: scale(0.5);
-                -moz-transform-origin: 0 0;
-                -o-transform: scale(0.5);
-                -o-transform-origin: 0 0;
-                -webkit-transform: scale(0.5);
-                -webkit-transform-origin: 0 0;
+                width: 350px !important;
+                height: 300px !important;
+                border: none !important;
+                -ms-zoom: 0.5 !important;
+                -moz-transform: scale(0.5) !important;
+                -moz-transform-origin: 0 0 !important;
+                -o-transform: scale(0.5) !important;
+                -o-transform-origin: 0 0 !important;
+                -webkit-transform: scale(0.5) !important;
+                -webkit-transform-origin: 0 0 !important;
             }`,
         ];
         const sheet = document.body.appendChild(document.createElement('style')).sheet;
@@ -101,7 +117,6 @@
             sheet.insertRule(STYLES[i], i);
         }
 
-        const MAX_BTNS_PER_ROW = 6;
         let i = 0;
         let row = 1;
         const $rows = {};
@@ -168,20 +183,22 @@
         open_frame_token('blizzard', 0, 1);
         open_frame_token('twitch', 0, 1);
         open_frame_token('paypal', 0, 1);
-        open_frame_src('outlook auth', 1, 1);
-        open_frame_token('github', 1, 1);
-        open_frame_token('demo2', 1, 1);
-        // open_frame_token('demo3', 1, 1);
-        open_frame_src('outlook', 1, 1);
-        open_frame_token('ea signup', 1, 1);
-        open_frame_token('ea signin', 1, 1);
+        open_frame_src('outlook auth', 0, 1);
+        open_frame_token('github', 0, 1);
+        open_frame_token('demo2', 0, 1);
+        // open_frame_token('octocaptcha', 0, 1);
+        open_frame_src('outlook', 0, 1);
+        open_frame_token('ea signup', 0, 1);
+        open_frame_token('ea signin', 0, 1);
+        open_frame_token('myprepaidcenter', 0, 1);
+        open_frame_token('twitter', 0, 1);
     }
 
     function open_frame_token(k, row, n) {
         if (!n) {
             n = nframes;
         }
-        console.log('open_frame_token', k, n);
+        // console.log('open_frame_token', k, n);
         for (let i = 0; i < n; i++) {
             load_captcha(k, row);
         }
@@ -191,7 +208,7 @@
         if (!n) {
             n = nframes;
         }
-        console.log('open_frame_src', k, n);
+        // console.log('open_frame_src', k, n);
         for (let i = 0; i < n; i++) {
             create_frame(k, row, SRCS[k]);
         }

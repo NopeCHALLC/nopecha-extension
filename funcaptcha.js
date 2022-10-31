@@ -16,21 +16,18 @@
         try {
             const $verify = document.querySelector('button[aria-describedby="descriptionVerify"]');
             if ($verify) {
-                // console.log('verify');
                 window.parent.postMessage({nopecha: true, action: 'clear'}, '*');
                 $verify.click();
             }
 
             const $fail_incorrect = document.querySelector('#wrong_children_button');
             if ($fail_incorrect) {
-                // console.log('fail_incorrect');
                 window.parent.postMessage({nopecha: true, action: 'clear'}, '*');
                 $fail_incorrect.click();
             }
 
             const $fail_timeout = document.querySelector('#wrongTimeout_children_button');
             if ($fail_timeout) {
-                // console.log('fail_timeout');
                 window.parent.postMessage({nopecha: true, action: 'clear'}, '*');
                 $fail_timeout.click();
             }
@@ -48,7 +45,6 @@
 
     function get_image_data() {
         const $image = document.querySelector('img#game_challengeItem_image');
-        // return $image?.src?.replace('data:image/jpeg;base64,', '');
         return $image?.src?.split(';base64,')[1];
     }
 
@@ -58,7 +54,6 @@
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
-                // console.log('checking', checking);
                 if (checking) {
                     return;
                 }
@@ -75,28 +70,23 @@
 
                 let task = get_task();
                 if (!task) {
-                    // console.log('no task');
                     checking = false;
                     return;
                 }
-                // console.log('task', task);
 
                 const cells = document.querySelectorAll('#game_children_challenge ul > li > a');
                 if (cells.length !== 6) {
-                    // console.log('invalid number of cells', cells);
                     checking = false;
                     return;
                 }
 
                 const image_data = get_image_data();
                 if (!image_data) {
-                    // console.log('no image data');
                     checking = false;
                     return;
                 }
 
                 if (last_image_data === image_data) {
-                    // console.log('image_data unchanged');
                     checking = false;
                     return;
                 }
@@ -155,7 +145,6 @@
 
     if (window.location.pathname.startsWith('/fc/assets/tile-game-ui/')) {
         while (true) {
-            // console.log('window.location.href', window.location.href);
             await Time.sleep(1000);
 
             const settings = await BG.exec('get_settings');
