@@ -136,9 +136,9 @@
             if (data[i] === false) {
                 continue;
             }
-
             cells[i].click();
         }
+
         last_image_data = null;
     }
 
@@ -153,7 +153,7 @@
             }
 
             if (settings.funcaptcha_auto_open && is_widget_frame()) {
-                await on_widget_frame(settings);
+                await on_widget_frame();
             }
             else if (settings.funcaptcha_auto_solve && is_image_frame()) {
                 await on_image_frame();

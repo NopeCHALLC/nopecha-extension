@@ -10,7 +10,6 @@
 
 
     function open_image_frame() {
-        console.log('open image frame');
         document.querySelector('#recaptcha-anchor')?.click();
     }
 
@@ -58,7 +57,6 @@
             task = task.join('\n');
         }
         if (!task) {
-            console.log('error getting task', task);
             return null;
         }
         return task;
@@ -115,9 +113,6 @@
                         urls[i] = url;
                         has_secondary_images = true;
                     }
-                    else {
-                        console.log('unknown image size', $img.naturalWidth);
-                    }
 
                     cells.push($e);
                     i++;
@@ -160,13 +155,20 @@
 
 
     function got_solve_error() {
+        // <div aria-live="polite">
+        //     <div class="rc-imageselect-error-select-more" style="" tabindex="0">Please select all matching images.</div>
+        //     <div class="rc-imageselect-error-dynamic-more" style="display:none">Please also check the new images.</div>
+        //     <div class="rc-imageselect-error-select-something" style="display:none">Please select around the object, or reload if there are none.</div>
+        // </div>
+
         const errors = [
             '.rc-imageselect-error-select-more',  // select all matching images
             '.rc-imageselect-error-dynamic-more',  // also check the new images
             '.rc-imageselect-error-select-something',  // select around the object or reload
         ];
         for (const e of errors) {
-            if (document.querySelector(e)?.style['display'] === '') {
+            const $e = document.querySelector(e);
+            if ($e?.style['display'] === '' || $e?.tabIndex === 0) {
                 return true;
             }
         }
@@ -305,7 +307,6 @@
             }
         }
 
-        // if ((n === 3 && result.length === 0 && images_loaded()) || n === 4) {
         if ((n === 3 && is_hard && clicks === 0 && await on_images_ready()) || (n === 3 && !is_hard) || n === 4) {
             await Time.sleep(200);
             submit();
@@ -342,9 +343,12 @@
         await Time.sleep(1000);
 
         const settings = await BG.exec('get_settings');
+        if (!settings || !settings.enabled) {
+            continue;
+        }
 
         // Using another solve method
-        if (!settings || !settings.enabled || settings.recaptcha_solve_method !== 'Image') {
+        if (settings.recaptcha_solve_method !== 'Image') {
             continue;
         }
 

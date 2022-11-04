@@ -35,7 +35,6 @@
     async function get_task() {
         let task = document.querySelector('h2.prompt-text')?.innerText?.replace(/\s+/g, ' ')?.trim();
         if (!task) {
-            console.log('error getting task', task);
             return null;
         }
 
@@ -154,7 +153,7 @@
         try {
             document.querySelector('.button-submit').click();
         } catch (e) {
-            console.log('error submitting', e);
+            console.error('error submitting', e);
         }
     }
 

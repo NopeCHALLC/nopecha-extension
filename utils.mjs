@@ -227,7 +227,7 @@ export class Cache {
 
 export class SettingsManager {
     static DEFAULT = {
-        version: 7,
+        version: 9,
 
         key: '',
 
@@ -246,9 +246,15 @@ export class SettingsManager {
         funcaptcha_auto_solve: true,
         funcaptcha_solve_delay: true,
 
-        textcaptcha_auto_solve: false,
+        awscaptcha_auto_open: true,
+        awscaptcha_auto_solve: true,
+        awscaptcha_solve_delay: true,
+
+        textcaptcha_auto_solve: true,
         textcaptcha_image_selector: '',
         textcaptcha_input_selector: '',
+
+        turnstile_auto_solve: true,
     };
 
     static ENCODE_FIELDS = {
@@ -267,9 +273,15 @@ export class SettingsManager {
         funcaptcha_auto_solve: {parse: Util.parse_bool},
         funcaptcha_solve_delay: {parse: Util.parse_bool},
 
+        awscaptcha_auto_open: {parse: Util.parse_bool},
+        awscaptcha_auto_solve: {parse: Util.parse_bool},
+        awscaptcha_solve_delay: {parse: Util.parse_bool},
+
         textcaptcha_auto_solve: {parse: Util.parse_bool},
         textcaptcha_image_selector: {parse: Util.parse_string},
         textcaptcha_input_selector: {parse: Util.parse_string},
+
+        turnstile_auto_solve: {parse: Util.parse_bool},
     };
 
     static IMPORT_URL = 'https://nopecha.com/setup';
@@ -330,7 +342,6 @@ export class SettingsManager {
     //     for (const k in new_settings) {
     //         base_settings[k] = new_settings[k];
     //     }
-
     //     return base_settings;
     // }
 }
