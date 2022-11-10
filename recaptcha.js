@@ -109,7 +109,7 @@
                     if ($img.classList[0] === "rc-image-tile-44") {
                         background_url = url;
                     }
-                    else if ($img.classList[0] === "rc-image-tile-33") {
+                    else if (["rc-image-tile-11", "rc-image-tile-33"].includes($img.classList[0])) {
                         urls[i] = url;
                         has_secondary_images = true;
                     }
