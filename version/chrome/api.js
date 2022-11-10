@@ -3,17 +3,17 @@ export const VERSION = 'chrome';
 export const browser = globalThis.chrome;
 
 export function register_language() {
-    // Reconnect existing scripts on upgrade
-    browser.runtime.onInstalled.addListener(async () => {
-        for (const cs of browser.runtime.getManifest().content_scripts) {
-            for (const tab of await browser.tabs.query({url: cs.matches})) {
-                browser.scripting.executeScript({
-                    target: {tabId: tab.id},
-                    files: cs.js,
-                });
-            }
-        }
-    });
+    // // Reconnect existing scripts on upgrade
+    // browser.runtime.onInstalled.addListener(async () => {
+    //     for (const cs of browser.runtime.getManifest().content_scripts) {
+    //         for (const tab of await browser.tabs.query({url: cs.matches})) {
+    //             browser.scripting.executeScript({
+    //                 target: {tabId: tab.id},
+    //                 files: cs.js,
+    //             });
+    //         }
+    //     }
+    // });
 
     browser.declarativeNetRequest.updateDynamicRules({
         addRules: [

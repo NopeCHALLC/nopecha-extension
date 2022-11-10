@@ -10,6 +10,7 @@
     },
     "browser_specific_settings": {
         "gecko": {
+            "id": "@nopecha.com",
             "strict_min_version": "101.0"
         }
     }

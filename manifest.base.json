@@ -10,8 +10,8 @@
         "default_icon": "icon/16.png",
         "default_popup": "popup.html"
     },
-    "version": "0.2.4",
-    "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, and text-based CAPTCHA using AI.",
+    "version": "0.3.0",
+    "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, AWS WAF, and text CAPTCHA using AI.",
     "permissions": [
         "storage",
         "scripting"
@@ -20,83 +20,101 @@
         {
             "matches": ["<all_urls>"],
             "js": ["utils.js", "content.js"],
-            "all_frames": true,
             "run_at": "document_start",
+            "all_frames": true,
             "match_about_blank": true
         },
 
         {
             "matches": ["*://nopecha.com/setup"],
             "js": ["setup.js"],
+            "run_at": "document_end",
             "all_frames": true,
-            "run_at": "document_end"
+            "match_about_blank": false
         },
 
         {
             "matches": ["*://*.hcaptcha.com/captcha/*"],
             "js": ["hcaptcha.js"],
+            "run_at": "document_end",
             "all_frames": true,
-            "run_at": "document_end"
+            "match_about_blank": false
         },
         {
             "matches": ["*://*.hcaptcha.com/captcha/*"],
             "js": ["hcaptcha_fast.js"],
+            "run_at": "document_start",
             "all_frames": true,
-            "run_at": "document_start"
+            "match_about_blank": false
         },
         {
             "matches": ["<all_urls>"],
             "js": ["hcaptcha_language.js"],
+            "run_at": "document_end",
             "all_frames": true,
-            "run_at": "document_end"
+            "match_about_blank": false
         },
 
         {
             "matches": ["<all_urls>"],
-            "js": ["recaptcha.js", "recaptcha_voice.js"],
+            "js": ["recaptcha.js", "recaptcha_speech.js"],
+            "run_at": "document_end",
             "all_frames": true,
-            "run_at": "document_end"
+            "match_about_blank": false
         },
         {
             "matches": ["*://*.google.com/recaptcha/*", "*://*.recaptcha.net/recaptcha/*", "*://recaptcha.net/recaptcha/*"],
             "js": ["recaptcha_fast.js"],
+            "run_at": "document_start",
             "all_frames": true,
-            "run_at": "document_start"
+            "match_about_blank": false
         },
 
         {
             "matches": ["*://*.arkoselabs.com/fc/*", "*://*.funcaptcha.com/fc/*"],
             "js": ["funcaptcha.js", "funcaptcha_scrape.js"],
-            "all_frames": true,
             "run_at": "document_end",
+            "all_frames": true,
             "match_about_blank": true
         },
         {
             "matches": ["*://*.arkoselabs.com/fc/*", "*://*.funcaptcha.com/fc/*"],
             "js": ["funcaptcha_fast.js"],
-            "all_frames": true,
             "run_at": "document_start",
+            "all_frames": true,
             "match_about_blank": true
-        },
-        {
-            "matches": ["*://nopecha.com/demo/funcaptcha"],
-            "js": ["funcaptcha_demo.js"],
-            "all_frames": false,
-            "run_at": "document_end"
         },
 
         {
             "matches": ["<all_urls>"],
-            "js": ["ocr.js", "autodetect.js"],
+            "js": ["awscaptcha.js"],
+            "run_at": "document_end",
             "all_frames": true,
-            "run_at": "document_end"
+            "match_about_blank": false
+        },
+
+        {
+            "matches": ["<all_urls>"],
+            "js": ["textcaptcha.js", "locate.js"],
+            "run_at": "document_end",
+            "all_frames": true,
+            "match_about_blank": true
         },
 
         {
             "matches": ["*://challenges.cloudflare.com/cdn-cgi/challenge-platform/turnstile/*"],
             "js": ["turnstile.js"],
+            "run_at": "document_end",
             "all_frames": true,
-            "run_at": "document_end"
+            "match_about_blank": false
+        },
+
+        {
+            "matches": ["*://nopecha.com/demo/funcaptcha"],
+            "js": ["funcaptcha_demo.js"],
+            "run_at": "document_end",
+            "all_frames": false,
+            "match_about_blank": false
         }
     ],
     "icons": {

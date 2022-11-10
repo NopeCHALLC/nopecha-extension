@@ -156,6 +156,7 @@ with in_dir(dir_path):
                 here_path.glob("*.js"),
                 here_path.glob("*.mjs"),
                 (here_path / "icon").iterdir(),
+                (here_path / "font").iterdir(),
             )
             if f.name != "utils.js"
         ]
@@ -228,6 +229,10 @@ with in_dir(dir_path):
                     extension_manifest["permissions"]
                 )
                 extension_manifest.update(specific_manifest)
+
+                # Remove Firefox gecko ID for production
+                with contextlib.suppress(KeyError):
+                    del extension_manifest['browser_specific_settings']['gecko']['id']
 
                 manifest_content = json.dumps(extension_manifest, indent=4)
                 (export_directory / "manifest.json").write_text(manifest_content)

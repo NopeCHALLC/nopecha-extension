@@ -1,30 +1,19 @@
 (async () => {
     function is_present(settings) {
         try {
-            return document.querySelector(settings.ocr_image_selector) !== null && document.querySelector(settings.ocr_input_selector) !== null;
+            const $image = document.querySelector(settings.textcaptcha_image_selector);
+            if (!$image) {
+                return false;
+            }
+            const $input = document.querySelector(settings.textcaptcha_input_selector);
+            if (!$input || $input.value) {
+                return false;
+            }
+
+            return true;
         } catch (e) {}
         return false;
     }
-
-
-    // function get_image_url($e) {
-    //     // Div with css background (e.g. hcaptcha)
-    //     const matches = $e?.style['background']?.trim()?.match(/(?!^)".*?"/g);
-    //     if (matches?.length > 0) {
-    //         return matches[0].replaceAll('"', '');
-    //     }
-
-    //     // Img with src or data-src
-    //     let url = $e.src || $e.dataset.src;
-    //     if (url) {
-    //         if (url.startsWith('/')) {
-    //             url = `${window.location.origin}${url}`;
-    //         }
-    //         return url;
-    //     }
-
-    //     return null;
-    // }
 
 
     async function get_image_data(selector) {
@@ -65,21 +54,25 @@
             }
 
             const $canvas = document.createElement('canvas');
-            $canvas.width = $img.width;
-            $canvas.height = $img.height;
+            $canvas.width = $img.naturalWidth;
+            $canvas.height = $img.naturalHeight;
             const ctx = $canvas.getContext('2d');
             ctx.drawImage($img, 0, 0);
 
             return $canvas;
         }
 
-        const $canvas = await get_canvas(selector);
-        return $canvas.toDataURL('image/jpeg').split(';base64,')[1];
+        try {
+            const $canvas = await get_canvas(selector);
+            return $canvas.toDataURL('image/jpeg').split(';base64,')[1];
+        } catch (e) {
+            return null;
+        }
     }
 
 
     let last_image_data = null;
-    function on_task_ready(settings, i=100) {
+    function on_task_ready(i=100) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -88,31 +81,19 @@
                 }
                 checking = true;
 
-                // const $image = document.querySelector(settings.ocr_image_selector);
-                // const image_url = get_image_url($image);
-                // if (!image_url || image_url === '') {
-                //     console.log('no image url', $image);
-                //     checking = false;
-                //     return;
-                // }
+                const settings = await BG.exec('get_settings');
+                if (!settings.textcaptcha_auto_solve) {
+                    checking = false;
+                    return;
+                }
 
-                // const url_hash = JSON.stringify(image_url);
-                // if (last_image_data === url_hash) {
-                //     console.log('task unchanged');
-                //     checking = false;
-                //     return;
-                // }
-                // last_image_data = url_hash;
-
-                const image_data = await get_image_data(settings.ocr_image_selector);
+                const image_data = await get_image_data(settings.textcaptcha_image_selector);
                 if (!image_data) {
-                    // console.log('no image data');
                     checking = false;
                     return;
                 }
 
                 if (last_image_data === image_data) {
-                    // console.log('image_data unchanged');
                     checking = false;
                     return;
                 }
@@ -126,8 +107,13 @@
     }
 
 
-    async function on_present(settings) {
-        const {image_data} = await on_task_ready(settings);
+    async function on_present() {
+        const {image_data} = await on_task_ready();
+
+        const settings = await BG.exec('get_settings');
+        if (!settings.enabled || !settings.textcaptcha_auto_solve) {
+            return;
+        }
 
         // Detect images
         const {job_id, data} = await NopeCHA.post({
@@ -141,7 +127,7 @@
 
         // Fill input
         if (data && data.length > 0) {
-            const $input = document.querySelector(settings.ocr_input_selector);
+            const $input = document.querySelector(settings.textcaptcha_input_selector);
             if ($input && !$input.value) {
                 $input.value = data[0];
             }
@@ -149,22 +135,16 @@
     }
 
 
-    // Example site
-    // https://www.projecthoneypot.org/contact_us.php
-    // settings.ocr_image_selector = 'img.captchapict';
-    // settings.ocr_input_selector = 'input.captcha';
-
-
     while (true) {
         await Time.sleep(1000);
 
         const settings = await BG.exec('get_settings');
-        if (!settings) {
+        if (!settings || !settings.enabled) {
             continue;
         }
 
-        if (settings.ocr_auto_solve && is_present(settings)) {
-            await on_present(settings);
+        if (settings.textcaptcha_auto_solve && is_present(settings)) {
+            await on_present();
         }
     }
 })();

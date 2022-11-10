@@ -1,9 +1,9 @@
-import {Cache, deep_copy, Time} from './utils.mjs'
+import {Cache, deep_copy, SettingsManager, Time} from './utils.mjs'
 import * as bapi from './api.js'
 
 
-console.clear();
-console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
+// console.clear();
+// console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
 
 
 class Net {
@@ -66,54 +66,28 @@ class Tab {
     }
 
     static active() {
-        // TODO: Implement MV2
-        // https://developer.chrome.com/docs/extensions/reference/tabs/#get-the-current-tab
-
         // `tab` will either be a `tabs.Tab` instance or `undefined`
         return new Promise(async resolve => {
-            // MV3
-            const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-            return resolve(tab);
-
-            // MV2
-            // chrome.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
-            //     if (chrome.runtime.lastError) {
-            //         console.error(chrome.runtime.lastError);
-            //     }
-            //     resolve(tab);
-            // });
+            if (bapi.VERSION === 'firefox') {
+                // MV2
+                bapi.browser.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
+                    if (bapi.browser.runtime.lastError) {
+                        console.error(bapi.browser.runtime.lastError);
+                    }
+                    resolve(tab);
+                });
+            }
+            else {
+                // MV3
+                const [tab] = await bapi.browser.tabs.query({active: true, lastFocusedWindow: true});
+                return resolve(tab);
+            }
         });
     }
 }
 
 
 class Settings {
-    static DEFAULT = {
-        version: 5,
-
-        active_tab: '#hcaptcha_tab',
-
-        key: '',
-
-        hcaptcha_auto_solve: true,
-        hcaptcha_solve_delay: 3000,
-        hcaptcha_auto_open: true,
-
-        recaptcha_auto_solve: true,
-        recaptcha_solve_delay: 1000,
-        recaptcha_auto_open: true,
-        recaptcha_solve_method: 'image',
-
-        funcaptcha_auto_solve: true,
-        funcaptcha_solve_delay: 1000,
-        funcaptcha_auto_open: true,
-
-        ocr_auto_solve: false,
-        ocr_image_selector: '',
-        ocr_input_selector: '',
-
-        debug: false,
-    };
     static data = {};
 
     static _save() {
@@ -133,7 +107,7 @@ class Settings {
                 }
                 else {
                     Settings.data = settings;
-                    if (Settings.data.version !== Settings.DEFAULT.version) {
+                    if (Settings.data.version !== SettingsManager.DEFAULT.version) {
                         const key = Settings.data.key;
                         await Settings.reset();
                         Settings.data.key = key;
@@ -158,7 +132,7 @@ class Settings {
     }
 
     static async reset() {
-        Settings.data = deep_copy(Settings.DEFAULT);
+        Settings.data = deep_copy(SettingsManager.DEFAULT);
 
         // Set key from manifest
         const manifest = bapi.browser.runtime.getManifest();
@@ -207,7 +181,6 @@ class Injector {
         return await Injector._inject(options);
     }
 }
-// Injector.inject_files({tab_id: null, data: {files: ['autodetect.js']}});
 
 
 class Recaptcha {
@@ -269,9 +242,76 @@ class Relay {
         bapi.browser.tabs.sendMessage(tab_id, data);
     }
 }
-// setInterval(() => {
-//     Relay.send({tab_id: undefined, data: {testing: 'hello world!'}});
-// }, 1000);
+
+
+class Icon {
+    static set_icon({data}) {
+        return new Promise(resolve => {
+            const ba = bapi.VERSION === 'firefox' ? bapi.browser.browserAction : bapi.browser.action;
+            if (data === 'on') {
+                ba.setIcon({
+                    path: {
+                        '16': '/icon/16.png',
+                        '32': '/icon/32.png',
+                        '48': '/icon/48.png',
+                        '128': '/icon/128.png',
+                    },
+                }, resolve);
+            }
+            else if (data === 'off') {
+                ba.setIcon({
+                    path: {
+                        '16': '/icon/16g.png',
+                        '32': '/icon/32g.png',
+                        '48': '/icon/48g.png',
+                        '128': '/icon/128g.png',
+                    },
+                }, resolve);
+            }
+            else {
+                console.error('unknown icon mode', data);
+                resolve(false);
+            }
+        });
+    }
+
+    static set_badge_text({tab_id, data}) {
+        return new Promise(resolve => {
+            const options = {text: data};
+            if (tab_id) {
+                options.tabId = tab_id;
+            }
+            bapi.browser.action.setBadgeText(options, resolve);
+        });
+    }
+
+    static set_badge_color({tab_id, data}) {
+        return new Promise(resolve => {
+            const options = {color: data};
+            if (tab_id) {
+                options.tabId = tab_id;
+            }
+            bapi.browser.action.setBadgeBackgroundColor(options, resolve);
+        });
+    }
+
+    static async set_badge({tab_id, data: {global, text, color}}) {
+        if (!tab_id && !global) {
+            const tab = await Tab.active();
+            tab_id = tab.id;
+        }
+
+        if (global) {
+            tab_id = null;
+        }
+
+        const proms = [Icon.set_badge_text({tab_id, data: text})];
+        if (color) {
+            proms.push(Icon.set_badge_color({tab_id, data: color}));
+        }
+        return await Promise.all(proms);
+    }
+}
 
 
 const FN = {
@@ -305,6 +345,9 @@ const FN = {
     b64_image: Image.b64,
 
     relay: Relay.send,
+
+    set_icon: Icon.set_icon,
+    // set_badge: Icon.set_badge,
 };
 
 
@@ -315,6 +358,8 @@ const FN = {
     // await Settings.reset();
     await Settings.load();
     // console.log('Settings.data', Settings.data);
+
+    await Icon.set_icon({data: Settings.data.enabled ? 'on' : 'off'});
 
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
         // Chrome doesn't support async event listeners yet
@@ -331,7 +376,7 @@ const FN = {
                     console.log('result', result);
                 }
                 return result;
-            } catch (e){
+            } catch (e) {
                 console.error('Failed while executting ', req, 'exception happened', e);
                 throw e;
             }
@@ -340,4 +385,5 @@ const FN = {
         // Will respond using the send callback
         return true;
     });
+
 })();

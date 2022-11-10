@@ -35,7 +35,6 @@
     async function get_task() {
         let task = document.querySelector('h2.prompt-text')?.innerText?.replace(/\s+/g, ' ')?.trim();
         if (!task) {
-            console.log('error getting task', task);
             return null;
         }
 
@@ -82,7 +81,7 @@
 
 
     let last_urls_hash = null;
-    function on_task_ready(i=100) {
+    function on_task_ready(i=200) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -96,19 +95,16 @@
                     checking = false;
                     return;
                 }
-                console.log('task', task);
 
                 const $task_image = document.querySelector('.challenge-example > .image > .image');
                 const task_url = get_image_url($task_image);
                 if (!task_url || task_url === '') {
-                    console.log('no task image url', $task_image);
                     checking = false;
                     return;
                 }
 
                 const $cells = document.querySelectorAll('.task-image');
                 if ($cells.length !== 9) {
-                    console.log('invalid number of cells', $cells);
                     checking = false;
                     return;
                 }
@@ -118,14 +114,12 @@
                 for (const $e of $cells) {
                     const $img = $e.querySelector('div.image');
                     if (!$img) {
-                        console.log('no cell image', $e);
                         checking = false;
                         return;
                     }
 
                     const url = get_image_url($img);
                     if (!url || url === '') {
-                        console.log('no cell image url', $e);
                         checking = false;
                         return;
                     }
@@ -136,7 +130,6 @@
 
                 const urls_hash = JSON.stringify(urls);
                 if (last_urls_hash === urls_hash) {
-                    console.log('task unchanged');
                     checking = false;
                     return;
                 }
@@ -160,7 +153,7 @@
         try {
             document.querySelector('.button-submit').click();
         } catch (e) {
-            console.log('error submitting', e);
+            console.error('error submitting', e);
         }
     }
 
@@ -184,13 +177,18 @@
     }
 
 
-    async function on_image_frame(settings) {
+    async function on_image_frame() {
         if (document.querySelector('.display-language .text').textContent !== 'EN') {
             document.querySelector('.language-selector .option:nth-child(23)').click();
             await Time.sleep(500);
         }
 
         const {task, task_url, cells, urls} = await on_task_ready();
+
+        const settings = await BG.exec('get_settings');
+        if (!settings.enabled || !settings.hcaptcha_auto_solve) {
+            return;
+        }
 
         const solve_start = Time.time();
 
@@ -205,7 +203,7 @@
             return;
         }
 
-        const delta = settings.hcaptcha_solve_delay - (Time.time() - solve_start);
+        const delta = settings.hcaptcha_solve_delay ? (3000 - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }
@@ -234,7 +232,7 @@
         await Time.sleep(1000);
 
         const settings = await BG.exec('get_settings');
-        if (!settings) {
+        if (!settings || !settings.enabled) {
             continue;
         }
 
@@ -242,7 +240,7 @@
             await on_widget_frame(settings);
         }
         else if (settings.hcaptcha_auto_solve && is_image_frame()) {
-            await on_image_frame(settings);
+            await on_image_frame();
         }
     }
 })();

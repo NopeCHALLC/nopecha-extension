@@ -73,7 +73,7 @@ class NopeCHA {
         UPDATE_REQUIRED: 17,
     };
 
-    static async post({captcha_type, task, image_urls, image_data, grid, key}) {
+    static async post({captcha_type, task, image_urls, image_data, grid, audio_data, key}) {
         const start_time = Date.now();
 
         const info = await BG.exec('info_tab');
@@ -99,6 +99,9 @@ class NopeCHA {
             }
             if (grid) {
                 data.grid = grid;
+            }
+            if (audio_data) {
+                data.audio_data = audio_data;
             }
 
             const text = await Net.fetch(NopeCHA.INFERENCE_URL, {method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'}});

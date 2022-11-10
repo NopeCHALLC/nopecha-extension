@@ -10,7 +10,6 @@
 
 
     function open_image_frame() {
-        console.log('open image frame');
         document.querySelector('#recaptcha-anchor')?.click();
     }
 
@@ -58,7 +57,6 @@
             task = task.join('\n');
         }
         if (!task) {
-            console.log('error getting task', task);
             return null;
         }
         return task;
@@ -66,9 +64,7 @@
 
 
     let last_urls_hash = null;
-    function on_task_ready(i=100) {
-        // Returns urls = [null|url] * 9 if 3x3
-        // Returns urls = [null] * 16 if 4x4
+    function on_task_ready(i=200) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -83,13 +79,11 @@
                     checking = false;
                     return;
                 }
-                console.log('task', task);
 
                 const is_hard = (task_lines.length === 3) ? true : false;
 
                 const $cells = document.querySelectorAll('table tr td');
                 if ($cells.length !== 9 && $cells.length !== 16) {
-                    console.log('invalid number of cells', $cells);
                     checking = false;
                     return;
                 }
@@ -102,14 +96,12 @@
                 for (const $e of $cells) {
                     const $img = $e?.querySelector('img');
                     if (!$img) {
-                        console.log('no cell image', $e);
                         checking = false;
                         return;
                     }
 
                     const url = get_image_url($img);
                     if (!url || url === '') {
-                        console.log('no cell image url', $e);
                         checking = false;
                         return;
                     }
@@ -121,9 +113,6 @@
                         urls[i] = url;
                         has_secondary_images = true;
                     }
-                    else {
-                        console.log('unknown image size', $img.naturalWidth);
-                    }
 
                     cells.push($e);
                     i++;
@@ -134,7 +123,6 @@
 
                 const urls_hash = JSON.stringify([background_url, urls]);
                 if (last_urls_hash === urls_hash) {
-                    console.log('task unchanged');
                     checking = false;
                     return;
                 }
@@ -167,13 +155,20 @@
 
 
     function got_solve_error() {
+        // <div aria-live="polite">
+        //     <div class="rc-imageselect-error-select-more" style="" tabindex="0">Please select all matching images.</div>
+        //     <div class="rc-imageselect-error-dynamic-more" style="display:none">Please also check the new images.</div>
+        //     <div class="rc-imageselect-error-select-something" style="display:none">Please select around the object, or reload if there are none.</div>
+        // </div>
+
         const errors = [
             '.rc-imageselect-error-select-more',  // select all matching images
             '.rc-imageselect-error-dynamic-more',  // also check the new images
             '.rc-imageselect-error-select-something',  // select around the object or reload
         ];
         for (const e of errors) {
-            if (document.querySelector(e)?.style['display'] === '') {
+            const $e = document.querySelector(e);
+            if ($e?.style['display'] === '' || $e?.tabIndex === 0) {
                 return true;
             }
         }
@@ -207,11 +202,7 @@
     }
 
 
-    async function on_image_frame(settings) {
-        if (settings.debug) {
-            await BG.exec('reload_tab', {delay: 300 * 1000, overwrite: true});
-        }
-
+    async function on_image_frame() {
         // Check if parent frame marked this frame as visible on screen
         const is_visible = await BG.exec('get_cache', {name: 'recaptcha_visible', tab_specific: true});
         if (is_visible !== true) {
@@ -248,7 +239,12 @@
 
         // Wait for task to be available
         const {task, is_hard, cells, background_url, urls} = await on_task_ready();
-        // console.log(task, is_hard, cells, urls);
+
+        const settings = await BG.exec('get_settings');
+        if (!settings.enabled || !settings.recaptcha_auto_solve) {
+            return;
+        }
+
         const n = cells.length == 9 ? 3 : 4;
 
         const image_urls = [];
@@ -285,11 +281,10 @@
             return;
         }
 
-        const delta = settings.recaptcha_solve_delay - (Time.time() - solve_start);
+        const delta = settings.recaptcha_solve_delay ? (1000 - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }
-
 
         // Submit solution
         let clicks = 0;
@@ -312,7 +307,6 @@
             }
         }
 
-        // if ((n === 3 && result.length === 0 && images_loaded()) || n === 4) {
         if ((n === 3 && is_hard && clicks === 0 && await on_images_ready()) || (n === 3 && !is_hard) || n === 4) {
             await Time.sleep(200);
             submit();
@@ -349,9 +343,12 @@
         await Time.sleep(1000);
 
         const settings = await BG.exec('get_settings');
+        if (!settings || !settings.enabled) {
+            continue;
+        }
 
         // Using another solve method
-        if (!settings || settings.recaptcha_solve_method !== 'image') {
+        if (settings.recaptcha_solve_method !== 'Image') {
             continue;
         }
 
@@ -361,7 +358,7 @@
             await on_widget_frame(settings);
         }
         else if (settings.recaptcha_auto_solve && is_image_frame()) {
-            await on_image_frame(settings);
+            await on_image_frame();
         }
     }
 })();

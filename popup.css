@@ -9,6 +9,7 @@ html * {
 }
 
 html, body {
+    background: #1a2432;
     margin: 0;
     padding: 0;
     width: 336px;
@@ -68,16 +69,34 @@ html, body {
     text-align: center;
     background-color: #1a73e8;
     color: #fff;
-    height: 20px;
-    line-height: 20px;
+    height: 24px;
+    line-height: 24px;
     border-radius: 4px;
     border: 1px solid #1a73e8;
-    padding: 8px;
-    font-size: 1.2em;
+    padding: 0;
+    font-size: 12px;
     transition: 200ms all;
 }
 #manage:hover {
     color: #1a73e8;
+    background-color: transparent;
+}
+
+#export {
+    width: 100%;
+    text-align: center;
+    background-color: #dc3545;
+    color: #fff;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 4px;
+    border: 1px solid #dc3545;
+    padding: 0;
+    font-size: 12px;
+    transition: 200ms all;
+}
+#export:hover {
+    color: #dc3545;
     background-color: transparent;
 }
 

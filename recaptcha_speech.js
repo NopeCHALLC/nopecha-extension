@@ -9,7 +9,7 @@
     }
 
 
-    function is_voice_frame() {
+    function is_speech_frame() {
         return document.querySelector('#audio-instructions') !== null || document.querySelector('.rc-doscaptcha-header') !== null;
     }
 
@@ -60,13 +60,13 @@
         if (is_solved()) {
             return;
         }
-        // Switch to voice
+        // Switch to speech
         await Time.sleep(500);
         document.querySelector('#recaptcha-audio-button')?.click();
     }
 
 
-    async function on_voice_frame(settings) {
+    async function on_speech_frame(settings) {
         // Check if parent frame marked this frame as visible on screen
         const is_visible = await BG.exec('get_cache', {name: 'recaptcha_visible', tab_specific: true});
         if (is_visible !== true) {
@@ -104,7 +104,7 @@
         });
         document.querySelector('#audio-response').value = res;
 
-        const delta = settings.recaptcha_solve_delay - (Time.time() - solve_start);
+        const delta = settings.recaptcha_solve_delay ? (1000 - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }
@@ -139,7 +139,7 @@
         const settings = await BG.exec('get_settings');
 
         // Using another solve method
-        if (!settings || settings.recaptcha_solve_method !== 'voice') {
+        if (!settings || !settings.enabled || settings.recaptcha_solve_method !== 'Speech') {
             continue;
         }
 
@@ -151,8 +151,8 @@
         else if (settings.recaptcha_auto_solve && is_image_frame()) {
             await on_image_frame(settings);
         }
-        else if (settings.recaptcha_auto_solve && is_voice_frame()) {
-            await on_voice_frame(settings);
+        else if (settings.recaptcha_auto_solve && is_speech_frame()) {
+            await on_speech_frame(settings);
         }
     }
 })();
