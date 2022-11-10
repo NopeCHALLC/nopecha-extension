@@ -106,10 +106,10 @@
                         return;
                     }
 
-                    if ($img.naturalWidth >= 300) {
+                    if ($img.classList[0] === "rc-image-tile-44") {
                         background_url = url;
                     }
-                    else if ($img.naturalWidth == 100) {
+                    else if ($img.classList[0] === "rc-image-tile-33") {
                         urls[i] = url;
                         has_secondary_images = true;
                     }
