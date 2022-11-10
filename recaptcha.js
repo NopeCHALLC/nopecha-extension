@@ -117,6 +117,12 @@
                     cells.push($e);
                     i++;
                 }
+                const firstUrl = urls[0];
+                if(firstUrl && urls.every(x => x === firstUrl)) {
+                    has_secondary_images = false;
+                    background_url = firstUrl;
+                    while(urls.length > 0) urls.shift();
+                }
                 if (has_secondary_images) {
                     background_url = null;
                 }
