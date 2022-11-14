@@ -88,11 +88,12 @@
                     return;
                 }
 
-                const cells = [];
+                let cells = [];
                 const urls = Array($cells.length).fill(null);
                 let background_url = null;
                 let has_secondary_images = false;
                 let i = 0;
+
                 for (const $e of $cells) {
                     const $img = $e?.querySelector('img');
                     if (!$img) {
@@ -109,22 +110,20 @@
                     if ($img.classList[0] === "rc-image-tile-44") {
                         background_url = url;
                     }
-                    else if (["rc-image-tile-11", "rc-image-tile-33"].includes($img.classList[0])) {
+                    else if ($img.classList[0] === "rc-image-tile-33") {
+                        background_url = url;
+                    }
+                    else if ($img.classList[0] === "rc-image-tile-11") {
                         urls[i] = url;
                         has_secondary_images = true;
+                        i++;
                     }
 
                     cells.push($e);
-                    i++;
-                }
-                const firstUrl = urls[0];
-                if(firstUrl && urls.every(x => x === firstUrl)) {
-                    has_secondary_images = false;
-                    background_url = firstUrl;
-                    while(urls.length > 0) urls.shift();
                 }
                 if (has_secondary_images) {
                     background_url = null;
+                    cells = cells.filter($e => $e.querySelector('img.rc-image-tile-11'));
                 }
 
                 const urls_hash = JSON.stringify([background_url, urls]);
