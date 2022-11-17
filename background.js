@@ -2,8 +2,8 @@ import {Cache, deep_copy, SettingsManager, Time} from './utils.mjs'
 import * as bapi from './api.js'
 
 
-// console.clear();
-// console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
+console.clear();
+console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
 
 
 class Net {
@@ -11,7 +11,7 @@ class Net {
         try {
             const res = await fetch(url, options);
             return await res.text();
-        } catch(e) {
+        } catch (e) {
             console.error("failed to fetch", url, e)
             return null;
         }
@@ -171,9 +171,10 @@ class Injector {
         return await Injector._inject(options);
     }
 
-    static async inject_files({tab_id, data: {files}}) {
+    static async inject_files({tab_id, frame_id, data: {files}}) {
         const options = {
-            target: {tabId: tab_id, allFrames: true},
+            // target: {tabId: tab_id, allFrames: true},
+            target: {tabId: tab_id, frameIds: [frame_id]},
             world: 'MAIN',
             injectImmediately: true,
             files: files,
@@ -367,11 +368,12 @@ const FN = {
             const verbose = !['get_settings', 'set_settings', 'set_cache'].includes(req.method);
 
             if (verbose) {
-                console.log('message', sender?.tab?.id, req);
+                console.log('message', sender, req);
             }
 
             try{
-                const result = await FN[req.method]({tab_id: sender?.tab?.id, data: req.data});
+                // const result = await FN[req.method]({tab_id: sender?.tab?.id, data: req.data});
+                const result = await FN[req.method]({tab_id: sender?.tab?.id, frame_id: sender?.frameId, data: req.data});
                 if (verbose){
                     console.log('result', result);
                 }

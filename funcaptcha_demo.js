@@ -17,12 +17,17 @@
         'ea signin': ['0F5FE186-B3CA-4EDB-A39B-9B9A3397D01D', false],
         'myprepaidcenter': ['0F941BF0-7303-D94B-B76A-EAA2E2048124', false],  // Pick the image where all animals are walking in the same direction as the arrow
         'twitter': ['2CB16598-CB82-4CF7-B332-5990DB66F3AB', true],  // Pick the shadow with a different object silhouette
+        'discoveryplus': ['FE296399-FDEA-2EA2-8CD5-50F6E3157ECA', false],
+        'minecraft': ['D39B0EE3-2973-4147-98EF-C92F93451E2D', false],
+        // 'rblxwild': ['476068BF-9607-4799-B53D-966BE98E2B81', false],
+        'imvu': ['0C2B415C-D772-47D4-A183-34934F786C7E', false],
+        'adobe': ['430FF2C3-1AB1-40B7-8BE7-44FC683FE02C', false],
     };
     const SRCS = {
         'outlook': ['https://iframe.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en', false],  // Pick the penguin
         'outlook auth': ['https://iframe-auth.arkoselabs.com/B7D8911C-5CC8-A9A3-35B0-554ACEE604DA/index.html?mkt=en', false],  // Pick one square that shows two identical objects.
     };
-    const MAX_BTNS_PER_ROW = 7;
+    const MAX_BTNS_PER_ROW = 9;
 
     let nframes = 18;
 
@@ -30,7 +35,8 @@
     reset();
     // open_all();
     // open_frame_token('ea signup', 0, nframes);
-    open_frame_token('twitter', 0, nframes);
+    // open_frame_token('twitter', 0, nframes);
+    open_frame_token('imvu', 0, nframes);
 
 
     function reset() {
@@ -201,8 +207,13 @@
         open_frame_src('outlook', 0, 1);
         open_frame_token('ea signup', 0, 1);
         open_frame_token('ea signin', 0, 1);
-        open_frame_token('myprepaidcenter', 0, 1);
+        // open_frame_token('myprepaidcenter', 0, 1);
         open_frame_token('twitter', 0, 1);
+        open_frame_token('discoveryplus', 0, 1);
+        open_frame_token('minecraft', 0, 1);
+        // open_frame_token('rblxwild', 0, 1);
+        open_frame_token('imvu', 0, 1);
+        open_frame_token('adobe', 0, 1);
     }
 
     function open_frame_token(k, row, n) {

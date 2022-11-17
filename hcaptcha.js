@@ -81,7 +81,7 @@
 
 
     let last_urls_hash = null;
-    function on_task_ready(i=200) {
+    function on_task_ready(i=500) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -193,7 +193,7 @@
         const solve_start = Time.time();
 
         // Detect images
-        const {job_id, data} = await NopeCHA.post({
+        const {job_id, data, metadata} = await NopeCHA.post({
             captcha_type: IS_DEVELOPMENT ? 'hcaptcha_dev' : 'hcaptcha',
             task: task,
             image_urls: urls,
@@ -201,6 +201,10 @@
         });
         if (!data) {
             return;
+        }
+
+        if (hook) {
+            hook.postMessage({event: 'nopecha_content', metadata});
         }
 
         const delta = settings.hcaptcha_solve_delay ? (3000 - (Time.time() - solve_start)) : 0;
@@ -226,6 +230,8 @@
 
 
     let was_solved = false;
+    let hooking = false;
+    let hook = null;
 
 
     while (true) {
@@ -234,6 +240,18 @@
         const settings = await BG.exec('get_settings');
         if (!settings || !settings.enabled) {
             continue;
+        }
+
+        if (!hooking) {
+            if (window.location.hash.includes('frame=challenge')) {
+                hooking = true;
+                window.addEventListener('message', event => {
+                    if (event.data.event === 'nopecha_hook') {
+                        hook = event.source;
+                    }
+                });
+                await BG.exec('inject_files', {files: ['hcaptcha_hook.js']});
+            }
         }
 
         if (settings.hcaptcha_auto_open && is_widget_frame()) {

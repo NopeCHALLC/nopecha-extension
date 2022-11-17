@@ -17,19 +17,23 @@
 
 
     async function get_image_data(selector) {
-        function get_image_from_style($e) {
-            return new Promise(resolve => {
-                let bg = $e.style.backgroundImage;
-                if (bg) {
-                    const matches = bg.trim().match(/(?!^)".*?"/g);
-                    if (!matches || matches.length === 0) {
-                        bg = null;
-                    }
-                    bg = matches[0].replaceAll('"', '');
+        function get_style_image_url($e) {
+            let bg = $e.style.backgroundImage;
+            if (bg) {
+                const matches = bg.trim().match(/(?!^)".*?"/g);
+                if (!matches || matches.length === 0) {
+                    bg = null;
                 }
+                bg = matches[0].replaceAll('"', '');
+            }
+            return bg;
+        }
+
+        function get_style_image_elem($e) {
+            return new Promise(resolve => {
                 const $img = new Image();
                 $img.onload = () => resolve($img);
-                $img.src = bg;
+                $img.src = get_style_image_url($e);
             });
         }
 
@@ -38,15 +42,18 @@
 
             // Canvas
             if ($e instanceof HTMLCanvasElement) {
+                // console.log('found canvas element', $e);
                 return $e;
             }
 
             let $img;
             if ($e instanceof HTMLImageElement) {
+                // console.log('found image element', $e);
                 $img = $e;
             }
             else {
-                $img = await get_image_from_style($e);
+                // console.log('found background image', $e);
+                $img = await get_style_image_elem($e);
             }
 
             if (!$img) {
@@ -66,13 +73,14 @@
             const $canvas = await get_canvas(selector);
             return $canvas.toDataURL('image/jpeg').split(';base64,')[1];
         } catch (e) {
+            console.error('failed to encode image data', e);
             return null;
         }
     }
 
 
     let last_image_data = null;
-    function on_task_ready(i=100) {
+    function on_task_ready(i=500) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
@@ -109,6 +117,7 @@
 
     async function on_present() {
         const {image_data} = await on_task_ready();
+        console.log('image_data', image_data);
 
         const settings = await BG.exec('get_settings');
         if (!settings.enabled || !settings.textcaptcha_auto_solve) {
@@ -144,6 +153,7 @@
         }
 
         if (settings.textcaptcha_auto_solve && is_present(settings)) {
+            console.log('run textcaptcha');
             await on_present();
         }
     }

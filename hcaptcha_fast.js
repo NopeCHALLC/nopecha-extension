@@ -45,4 +45,9 @@
             toggle_img(e?.target?.parentNode, is_selecting);
         }
     });
+
+    window.addEventListener('load', () => {
+        const sheet = document.body.appendChild(document.createElement('style')).sheet;
+        sheet.insertRule('[aria-pressed="true"] > .border-focus {background-color: #0f0 !important; opacity: 0.3 !important}', 0);
+    });
 })();

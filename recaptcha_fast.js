@@ -60,7 +60,7 @@
 
     const SPEED = 2;
 
-    window.addEventListener('load', function (event) {
+    window.addEventListener('load', () => {
         const sheet = document.body.appendChild(document.createElement('style')).sheet;
         sheet.insertRule(`.rc-imageselect-table-33, .rc-imageselect-table-42, .rc-imageselect-table-44 {transition-duration: ${1/SPEED}s !important}`, 0);
         sheet.insertRule(`.rc-imageselect-tile {transition-duration: ${4/SPEED}s !important}`, 1);

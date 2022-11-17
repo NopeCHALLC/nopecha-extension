@@ -154,17 +154,17 @@ class NopeCHA {
                 if ('error' in r) {
                     // TODO: handle errors
                     if (r.error !== NopeCHA.ERRORS.INCOMPLETE_JOB) {
-                        return {job_id, data: null};
+                        return {job_id, data: null, metadata: null};
                     }
                     continue;
                 }
-                return {job_id, data: r.data};
+                return {job_id, data: r.data, metadata: r.metadata};
             } catch (e) {
                 console.log('failed to parse server response for solution', e);
                 break;
             }
         }
 
-        return {job_id, data: null};
+        return {job_id, data: null, metadata: null};
     }
 }

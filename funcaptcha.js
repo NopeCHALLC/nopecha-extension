@@ -50,7 +50,7 @@
 
 
     let last_image_data = null;
-    function on_task_ready(i=200) {
+    function on_task_ready(i=500) {
         return new Promise(resolve => {
             let checking = false;
             const check_interval = setInterval(async () => {
