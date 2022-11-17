@@ -207,7 +207,9 @@
             hook.postMessage({event: 'nopecha_content', metadata});
         }
 
-        const delta = settings.hcaptcha_solve_delay ? (3000 - (Time.time() - solve_start)) : 0;
+        let delay = parseInt(settings.hcaptcha_solve_delay_time);
+        delay = delay ? delay : 3000;
+        const delta = settings.hcaptcha_solve_delay ? (delay - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }

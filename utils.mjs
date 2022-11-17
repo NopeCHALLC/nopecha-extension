@@ -227,7 +227,7 @@ export class Cache {
 
 export class SettingsManager {
     static DEFAULT = {
-        version: 9,
+        version: 11,
 
         key: '',
 
@@ -236,19 +236,23 @@ export class SettingsManager {
         hcaptcha_auto_open: true,
         hcaptcha_auto_solve: true,
         hcaptcha_solve_delay: true,
+        hcaptcha_solve_delay_time: 3000,
 
         recaptcha_auto_open: true,
         recaptcha_auto_solve: true,
         recaptcha_solve_delay: true,
+        recaptcha_solve_delay_time: 1000,
         recaptcha_solve_method: 'Image',
 
         funcaptcha_auto_open: true,
         funcaptcha_auto_solve: true,
         funcaptcha_solve_delay: true,
+        funcaptcha_solve_delay_time: 1000,
 
         awscaptcha_auto_open: true,
         awscaptcha_auto_solve: true,
         awscaptcha_solve_delay: true,
+        awscaptcha_solve_delay_time: 1000,
 
         textcaptcha_auto_solve: true,
         textcaptcha_image_selector: '',
@@ -263,19 +267,23 @@ export class SettingsManager {
         hcaptcha_auto_open: {parse: Util.parse_bool},
         hcaptcha_auto_solve: {parse: Util.parse_bool},
         hcaptcha_solve_delay: {parse: Util.parse_bool},
+        hcaptcha_solve_delay_time: {parse: Util.parse_int},
 
         recaptcha_auto_open: {parse: Util.parse_bool},
         recaptcha_auto_solve: {parse: Util.parse_bool},
         recaptcha_solve_delay: {parse: Util.parse_bool},
+        recaptcha_solve_delay_time: {parse: Util.parse_int},
         recaptcha_solve_method: {parse: Util.parse_string},
 
         funcaptcha_auto_open: {parse: Util.parse_bool},
         funcaptcha_auto_solve: {parse: Util.parse_bool},
         funcaptcha_solve_delay: {parse: Util.parse_bool},
+        funcaptcha_solve_delay_time: {parse: Util.parse_int},
 
         awscaptcha_auto_open: {parse: Util.parse_bool},
         awscaptcha_auto_solve: {parse: Util.parse_bool},
         awscaptcha_solve_delay: {parse: Util.parse_bool},
+        awscaptcha_solve_delay_time: {parse: Util.parse_int},
 
         textcaptcha_auto_solve: {parse: Util.parse_bool},
         textcaptcha_image_selector: {parse: Util.parse_string},

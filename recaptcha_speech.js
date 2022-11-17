@@ -104,7 +104,9 @@
         });
         document.querySelector('#audio-response').value = res;
 
-        const delta = settings.recaptcha_solve_delay ? (1000 - (Time.time() - solve_start)) : 0;
+        let delay = parseInt(settings.recaptcha_solve_delay_time);
+        delay = delay ? delay : 1000;
+        const delta = settings.recaptcha_solve_delay ? (delay - (Time.time() - solve_start)) : 0;
         if (delta > 0) {
             await Time.sleep(delta);
         }
