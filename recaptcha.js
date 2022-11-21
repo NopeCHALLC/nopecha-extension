@@ -14,6 +14,16 @@
     }
 
 
+    function is_invalid_config() {
+        return document.querySelector('.rc-anchor-error-message') !== null;
+    }
+
+
+    function is_rate_limited() {
+        return document.querySelector('.rc-doscaptcha-header') !== null;
+    }
+
+
     function is_solved() {
         const is_widget_frame_solved = document.querySelector('.recaptcha-checkbox')?.getAttribute('aria-checked') === 'true';
         // Note: verify button is disabled after clicking and during transition to the next image task
@@ -209,6 +219,11 @@
             return;
         }
 
+        if (is_rate_limited()) {
+            console.log('rate limited');
+            return;
+        }
+
         // Wait if verify button is disabled
         if (is_solved()) {
             return;
@@ -345,12 +360,12 @@
         await Time.sleep(1000);
 
         const settings = await BG.exec('get_settings');
-        if (!settings || !settings.enabled) {
+        if (!settings || !settings.enabled || settings.recaptcha_solve_method !== 'Image') {
             continue;
         }
 
-        // Using another solve method
-        if (settings.recaptcha_solve_method !== 'Image') {
+        const hostname = await Location.hostname();
+        if (settings.disabled_hosts.includes(hostname)) {
             continue;
         }
 
@@ -362,5 +377,16 @@
         else if (settings.recaptcha_auto_solve && is_image_frame()) {
             await on_image_frame();
         }
+
+        // if (is_invalid_config()) {
+        //     console.log('invalid config');
+        //     window.postMessage({event: 'NOPECHA', status: 'invalid_config'}, '*');
+        //     // return;
+        // }
+        // if (is_rate_limited()) {
+        //     console.log('rate limited');
+        //     window.postMessage({event: 'NOPECHA', status: 'rate_limited'}, '*');
+        //     // return;
+        // }
     }
 })();

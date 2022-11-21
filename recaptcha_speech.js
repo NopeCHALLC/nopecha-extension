@@ -145,6 +145,11 @@
             continue;
         }
 
+        const hostname = await Location.hostname();
+        if (settings.disabled_hosts.includes(hostname)) {
+            continue;
+        }
+
         check_image_frame_visibility();
 
         if (settings.recaptcha_auto_open && is_widget_frame()) {

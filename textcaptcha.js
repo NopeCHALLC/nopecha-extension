@@ -117,21 +117,31 @@
 
     async function on_present() {
         const {image_data} = await on_task_ready();
-        console.log('image_data', image_data);
+        // console.log('image_data', image_data);
 
         const settings = await BG.exec('get_settings');
         if (!settings.enabled || !settings.textcaptcha_auto_solve) {
             return;
         }
 
+        const solve_start = Time.time();
+
         // Detect images
         const {job_id, data} = await NopeCHA.post({
-            captcha_type: IS_DEVELOPMENT ? 'ocr_dev' : 'ocr',
+            captcha_type: IS_DEVELOPMENT ? 'textcaptcha_dev' : 'textcaptcha',
             image_data: [image_data],
             key: settings.key,
         });
         if (!data) {
             return;
+        }
+        console.log('data', data);
+
+        let delay = parseInt(settings.textcaptcha_solve_delay_time);
+        delay = delay ? delay : 100;
+        const delta = settings.textcaptcha_solve_delay ? (delay - (Time.time() - solve_start)) : 0;
+        if (delta > 0) {
+            await Time.sleep(delta);
         }
 
         // Fill input
@@ -152,8 +162,12 @@
             continue;
         }
 
+        const hostname = await Location.hostname();
+        if (settings.disabled_hosts.includes(hostname)) {
+            continue;
+        }
+
         if (settings.textcaptcha_auto_solve && is_present(settings)) {
-            console.log('run textcaptcha');
             await on_present();
         }
     }

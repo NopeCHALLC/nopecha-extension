@@ -19,6 +19,27 @@ class Net {
 }
 
 
+class Script {
+    static inject_file(file) {
+        return new Promise(resolve => {
+            const $script = document.createElement('script');
+            $script.src = chrome.runtime.getURL(file);
+            $script.onload = resolve;
+            (document.head || document.documentElement).appendChild($script);
+        });
+    }
+}
+
+
+class Location {
+    static async hostname() {
+        const tab = await BG.exec('info_tab');
+        const tab_url = tab.url ? tab.url : 'Unknown Host';
+        return tab.url?.replace(/^(.*:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/, '$2');
+    }
+}
+
+
 class Image {
     static encode(url) {
         return new Promise(resolve => {
@@ -147,7 +168,7 @@ class NopeCHA {
                 break;
             }
 
-            await Time.sleep(500);
+            await Time.sleep(1000);
             const text = await Net.fetch(`${NopeCHA.INFERENCE_URL}?id=${job_id}&key=${key}`);
             try {
                 const r = JSON.parse(text);
@@ -161,7 +182,7 @@ class NopeCHA {
                 return {job_id, data: r.data, metadata: r.metadata};
             } catch (e) {
                 console.log('failed to parse server response for solution', e);
-                break;
+                // break;
             }
         }
 

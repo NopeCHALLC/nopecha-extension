@@ -244,15 +244,27 @@
             continue;
         }
 
-        if (!hooking) {
+        const hostname = await Location.hostname();
+        if (settings.disabled_hosts.includes(hostname)) {
+            continue;
+        }
+
+        if (!hooking && hook === null) {
+            window.addEventListener('message', e => {
+                if (e.data.event === 'nopecha_hook') {
+                    hook = event.source;
+                }
+            });
+
             if (window.location.hash.includes('frame=challenge')) {
                 hooking = true;
-                window.addEventListener('message', event => {
-                    if (event.data.event === 'nopecha_hook') {
-                        hook = event.source;
-                    }
-                });
-                await BG.exec('inject_files', {files: ['hcaptcha_hook.js']});
+                const browser_version = await BG.exec('browser_version');
+                if (browser_version === 'firefox') {
+                    await Script.inject_file('hcaptcha_hook.js');
+                }
+                else {
+                    await BG.exec('inject_files', {files: ['hcaptcha_hook.js']});
+                }
             }
         }
 
@@ -263,4 +275,76 @@
             await on_image_frame();
         }
     }
+
+    // function show_progress() {
+    //     const sheet = document.body.appendChild(document.createElement('style')).sheet;
+    //     sheet.insertRule(`#nopecha_progress {
+    //         background: #222;
+    //         position: absolute;
+    //         top: 0;
+    //         right: 0;
+    //         min-width: 70px;
+    //         min-height: 70px;
+    //         z-index: 9999;
+    //     }`, 0);
+    //     sheet.insertRule(`.progressbar {
+    //         position: relative;
+    //         width: 70px;
+    //         height: 70px;
+    //         transform: rotate(-90deg);
+    //     }`, 1);
+    //     sheet.insertRule(`.progressbar > svg {
+    //         position: absolute;
+    //         width: 70px;
+    //         height: 70px;
+    //         top: 0;
+    //         bottom: 0;
+    //         left: 0;
+    //         right: 0;
+    //     }`, 2);
+    //     sheet.insertRule(`.progressbar > svg > circle {
+    //         position: relative;
+    //         width: 70px;
+    //         height: 70px;
+    //         fill: none;
+    //         stroke: #fff;
+    //         stroke-width: 2;
+    //         stroke-dasharray: 440;
+    //         stroke-dashoffset: 440;
+    //         stroke-linecap: round;
+    //         transform: translate(5px, 5px);
+    //         -webkit-animation: anim_circle 3s linear forwards;
+    //         animation: anim_circle 3s linear forwards;
+    //         filter: drop-shadow(0 0 5px #ff33ff);
+    //         z-index: 999;
+    //     }`, 3);
+    //     sheet.insertRule(`.progressbar__text {
+    //         color: #ff33ff;
+    //         position: absolute;
+    //         top: 50%;
+    //         left: 50%;
+    //         padding: 0.25em 0.5em;
+    //         border-radius: 0.25em;
+    //         font-size: 12px;
+    //         line-height: 12px;
+    //         text-align: center;
+    //         transform: translate(-50%, -50%) rotate(90deg);
+    //     }`, 4);
+    //     sheet.insertRule(`@-webkit-keyframes anim_circle {to {stroke-dashoffset: 0;}}`, 5);
+    //     sheet.insertRule(`@keyframes anim_circle {to {stroke-dashoffset: 0;}}`, 6);
+
+    //     const $svg = document.createElement('svg');
+    //     $svg.innerHTML = '<circle cx="30" cy="30" r="25"> </circle>'
+    //     const $text = document.createElement('span');
+    //     $text.classList.add('progressbar__text');
+    //     $text.innerHTML = 'Solve';
+    //     const $p = document.createElement('div');
+    //     $p.classList.add('progressbar');
+    //     $p.append($svg);
+    //     $p.append($text);
+    //     const $nopecha_progress = document.createElement('div');
+    //     $nopecha_progress.id = 'nopecha_progress';
+    //     $nopecha_progress.append($p);
+    //     document.body.append($nopecha_progress);
+    // }
 })();

@@ -96,8 +96,8 @@ class Settings {
 
     static load() {
         return new Promise(resolve => {
-            let storage = bapi.browser.storage;
-            if (!storage) {  // Browsers such as chromium
+            const storage = bapi.browser.storage;
+            if (!storage) {
                 resolve();
                 return;
             }
@@ -109,14 +109,15 @@ class Settings {
                     Settings.data = settings;
                     if (Settings.data.version !== SettingsManager.DEFAULT.version) {
                         const key = Settings.data.key;
+                        console.log('mismatched version', key);
                         await Settings.reset();
                         Settings.data.key = key;
                     }
                 }
-                // Temporary fix
-                if (Settings.data.key?.startsWith('MIIBI')) {
-                    Settings.data.key = '';
-                }
+                // // Temporary fix
+                // if (Settings.data.key?.startsWith('MIIBI')) {
+                //     Settings.data.key = '';
+                // }
                 resolve();
             });
         });
@@ -173,12 +174,14 @@ class Injector {
 
     static async inject_files({tab_id, frame_id, data: {files}}) {
         const options = {
-            // target: {tabId: tab_id, allFrames: true},
             target: {tabId: tab_id, frameIds: [frame_id]},
             world: 'MAIN',
             injectImmediately: true,
             files: files,
         };
+        if (bapi.VERSION === 'firefox') {
+            delete options.world;
+        }
         return await Injector._inject(options);
     }
 }
@@ -194,13 +197,13 @@ class Recaptcha {
 
 class Server {
     static ENDPOINT = `https://api.nopecha.com/status?v=${bapi.browser.runtime.getManifest().version}`;
-    static in_progress = false;
+    static is_fetching_plan = false;
 
     static async get_plan({data: {key}}) {
-        if (Server.in_progress) {
+        if (Server.is_fetching_plan) {
             return false;
         }
-        Server.in_progress = true;
+        Server.is_fetching_plan = true;
         let plan = {
             plan: 'Unknown',
             credit: 0,
@@ -212,7 +215,7 @@ class Server {
             const r = await fetch(`${Server.ENDPOINT}&k=${key}`);
             plan = JSON.parse(await r.text());
         } catch {}
-        Server.in_progress = false;
+        Server.is_fetching_plan = false;
         return plan;
     }
 }
@@ -315,6 +318,13 @@ class Icon {
 }
 
 
+class Browser {
+    static async get_version() {
+        return bapi.VERSION;
+    }
+}
+
+
 const FN = {
     set_cache: Cache.set,
     get_cache: Cache.get,
@@ -349,6 +359,8 @@ const FN = {
 
     set_icon: Icon.set_icon,
     // set_badge: Icon.set_badge,
+
+    browser_version: Browser.get_version,
 };
 
 
@@ -366,16 +378,22 @@ const FN = {
         // Chrome doesn't support async event listeners yet
         (async () => {
             const verbose = !['get_settings', 'set_settings', 'set_cache'].includes(req.method);
+            // const verbose = !['set_cache'].includes(req.method);
 
             if (verbose) {
                 console.log('message', sender, req);
             }
 
+            let tab_id = sender?.tab?.id;
+            if (req.data && 'tab_id' in req.data) {
+                tab_id = req.data.tab_id;
+            }
+
             try{
                 // const result = await FN[req.method]({tab_id: sender?.tab?.id, data: req.data});
-                const result = await FN[req.method]({tab_id: sender?.tab?.id, frame_id: sender?.frameId, data: req.data});
+                const result = await FN[req.method]({tab_id, frame_id: sender?.frameId, data: req.data});
                 if (verbose){
-                    console.log('result', result);
+                    console.log('result', req.method, result);
                 }
                 return result;
             } catch (e) {

@@ -154,6 +154,11 @@
                 continue;
             }
 
+            const hostname = await Location.hostname();
+            if (settings.disabled_hosts.includes(hostname)) {
+                continue;
+            }
+
             if (settings.funcaptcha_auto_open && is_widget_frame()) {
                 await on_widget_frame();
             }

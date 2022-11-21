@@ -231,8 +231,9 @@ with in_dir(dir_path):
                 extension_manifest.update(specific_manifest)
 
                 # Remove Firefox gecko ID for production
-                with contextlib.suppress(KeyError):
-                    del extension_manifest['browser_specific_settings']['gecko']['id']
+                # if zip:
+                #     with contextlib.suppress(KeyError):
+                #         del extension_manifest['browser_specific_settings']['gecko']['id']
 
                 manifest_content = json.dumps(extension_manifest, indent=4)
                 (export_directory / "manifest.json").write_text(manifest_content)

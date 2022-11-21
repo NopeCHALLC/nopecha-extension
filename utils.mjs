@@ -80,6 +80,16 @@ export class Util {
         return s;
     }
 
+    static parse_json(s, fallback) {
+        if (!s) {
+            s = fallback;
+        }
+        else {
+            s = JSON.parse(s);
+        }
+        return s;
+    }
+
     static generate_id(n) {
         let result = '';
         for (let i = 0; i < n; i++) {
@@ -227,11 +237,11 @@ export class Cache {
 
 export class SettingsManager {
     static DEFAULT = {
-        version: 11,
-
+        version: 15,
         key: '',
 
         enabled: true,
+        disabled_hosts: [],
 
         hcaptcha_auto_open: true,
         hcaptcha_auto_solve: true,
@@ -255,14 +265,15 @@ export class SettingsManager {
         awscaptcha_solve_delay_time: 1000,
 
         textcaptcha_auto_solve: true,
+        textcaptcha_solve_delay: true,
+        textcaptcha_solve_delay_time: 100,
         textcaptcha_image_selector: '',
         textcaptcha_input_selector: '',
-
-        turnstile_auto_solve: true,
     };
 
     static ENCODE_FIELDS = {
         enabled: {parse: Util.parse_bool},
+        disabled_hosts: {parse: Util.parse_json},
 
         hcaptcha_auto_open: {parse: Util.parse_bool},
         hcaptcha_auto_solve: {parse: Util.parse_bool},
@@ -286,10 +297,10 @@ export class SettingsManager {
         awscaptcha_solve_delay_time: {parse: Util.parse_int},
 
         textcaptcha_auto_solve: {parse: Util.parse_bool},
+        textcaptcha_solve_delay: {parse: Util.parse_bool},
+        textcaptcha_solve_delay_time: {parse: Util.parse_int},
         textcaptcha_image_selector: {parse: Util.parse_string},
         textcaptcha_input_selector: {parse: Util.parse_string},
-
-        turnstile_auto_solve: {parse: Util.parse_bool},
     };
 
     static IMPORT_URL = 'https://nopecha.com/setup';

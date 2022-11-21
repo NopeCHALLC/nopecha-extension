@@ -1,5 +1,10 @@
 {
     "manifest_version": 3,
+    "action": {
+        "default_title": "NopeCHA: CAPTCHA Solver",
+        "default_icon": "icon/16.png",
+        "default_popup": "popup.html"
+    },
     "permissions": [
         "declarativeNetRequest"
     ],

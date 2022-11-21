@@ -209,7 +209,7 @@
         open_frame_token('ea signin', 0, 1);
         // open_frame_token('myprepaidcenter', 0, 1);
         open_frame_token('twitter', 0, 1);
-        open_frame_token('discoveryplus', 0, 1);
+        // open_frame_token('discoveryplus', 0, 1);
         open_frame_token('minecraft', 0, 1);
         // open_frame_token('rblxwild', 0, 1);
         open_frame_token('imvu', 0, 1);

@@ -3,13 +3,16 @@
         return document.querySelector('#captcha-container > #root #amzn-captcha-verify-button') !== null;
     }
 
+
     function is_image_frame() {
         return document.querySelector('#captcha-container > #root #amzn-btn-audio-internal > img[title="Audio problem"]') !== null;
     }
 
+
     function is_audio_frame() {
         return document.querySelector('#captcha-container > #root #amzn-btn-audio-internal > img[title="Visual problem"]') !== null;
     }
+
 
     async function on_widget_frame() {
         try {
@@ -22,6 +25,7 @@
         }
     }
 
+
     async function on_image_frame() {
         try {
             const $e = document.querySelector('#captcha-container > #root #amzn-btn-audio-internal');
@@ -33,6 +37,7 @@
         }
     }
 
+
     function get_audio_data() {
         try {
             const $audio = document.querySelector('audio');
@@ -43,6 +48,7 @@
         }
         return null;
     }
+
 
     let last_audio_data = null;
     function on_task_ready(i=500) {
@@ -83,6 +89,7 @@
             }, i);
         });
     }
+
 
     async function on_audio_frame() {
         const {input, audio_data} = await on_task_ready();
@@ -129,15 +136,19 @@
             await Time.sleep(200);
             document.querySelector('#amzn-btn-verify-internal')?.click();
         }
-
-        // last_audio_data = null;
     }
+
 
     while (true) {
         await Time.sleep(1000);
 
         const settings = await BG.exec('get_settings');
         if (!settings || !settings.enabled) {
+            continue;
+        }
+
+        const hostname = await Location.hostname();
+        if (settings.disabled_hosts.includes(hostname)) {
             continue;
         }
 

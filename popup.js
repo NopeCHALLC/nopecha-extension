@@ -71,11 +71,10 @@ async function render_plan() {
 
     // Display plan name
     let plan_name = plan.plan;
-    if (plan_name !== 'Invalid key') {
-        plan_name = `${plan_name} Plan`
+    if (!['Invalid key', 'Rate limit reached'].includes(plan_name)) {
+        plan_name = `${plan_name} Plan`;
     }
     $plan.innerHTML = plan_name;
-
 
     if (plan.error) {
         $plan.classList.add('red');
@@ -127,6 +126,7 @@ async function render_plan() {
 
 async function init_ui() {
     const settings = await BG.exec('get_settings');
+    console.log('settings', settings);
 
     /**
      * Power button
@@ -287,7 +287,7 @@ async function init_ui() {
             $text.addEventListener('input', async () => {
                 const value = $text.value;
                 await BG.exec('set_settings', {id: k, value: value});
-                console.log(k, value);
+                // console.log(k, value);
             });
         }
     }
@@ -303,6 +303,88 @@ async function init_ui() {
             window.close();
         });
     }
+
+    /**
+     * Disabled hosts
+     */
+
+    const $bl = document.querySelector('#disabled_hosts');
+    async function set_disabled_hosts(render=true) {
+        const hosts = new Set();
+        for (const e of settings.disabled_hosts) {
+            hosts.add(e.trim());
+        }
+        settings.disabled_hosts = [...hosts];
+        await BG.exec('set_settings', {id: 'disabled_hosts', value: settings.disabled_hosts});
+        if (render) {
+            await render_disabled_hosts();
+        }
+    }
+    async function set_current_host() {
+        const active_tab = await BG.exec('active_tab');
+        const active_url = active_tab.url ? active_tab.url : 'Unknown Host';
+        const current_host = active_url.replace(/^(.*:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/, '$2');
+        const $current_host = document.querySelector('#current_page_host');
+        $current_host.innerHTML = current_host;
+
+        let can_add = true;
+        if (!active_tab.url || settings.disabled_hosts.includes(settings.disabled_hosts)) {
+            can_add = false;
+        }
+
+        const $add_current_host = document.querySelector('#add_current_page_host');
+        if (can_add) {
+            $add_current_host.addEventListener('click', async () => {
+                settings.disabled_hosts.push(current_host);
+                await set_disabled_hosts();
+            });
+        }
+        else {
+            $add_current_host.disabled = true;
+        }
+    }
+    async function render_disabled_hosts() {
+        $bl.innerHTML = '';  // Clear disabled_hosts
+
+        const $bl_item_template = document.querySelector('#template > #disabled_hosts_item');
+        let change_delay_timer = null;
+
+        for (const i in settings.disabled_hosts) {
+            const e = settings.disabled_hosts[i]?.trim();
+            if (!e) {
+                continue;
+            }
+            const $e = $bl_item_template.cloneNode(true);
+            $e.id = null;
+            // Change hostname
+            const $input = $e.querySelector('input.hostname');
+            $input.value = e;
+            $input.addEventListener('input', () => {
+                clearTimeout(change_delay_timer);
+                console.log('$input.value', $input.value);
+                settings.disabled_hosts[i] = $input.value;
+                change_delay_timer = setTimeout(async () => {
+                    await set_disabled_hosts(false);
+                }, 200);
+            });
+            // Remove hostname
+            const $remove = $e.querySelector('.remove');
+            $remove.addEventListener('click', () => {
+                const index = settings.disabled_hosts.indexOf($input.value);
+                if (index !== -1) {
+                    settings.disabled_hosts.splice(index, 1);
+                    set_disabled_hosts(false);
+                }
+                $e.remove();
+            });
+            $bl.append($e);
+        }
+    }
+    set_current_host();
+    render_disabled_hosts();
+
+    // for (const ) {
+    // }
 
     /**
      * Export settings

@@ -1,16 +1,6 @@
 {
     "name": "NopeCHA: CAPTCHA Solver",
-    "action": {
-        "default_title": "NopeCHA: CAPTCHA Solver",
-        "default_icon": "icon/16.png",
-        "default_popup": "popup.html"
-    },
-    "browser_action": {
-        "default_title": "NopeCHA: CAPTCHA Solver",
-        "default_icon": "icon/16.png",
-        "default_popup": "popup.html"
-    },
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, AWS WAF, and text CAPTCHA using AI.",
     "permissions": [
         "storage",
@@ -84,6 +74,13 @@
             "all_frames": true,
             "match_about_blank": true
         },
+        {
+            "matches": ["*://nopecha.com/demo/funcaptcha"],
+            "js": ["funcaptcha_demo.js"],
+            "run_at": "document_end",
+            "all_frames": false,
+            "match_about_blank": false
+        },
 
         {
             "matches": ["<all_urls>"],
@@ -99,22 +96,6 @@
             "run_at": "document_end",
             "all_frames": true,
             "match_about_blank": true
-        },
-
-        {
-            "matches": ["*://challenges.cloudflare.com/cdn-cgi/challenge-platform/turnstile/*"],
-            "js": ["turnstile.js"],
-            "run_at": "document_end",
-            "all_frames": true,
-            "match_about_blank": false
-        },
-
-        {
-            "matches": ["*://nopecha.com/demo/funcaptcha"],
-            "js": ["funcaptcha_demo.js"],
-            "run_at": "document_end",
-            "all_frames": false,
-            "match_about_blank": false
         }
     ],
     "icons": {

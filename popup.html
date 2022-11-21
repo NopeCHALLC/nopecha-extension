@@ -19,6 +19,19 @@
             </div>
         </div>
 
+        <div id="template" class="hidden">
+            <div id="disabled_hosts_item" class="settings_item_container list_item">
+                <div class="list_item_row">
+                    <input type="text" autocomplete="off" spellcheck="false" placeholder="Enter hostname" value="" class="settings_text text_input list_input hostname">
+                    <button class="list_item_button remove">
+                        <svg width="16" height="16" fill="#ffffff">
+                            <path d="M9 2H7v12h2V2zm2.75 0l-1.5 12h1.98l1.5-12h-1.98zm-7.5 0H2.27l1.5 12h1.98L4.25 2zM0 0h16l-2 16H2L0 0z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div id="app_frame">
 
             <!-- HCAPTCHA TAB -->
@@ -111,7 +124,7 @@
                                 </div>
                                 <div class="settings_description_container bbflex">
                                     <div class="settings_description">Milliseconds to delay solving.</div>
-                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay (ms)" value="" class="settings_text text_input small" data-settings="hcaptcha_solve_delay_time">
+                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay" value="" class="settings_text text_input text_right small" data-settings="hcaptcha_solve_delay_time">
                                 </div>
                             </div>
 
@@ -211,7 +224,7 @@
                                 </div>
                                 <div class="settings_description_container bbflex">
                                     <div class="settings_description">Milliseconds to delay solving.</div>
-                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay (ms)" value="" class="settings_text text_input small" data-settings="recaptcha_solve_delay_time">
+                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay" value="" class="settings_text text_input text_right small" data-settings="recaptcha_solve_delay_time">
                                 </div>
                             </div>
 
@@ -337,7 +350,7 @@
                                 </div>
                                 <div class="settings_description_container bbflex">
                                     <div class="settings_description">Milliseconds to delay solving.</div>
-                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay (ms)" value="" class="settings_text text_input small" data-settings="funcaptcha_solve_delay_time">
+                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay" value="" class="settings_text text_input text_right small" data-settings="funcaptcha_solve_delay_time">
                                 </div>
                             </div>
 
@@ -437,7 +450,7 @@
                                 </div>
                                 <div class="settings_description_container bbflex">
                                     <div class="settings_description">Milliseconds to delay solving.</div>
-                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay (ms)" value="" class="settings_text text_input small" data-settings="awscaptcha_solve_delay_time">
+                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay" value="" class="settings_text text_input text_right small" data-settings="awscaptcha_solve_delay_time">
                                 </div>
                             </div>
 
@@ -492,6 +505,40 @@
                                 <div class="settings_item">
                                     <div class="bbflex">
                                         <div class="bbflex">
+                                            <svg width="16" height="16" fill="#ffffff"><path d="M12.214 10l.964 3H14.5a1.5 1.5 0 010 3h-13a1.5 1.5 0 010-3h1.322l.964-3h8.428zm-1.607-5l.964 3H4.429l.964-3h5.214zM9 0l.964 3H6.036L7 0h2z"></path></svg>
+                                            <div class="settings_item_label bbflex">Delay solving</div>
+                                        </div>
+                                        <div class="bbflex">
+                                            <div class="settings_toggle off" data-settings="textcaptcha_solve_delay">
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings_description_container bbflex">
+                                    <div class="settings_description">Adds a delay to avoid detection.</div>
+                                </div>
+                            </div>
+
+                            <div class="settings_item_container">
+                                <div class="settings_item">
+                                    <div class="bbflex">
+                                        <div class="bbflex">
+                                            <svg width="16" height="16" fill="#ffffff"><path d="M16 8a8 8 0 01-8 8v-1a7 7 0 007-7h1zm-4.667 3.536l.667.707C10.976 13.33 9.562 14 8 14c-1.562 0-2.976-.671-4-1.757l.667-.707C5.52 12.441 6.698 13 8 13s2.48-.56 3.333-1.464zM7 4.5a.5.5 0 01.492.41L7.5 5v3.5H10a.5.5 0 01.492.41L10.5 9a.5.5 0 01-.41.492L10 9.5H6.5V5a.5.5 0 01.5-.5zM8 0v1a7 7 0 00-7 7H0a8 8 0 018-8zm0 2c1.562 0 2.977.672 4 1.758l-.666.707C10.48 3.56 9.302 3 8 3s-2.48.56-3.334 1.465L4 3.758C5.023 2.672 6.438 2 8 2z"></path></svg>
+                                            <div class="settings_item_label bbflex">Delay Timer</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings_description_container bbflex">
+                                    <div class="settings_description">Milliseconds to delay solving.</div>
+                                    <input type="number" autocomplete="off" spellcheck="false" placeholder="Delay" value="" class="settings_text text_input text_right small" data-settings="textcaptcha_solve_delay_time">
+                                </div>
+                            </div>
+
+                            <div class="settings_item_container">
+                                <div class="settings_item">
+                                    <div class="bbflex">
+                                        <div class="bbflex">
                                             <svg width="16" height="16" fill="#ffffff"><path d="M10.833 0C12.03 0 13 .895 13 2v2h-2V2H2v12h2v2H2.167C.97 16 0 15.105 0 14V2C0 .895.97 0 2.167 0h8.666zM9.5 5a4.5 4.5 0 013.81 6.895l2.397 2.398a1 1 0 01-1.32 1.497l-.094-.083-2.398-2.396A4.5 4.5 0 119.5 5zm0 2a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"></path></svg>
                                             <div class="settings_item_label bbflex">Image Element</div>
                                         </div>
@@ -504,7 +551,7 @@
                                 </div>
                                 <div class="settings_description_container bbflex">
                                     <div class="settings_description">CSS selector for the captcha image.</div>
-                                    <input type="text" autocomplete="off" spellcheck="false" placeholder="Enter CSS selector" value="" class="settings_text text_input" data-settings="textcaptcha_image_selector">
+                                    <input type="text" autocomplete="off" spellcheck="false" placeholder="Enter CSS selector" value="" class="settings_text text_input text_right" data-settings="textcaptcha_image_selector">
                                 </div>
                             </div>
 
@@ -524,7 +571,7 @@
                                 </div>
                                 <div class="settings_description_container bbflex">
                                     <div class="settings_description">CSS selector for the captcha input.</div>
-                                    <input type="text" autocomplete="off" spellcheck="false" placeholder="Enter CSS selector" value="" class="settings_text text_input" data-settings="textcaptcha_input_selector">
+                                    <input type="text" autocomplete="off" spellcheck="false" placeholder="Enter CSS selector" value="" class="settings_text text_input text_right" data-settings="textcaptcha_input_selector">
                                 </div>
                             </div>
 
@@ -534,46 +581,43 @@
                 </div>
             </div>
 
-            <!-- TURNSTILE TAB -->
-            <div class="tab hidden" data-tab="turnstile">
+            <!-- DISABLED HOSTS TAB -->
+            <div class="tab hidden" data-tab="disabled_hosts">
                 <div class="header">
                     <button class="nav_icon back" data-tabtarget="main">
                         <svg width="12" height="12" viewBox="0 0 9 16"><path d="M2.684 8l6.038-6.308c.37-.387.37-1.015 0-1.402a.92.92 0 00-1.342 0L0 8l7.38 7.71a.92.92 0 001.342 0c.37-.387.37-1.015 0-1.402L2.684 8z"></path></svg>
                     </button>
 
                     <div class="header_label_container">
-                        <div class="header_label">Turnstile</div>
+                        <div class="header_label">Disabled Hosts</div>
                     </div>
 
-                    <a href="https://nopecha.com/demo/turnstile" target="_blank">
-                        <button class="nav_icon">
-                            <svg width="16" height="16" viewBox="0 0 46 46"><path d="M27.3146 7.26134C22.346 7.11258 17.5089 8.87182 13.7968 12.1778l1.2307-6.74308-3.1939-.58208L9.67207 16.6889 21.5124 18.8498 22.0945 15.6559l-6.0801-1.1096c2.9126-2.5542 6.6454-3.9781 10.5192-4.0126C30.4073 10.4993 34.1648 11.8565 37.1224 14.3585s4.9188 5.9826 5.5269 9.8085C43.2573 27.9929 42.4718 31.91 40.4356 35.2057c-2.0362 3.2956-5.1877 5.7509-8.8813 6.9191S23.8704 43.0965 20.3094 41.5711c-3.5609-1.5254-6.456-4.2784-8.1586-7.7582-1.7026-3.4797-2.0995-7.455-1.1185-11.2027L7.89023 21.7861c-1.02566 3.9081-.81053 8.0386.61559 11.8191C9.93194 37.3856 12.4985 40.629 15.8498 42.8861c3.3514 2.257 7.3217 3.4159 11.361 3.3162C31.2501 46.1025 35.1584 44.7491 38.3943 42.3294c3.2359-2.4196 5.6393-5.7858 6.8771-9.632C46.5092 28.8511 46.5202 24.7151 45.3029 20.8623s-3.6026-7.2317-6.8256-9.6685c-3.2229-2.43693-7.124-3.81119-11.1627-3.93246z" fill="rgb(243, 128, 32)"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M38.8474 21.9189 35.9285 19 24.4761 30.4524l-4.5531-4.553L17 28.8224l7.4833 7.4832 2.923-2.923L27.3949 33.3713 38.8474 21.9189z" fill="rgb(243, 128, 32)"></path></svg>
-                        </button>
-                    </a>
+                    <button class="nav_icon" disabled>
+                        <!-- <svg width="16" height="16"><path fill="#FFF" fill-rule="evenodd" d="M9 7h6a1 1 0 110 2H9v6a1 1 0 11-2 0V9H1a1 1 0 110-2h6V1a1 1 0 112 0v6z"></path></svg> -->
+                    </button>
                 </div>
 
                 <div style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 402px;">
                     <div style="position: relative; overflow: auto; margin-bottom: -15px; min-height: 15px; max-height: 417px;">
                         <div class="scrolling_container">
-
-                            <div class="settings_item_container">
-                                <div class="settings_item">
-                                    <div class="bbflex">
-                                        <div class="bbflex">
-                                            <svg width="16" height="16" fill="#ffffff"><path d="M13.336 9.007l.044.085 2.58 6.193a.516.516 0 01-.91.48l-.043-.083-.728-1.747h-2.753l-.727 1.747a.516.516 0 01-.586.306l-.089-.028a.516.516 0 01-.306-.586l.028-.089 2.58-6.193a.517.517 0 01.91-.085zM4.128 1.728V4.13a5.161 5.161 0 004.13 9.187v2.095A7.226 7.226 0 014.128 1.73zm8.775 8.904l-.947 2.271h1.893l-.946-2.27zM8.258 0v8.258H6.193V0h2.065zm2.065 1.728a7.233 7.233 0 014.055 5.498h-2.094a5.162 5.162 0 00-1.962-3.097V1.728z"></path></svg>
-                                            <div class="settings_item_label bbflex">Auto-Solve</div>
-                                        </div>
-                                        <div class="bbflex">
-                                            <div class="settings_toggle" data-settings="turnstile_auto_solve">
-                                                <div></div>
-                                            </div>
-                                        </div>
+                            <div class="css-rghnfo">
+                                <div class="settings_item_header">Current Page</div>
+                                <div class="settings_item_container list_item">
+                                    <div class="list_item_row">
+                                        <div id="current_page_host">jsonformatter.org</div>
+                                        <button id="add_current_page_host" class="list_item_button">
+                                            <svg width="16" height="16"><path fill="rgb(0, 106, 255)" fill-rule="evenodd" d="M9 7h6a1 1 0 110 2H9v6a1 1 0 11-2 0V9H1a1 1 0 110-2h6V1a1 1 0 112 0v6z"></path></svg>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="settings_description_container bbflex">
-                                    <div class="settings_description">Automatically solves captcha challenges.</div>
-                                </div>
                             </div>
+
+                            <div>
+                                <div class="settings_item_header">Disabled Hosts</div>
+
+                                <div id="disabled_hosts"></div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -720,10 +764,10 @@
                         </div>
                     </button>
 
-                    <button class="menu_item_container" data-tabtarget="turnstile">
+                    <button class="menu_item_container" data-tabtarget="disabled_hosts">
                         <div class="button_label_container">
-                            <svg width="16" height="16" viewBox="0 0 46 46"><path d="M27.3146 7.26134C22.346 7.11258 17.5089 8.87182 13.7968 12.1778l1.2307-6.74308-3.1939-.58208L9.67207 16.6889 21.5124 18.8498 22.0945 15.6559l-6.0801-1.1096c2.9126-2.5542 6.6454-3.9781 10.5192-4.0126C30.4073 10.4993 34.1648 11.8565 37.1224 14.3585s4.9188 5.9826 5.5269 9.8085C43.2573 27.9929 42.4718 31.91 40.4356 35.2057c-2.0362 3.2956-5.1877 5.7509-8.8813 6.9191S23.8704 43.0965 20.3094 41.5711c-3.5609-1.5254-6.456-4.2784-8.1586-7.7582-1.7026-3.4797-2.0995-7.455-1.1185-11.2027L7.89023 21.7861c-1.02566 3.9081-.81053 8.0386.61559 11.8191C9.93194 37.3856 12.4985 40.629 15.8498 42.8861c3.3514 2.257 7.3217 3.4159 11.361 3.3162C31.2501 46.1025 35.1584 44.7491 38.3943 42.3294c3.2359-2.4196 5.6393-5.7858 6.8771-9.632C46.5092 28.8511 46.5202 24.7151 45.3029 20.8623s-3.6026-7.2317-6.8256-9.6685c-3.2229-2.43693-7.124-3.81119-11.1627-3.93246z" fill="rgb(243, 128, 32)"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M38.8474 21.9189 35.9285 19 24.4761 30.4524l-4.5531-4.553L17 28.8224l7.4833 7.4832 2.923-2.923L27.3949 33.3713 38.8474 21.9189z" fill="rgb(243, 128, 32)"></path></svg>
-                            <div class="button_label">Turnstile</div>
+                            <svg width="16" height="16" class="left-icon"><path fill-rule="evenodd" d="M3 2v12h10V2H3zm0-2h10a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V2a2 2 0 012-2zm2 4h6v2H5V4zm0 4h3v2H5V8z"></path></svg>
+                            <div class="button_label">Disabled Hosts</div>
                         </div>
                         <div class="icon-container">
                             <svg viewBox="0 0 16 16" class="menu_item_arrow"><path fill-rule="evenodd" d="M10.3 8l-6-6.3a1 1 0 010-1.4 1 1 0 011.3 0L13 8l-7.4 7.7a1 1 0 01-1.3 0 1 1 0 010-1.4l6-6.3z"></path></svg>
