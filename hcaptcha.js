@@ -185,7 +185,7 @@
 
         const {task, task_url, cells, urls} = await on_task_ready();
 
-        const settings = await BG.exec('get_settings');
+        const settings = await BG.exec('Settings.get');
         if (!settings.enabled || !settings.hcaptcha_auto_solve) {
             return;
         }
@@ -204,7 +204,7 @@
         }
 
         if (hook) {
-            hook.postMessage({event: 'nopecha_content', metadata});
+            hook.postMessage({event: 'NopeCHA.metadata', metadata});
         }
 
         let delay = parseInt(settings.hcaptcha_solve_delay_time);
@@ -239,7 +239,7 @@
     while (true) {
         await Time.sleep(1000);
 
-        const settings = await BG.exec('get_settings');
+        const settings = await BG.exec('Settings.get');
         if (!settings || !settings.enabled) {
             continue;
         }
@@ -251,19 +251,19 @@
 
         if (!hooking && hook === null) {
             window.addEventListener('message', e => {
-                if (e.data.event === 'nopecha_hook') {
-                    hook = event.source;
+                if (e.data.event === 'NopeCHA.hook') {
+                    hook = e.source;
                 }
             });
 
             if (window.location.hash.includes('frame=challenge')) {
                 hooking = true;
-                const browser_version = await BG.exec('browser_version');
+                const browser_version = await BG.exec('Browser.version');
                 if (browser_version === 'firefox') {
                     await Script.inject_file('hcaptcha_hook.js');
                 }
                 else {
-                    await BG.exec('inject_files', {files: ['hcaptcha_hook.js']});
+                    await BG.exec('Inject.files', {files: ['hcaptcha_hook.js']});
                 }
             }
         }

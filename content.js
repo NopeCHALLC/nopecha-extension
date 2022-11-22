@@ -1,11 +1,13 @@
 class BG {
-    static exec(method, data) {
+    // static exec(method, data) {
+    static exec() {
         return new Promise(resolve => {
             try {
-                chrome.runtime.sendMessage({method, data}, resolve);
+                // console.log('exec', arguments);
+                chrome.runtime.sendMessage([...arguments], resolve);
             } catch (e) {
-                // console.log('exec failed', e);
-                resolve();
+                console.log('exec failed', e);
+                resolve(null);
             }
         });
     }
@@ -14,7 +16,7 @@ class BG {
 
 class Net {
     static async fetch(url, options) {
-        return await BG.exec('fetch', {url, options});
+        return await BG.exec('Net.fetch', {url, options});
     }
 }
 
@@ -32,10 +34,14 @@ class Script {
 
 
 class Location {
+    static parse_hostname(url) {
+        return url.replace(/^(.*:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/, '$2');
+    }
+
     static async hostname() {
-        const tab = await BG.exec('info_tab');
+        const tab = await BG.exec('Tab.info');
         const tab_url = tab.url ? tab.url : 'Unknown Host';
-        return tab.url?.replace(/^(.*:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/, '$2');
+        return Location.parse_hostname(tab_url);
     }
 }
 
@@ -97,7 +103,7 @@ class NopeCHA {
     static async post({captcha_type, task, image_urls, image_data, grid, audio_data, key}) {
         const start_time = Date.now();
 
-        const info = await BG.exec('info_tab');
+        const info = await BG.exec('Tab.info');
 
         while (true) {
             const now = Date.now();

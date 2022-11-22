@@ -4,7 +4,8 @@
     "description": "Automatically solve reCAPTCHA, hCaptcha, FunCAPTCHA, AWS WAF, and text CAPTCHA using AI.",
     "permissions": [
         "storage",
-        "scripting"
+        "scripting",
+        "contextMenus"
     ],
     "content_scripts": [
         {

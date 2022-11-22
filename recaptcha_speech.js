@@ -40,6 +40,13 @@
 
 
     async function on_widget_frame(settings) {
+        // Check if parent frame marked this frame as visible on screen
+        const is_visible = await BG.exec('Cache.get', {name: 'recaptcha_widget_visible', tab_specific: true});
+        console.log('is_visible', is_visible);
+        if (is_visible !== true) {
+            return;
+        }
+
         // Wait if already solved
         if (is_solved()) {
             return;
@@ -51,7 +58,7 @@
 
     async function on_image_frame(settings) {
         // Check if parent frame marked this frame as visible on screen
-        const is_visible = await BG.exec('get_cache', {name: 'recaptcha_visible', tab_specific: true});
+        const is_visible = await BG.exec('Cache.get', {name: 'recaptcha_image_visible', tab_specific: true});
         if (is_visible !== true) {
             return;
         }
@@ -68,7 +75,7 @@
 
     async function on_speech_frame(settings) {
         // Check if parent frame marked this frame as visible on screen
-        const is_visible = await BG.exec('get_cache', {name: 'recaptcha_visible', tab_specific: true});
+        const is_visible = await BG.exec('Cache.get', {name: 'recaptcha_image_visible', tab_specific: true});
         if (is_visible !== true) {
             return;
         }
@@ -81,7 +88,7 @@
         // Try again later error
         if (got_solve_error()) {
             // await BG.exec('set_settings', {id: 'solve_method', value: 'image'});
-            await BG.exec('reset_recaptcha');
+            // await BG.exec('reset_recaptcha');
             return;
         }
 
@@ -116,29 +123,41 @@
 
 
     async function check_image_frame_visibility() {
-        const $image_frames = document.querySelectorAll('iframe[src*="/recaptcha/api2/bframe"]');
+        const $image_frames = [
+            ...document.querySelectorAll('iframe[src*="/recaptcha/api2/bframe"]'),
+            ...document.querySelectorAll('iframe[src*="/recaptcha/enterprise/bframe"]'),
+        ];
         if ($image_frames.length > 0) {
-            let is_visible = false;
-            for (const $image_frame of $image_frames) {
-                is_visible = window.getComputedStyle($image_frame).visibility === 'visible';
-                if (is_visible) {
-                    break;
+            for (const $frame of $image_frames) {
+                if (window.getComputedStyle($frame).visibility === 'visible') {
+                    return await BG.exec('Cache.set', {name: 'recaptcha_image_visible', value: true, tab_specific: true});
                 }
             }
-            if (is_visible) {
-                await BG.exec('set_cache', {name: 'recaptcha_visible', value: true, tab_specific: true});
-            }
-            else {
-                await BG.exec('set_cache', {name: 'recaptcha_visible', value: false, tab_specific: true});
-            }
+            await BG.exec('Cache.set', {name: 'recaptcha_image_visible', value: false, tab_specific: true});
         }
+    }
+
+    async function check_widget_frame_visibility() {
+        const $widget_frames = [
+            ...document.querySelectorAll('iframe[src*="/recaptcha/api2/anchor"]'),
+            ...document.querySelectorAll('iframe[src*="/recaptcha/enterprise/anchor"]'),
+        ];
+        if ($widget_frames.length > 0) {
+            for (const $frame of $widget_frames) {
+                if (window.getComputedStyle($frame).visibility === 'visible') {
+                    return await BG.exec('Cache.set', {name: 'recaptcha_widget_visible', value: true, tab_specific: true});
+                }
+            }
+            await BG.exec('Cache.set', {name: 'recaptcha_widget_visible', value: false, tab_specific: true});
+        }
+        return false;
     }
 
 
     while (true) {
         await Time.sleep(1000);
 
-        const settings = await BG.exec('get_settings');
+        const settings = await BG.exec('Settings.get');
 
         // Using another solve method
         if (!settings || !settings.enabled || settings.recaptcha_solve_method !== 'Speech') {
@@ -150,7 +169,8 @@
             continue;
         }
 
-        check_image_frame_visibility();
+        await check_image_frame_visibility();
+        await check_widget_frame_visibility();
 
         if (settings.recaptcha_auto_open && is_widget_frame()) {
             await on_widget_frame(settings);

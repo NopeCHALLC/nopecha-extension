@@ -720,12 +720,12 @@
 
 
     let metadata = [];
-    window.addEventListener('message', event => {
-        if (event.data.event === 'nopecha_content') {
-            metadata.push(event.data.metadata);
+    window.addEventListener('message', e => {
+        if (e.data.event === 'NopeCHA.metadata') {
+            metadata.push(e.data.metadata);
         }
     });
-    window.postMessage({event: 'nopecha_hook'});
+    window.postMessage({event: 'NopeCHA.hook'});
 
 
     _xh.before(r => {

@@ -59,7 +59,7 @@
                 }
                 checking = true;
 
-                const settings = await BG.exec('get_settings');
+                const settings = await BG.exec('Settings.get');
                 if (!settings.enabled || !settings.funcaptcha_auto_solve) {
                     return;
                 }
@@ -107,7 +107,7 @@
             return;
         }
 
-        const settings = await BG.exec('get_settings');
+        const settings = await BG.exec('Settings.get');
         if (!settings.enabled || !settings.funcaptcha_auto_solve) {
             return;
         }
@@ -149,7 +149,7 @@
         while (true) {
             await Time.sleep(1000);
 
-            const settings = await BG.exec('get_settings');
+            const settings = await BG.exec('Settings.get');
             if (!settings || !settings.enabled) {
                 continue;
             }

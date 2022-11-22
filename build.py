@@ -67,6 +67,12 @@ parser.add_argument(
     action="store_true",
     help="Compresses files and creates zip file to submit for evaluation or test in the browser",
 )
+parser.add_argument(
+    "-c",
+    "--clean",
+    action="store_true",
+    help="Clean gecko ID from Firefox manifest for submission to Mozilla",
+)
 parser.add_argument("-w", "--watch", action="store_true", help=watchdog_help)
 
 program_args = parser.parse_args()
@@ -230,10 +236,10 @@ with in_dir(dir_path):
                 )
                 extension_manifest.update(specific_manifest)
 
-                # Remove Firefox gecko ID for production
-                # if zip:
-                #     with contextlib.suppress(KeyError):
-                #         del extension_manifest['browser_specific_settings']['gecko']['id']
+                # Remove Firefox gecko ID for submission
+                if program_args.clean:
+                    with contextlib.suppress(KeyError):
+                        del extension_manifest['browser_specific_settings']['gecko']['id']
 
                 manifest_content = json.dumps(extension_manifest, indent=4)
                 (export_directory / "manifest.json").write_text(manifest_content)

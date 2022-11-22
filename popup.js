@@ -15,7 +15,7 @@ function number_with_comma(n) {
 
 
 async function check_plan() {
-    const settings = await BG.exec('get_settings');
+    const settings = await BG.exec('Settings.get');
     if (!settings) {
         return;
     }
@@ -25,7 +25,7 @@ async function check_plan() {
     }
     checking_server_plan = true;
 
-    plan = await BG.exec('get_server_plan', {key: settings.key});  // plan = {plan, credit, quota, duration, lastreset}
+    plan = await BG.exec('Server.get_plan', {key: settings.key});  // plan = {plan, credit, quota, duration, lastreset}
 
     if (plan.error) {
         plan = {
@@ -46,7 +46,7 @@ async function check_plan() {
 
 
 async function render_plan() {
-    const settings = await BG.exec('get_settings');
+    const settings = await BG.exec('Settings.get');
     if (!settings) {
         return;
     }
@@ -125,8 +125,9 @@ async function render_plan() {
 
 
 async function init_ui() {
-    const settings = await BG.exec('get_settings');
+    const settings = await BG.exec('Settings.get');
     console.log('settings', settings);
+
 
     /**
      * Power button
@@ -152,21 +153,20 @@ async function init_ui() {
         if ($power_btn.classList.contains('off')) {
             $power_btn.classList.remove('off');
             $power_spinning.classList.remove('hidden');
-            await BG.exec('set_settings', {id: 'enabled', value: true});
-            await BG.exec('set_icon', 'on');
-            // await BG.exec('set_badge', {global: true, text: 'ON', color: '#00FF00'});
+            await BG.exec('Settings.set', {id: 'enabled', value: true});
+            await BG.exec('Icon.set', {status: 'on'});
             last_anim = setTimeout(() => {
                 $power_spinning.classList.add('hidden');
                 $power_static.classList.remove('hidden');
             }, 1000);
         }
         else {
-            await BG.exec('set_settings', {id: 'enabled', value: false});
-            await BG.exec('set_icon', 'off');
-            // await BG.exec('set_badge', {global: true, text: 'OFF', color: '#FF0000'});
+            await BG.exec('Settings.set', {id: 'enabled', value: false});
+            await BG.exec('Icon.set', {status: 'off'});
             $power_btn.classList.add('off');
         }
     });
+
 
     /**
      * Subscription key
@@ -205,11 +205,6 @@ async function init_ui() {
         document.querySelector('#export').classList.add('hidden');
     }
 
-    // let change_delay_timer = null;
-    // document.querySelector('#key').addEventListener('input', () => {
-    //     clearTimeout(change_delay_timer);
-    //     change_delay_timer = setTimeout(check_plan, 500);
-    // });
 
     /**
      * Tab switching
@@ -224,6 +219,7 @@ async function init_ui() {
             $tab.classList.remove('hidden');
         });
     }
+
 
     /**
      * Navigate backwards on mouse back or backspace
@@ -246,6 +242,7 @@ async function init_ui() {
         }
     });
 
+
     /**
      * Set UI from settings and attach listeners
      */
@@ -258,7 +255,7 @@ async function init_ui() {
             // Listen
             $toggle.addEventListener('click', async () => {
                 const value = $toggle.classList.contains('off');
-                await BG.exec('set_settings', {id: k, value: value});
+                await BG.exec('Settings.set', {id: k, value: value});
                 $toggle.classList.remove('on', 'off');
                 $toggle.classList.add(value ? 'on' : 'off');
             });
@@ -274,7 +271,7 @@ async function init_ui() {
             $option.addEventListener('click', async () => {
                 document.querySelector(`.settings_dropdown.selected[data-settings="${k}"]`)?.classList?.remove('selected');
                 const value = $option.dataset.value;
-                await BG.exec('set_settings', {id: k, value: value});
+                await BG.exec('Settings.set', {id: k, value: value});
                 $option.classList.add('selected');
                 document.querySelector($option.dataset.displays).innerHTML = $option.innerHTML;
             });
@@ -286,11 +283,12 @@ async function init_ui() {
             // Listen
             $text.addEventListener('input', async () => {
                 const value = $text.value;
-                await BG.exec('set_settings', {id: k, value: value});
+                await BG.exec('Settings.set', {id: k, value: value});
                 // console.log(k, value);
             });
         }
     }
+
 
     /**
      * Locate element
@@ -299,10 +297,12 @@ async function init_ui() {
     for (const $e of document.querySelectorAll('.locate')) {
         $e.addEventListener('click', async () => {
             const key = $e.dataset.key;
-            await BG.exec('relay', {action: 'start_locate', locate: key});
+            await BG.exec('Relay.send', {data: {action: 'start_locate', locate: key}});
+            // await BG.exec('Relay.send', {action: 'start_locate', locate: key});
             window.close();
         });
     }
+
 
     /**
      * Disabled hosts
@@ -315,13 +315,13 @@ async function init_ui() {
             hosts.add(e.trim());
         }
         settings.disabled_hosts = [...hosts];
-        await BG.exec('set_settings', {id: 'disabled_hosts', value: settings.disabled_hosts});
+        await BG.exec('Settings.set', {id: 'disabled_hosts', value: settings.disabled_hosts});
         if (render) {
             await render_disabled_hosts();
         }
     }
     async function set_current_host() {
-        const active_tab = await BG.exec('active_tab');
+        const active_tab = await BG.exec('Tab.active');
         const active_url = active_tab.url ? active_tab.url : 'Unknown Host';
         const current_host = active_url.replace(/^(.*:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/, '$2');
         const $current_host = document.querySelector('#current_page_host');
@@ -383,15 +383,13 @@ async function init_ui() {
     set_current_host();
     render_disabled_hosts();
 
-    // for (const ) {
-    // }
 
     /**
      * Export settings
      */
 
     document.querySelector('#export').addEventListener('click', async () => {
-        const settings = await BG.exec('get_settings');
+        const settings = await BG.exec('Settings.get');
         const url = SettingsManager.export(settings);
         window.open(url, '_blank');
     });

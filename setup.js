@@ -22,7 +22,7 @@
             const proms = [];
             for (const [k, v] of Object.entries(settings)) {
                 console.log(k, v);
-                proms.push(BG.exec('set_settings', {id: k, value: v}));
+                proms.push(BG.exec('Settings.set', {id: k, value: v}));
             }
             await Promise.all(proms);
 

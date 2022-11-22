@@ -331,7 +331,7 @@
 
                 const css_selector = self.get_css(self.$t);
                 self.update_css_selector(self.window_id, css_selector);
-                BG.exec('relay', {action: 'update_locate', window_id: self.window_id, css_selector});
+                BG.exec('Relay.send', {data: {action: 'update_locate', window_id: self.window_id, css_selector}});
 
                 if (self.draw_mark) {
                     const center = self.get_center($t);
@@ -365,7 +365,7 @@
         // Save the selected element
         const $e = event.target;
         const selector = nopecha_selector.get_css($e);
-        BG.exec('set_settings', {id: nopecha_selector.locate, value: selector});
+        BG.exec('Settings.set', {id: nopecha_selector.locate, value: selector});
         stop(true);
     }
 
@@ -416,7 +416,7 @@
         } catch (e) {}
 
         if (broadcast) {
-            BG.exec('relay', {action: 'stop_locate'});
+            BG.exec('Relay.send', {data: {action: 'stop_locate'}});
         }
     }
 

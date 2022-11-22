@@ -146,95 +146,6 @@ export class Time {
 }
 
 
-export class Cache {
-    // Runtime variables cache
-    static cache = {};
-
-    // Values, counts, and arrays
-    static async set({tab_id, data: {name, value, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        Cache.cache[name] = value;
-        return Cache.cache[name];
-    }
-
-    // Values, counts, and arrays
-    static async get({tab_id, data: {name, tab_specific}}) {
-        console.log('Cache.get', tab_id, Cache.cache);
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        return Cache.cache[name];
-    }
-
-    // Values, counts, and arrays
-    static async remove({tab_id, data: {name, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        const value = Cache.cache[name];
-        delete Cache.cache[name];
-        return value;
-    }
-
-    // Arrays
-    static async append({tab_id, data: {name, value, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        if (!(name in Cache.cache)) {
-            Cache.cache[name] = [];
-        }
-        Cache.cache[name].push(value);
-        return Cache.cache[name];
-    }
-
-    // Arrays
-    static async empty({tab_id, data: {name, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        const value = Cache.cache[name];
-        Cache.cache[name] = [];
-        return value;
-    }
-
-    // Counts
-    static async inc({tab_id, data: {name, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        if (!(name in Cache.cache)) {
-            Cache.cache[name] = 0;
-        }
-        Cache.cache[name]++;
-        return Cache.cache[name];
-    }
-
-    // Counts
-    static async dec({tab_id, data: {name, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        if (!(name in Cache.cache)) {
-            Cache.cache[name] = 0;
-        }
-        Cache.cache[name]--;
-        return Cache.cache[name];
-    }
-
-    // Counts
-    static async zero({tab_id, data: {name, tab_specific}}) {
-        if (tab_specific) {
-            name = `${tab_id}_${name}`;
-        }
-        Cache.cache[name] = 0;
-        return Cache.cache[name];
-    }
-}
-
-
 export class SettingsManager {
     static DEFAULT = {
         version: 15,
@@ -272,35 +183,35 @@ export class SettingsManager {
     };
 
     static ENCODE_FIELDS = {
-        enabled: {parse: Util.parse_bool},
-        disabled_hosts: {parse: Util.parse_json},
+        enabled: {parse: Util.parse_bool, encode: encodeURIComponent},
+        disabled_hosts: {parse: Util.parse_json, encode: e => encodeURIComponent(JSON.stringify(e))},
 
-        hcaptcha_auto_open: {parse: Util.parse_bool},
-        hcaptcha_auto_solve: {parse: Util.parse_bool},
-        hcaptcha_solve_delay: {parse: Util.parse_bool},
-        hcaptcha_solve_delay_time: {parse: Util.parse_int},
+        hcaptcha_auto_open: {parse: Util.parse_bool, encode: encodeURIComponent},
+        hcaptcha_auto_solve: {parse: Util.parse_bool, encode: encodeURIComponent},
+        hcaptcha_solve_delay: {parse: Util.parse_bool, encode: encodeURIComponent},
+        hcaptcha_solve_delay_time: {parse: Util.parse_int, encode: encodeURIComponent},
 
-        recaptcha_auto_open: {parse: Util.parse_bool},
-        recaptcha_auto_solve: {parse: Util.parse_bool},
-        recaptcha_solve_delay: {parse: Util.parse_bool},
-        recaptcha_solve_delay_time: {parse: Util.parse_int},
-        recaptcha_solve_method: {parse: Util.parse_string},
+        recaptcha_auto_open: {parse: Util.parse_bool, encode: encodeURIComponent},
+        recaptcha_auto_solve: {parse: Util.parse_bool, encode: encodeURIComponent},
+        recaptcha_solve_delay: {parse: Util.parse_bool, encode: encodeURIComponent},
+        recaptcha_solve_delay_time: {parse: Util.parse_int, encode: encodeURIComponent},
+        recaptcha_solve_method: {parse: Util.parse_string, encode: encodeURIComponent},
 
-        funcaptcha_auto_open: {parse: Util.parse_bool},
-        funcaptcha_auto_solve: {parse: Util.parse_bool},
-        funcaptcha_solve_delay: {parse: Util.parse_bool},
-        funcaptcha_solve_delay_time: {parse: Util.parse_int},
+        funcaptcha_auto_open: {parse: Util.parse_bool, encode: encodeURIComponent},
+        funcaptcha_auto_solve: {parse: Util.parse_bool, encode: encodeURIComponent},
+        funcaptcha_solve_delay: {parse: Util.parse_bool, encode: encodeURIComponent},
+        funcaptcha_solve_delay_time: {parse: Util.parse_int, encode: encodeURIComponent},
 
-        awscaptcha_auto_open: {parse: Util.parse_bool},
-        awscaptcha_auto_solve: {parse: Util.parse_bool},
-        awscaptcha_solve_delay: {parse: Util.parse_bool},
-        awscaptcha_solve_delay_time: {parse: Util.parse_int},
+        awscaptcha_auto_open: {parse: Util.parse_bool, encode: encodeURIComponent},
+        awscaptcha_auto_solve: {parse: Util.parse_bool, encode: encodeURIComponent},
+        awscaptcha_solve_delay: {parse: Util.parse_bool, encode: encodeURIComponent},
+        awscaptcha_solve_delay_time: {parse: Util.parse_int, encode: encodeURIComponent},
 
-        textcaptcha_auto_solve: {parse: Util.parse_bool},
-        textcaptcha_solve_delay: {parse: Util.parse_bool},
-        textcaptcha_solve_delay_time: {parse: Util.parse_int},
-        textcaptcha_image_selector: {parse: Util.parse_string},
-        textcaptcha_input_selector: {parse: Util.parse_string},
+        textcaptcha_auto_solve: {parse: Util.parse_bool, encode: encodeURIComponent},
+        textcaptcha_solve_delay: {parse: Util.parse_bool, encode: encodeURIComponent},
+        textcaptcha_solve_delay_time: {parse: Util.parse_int, encode: encodeURIComponent},
+        textcaptcha_image_selector: {parse: Util.parse_string, encode: encodeURIComponent},
+        textcaptcha_input_selector: {parse: Util.parse_string, encode: encodeURIComponent},
     };
 
     static IMPORT_URL = 'https://nopecha.com/setup';
@@ -313,7 +224,7 @@ export class SettingsManager {
 
         const fields = [settings.key];
         for (const k in SettingsManager.ENCODE_FIELDS) {
-            fields.push(`${k}=${encodeURIComponent(settings[k])}`);
+            fields.push(`${k}=${SettingsManager.ENCODE_FIELDS[k].encode(settings[k])}`);
         }
 
         const encoded_hash = `#${fields.join(SettingsManager.DELIMITER)}`;
@@ -350,17 +261,10 @@ export class SettingsManager {
             }
 
             const v = decodeURIComponent(v_raw);
+            console.log('v', v);
             settings[k] = SettingsManager.ENCODE_FIELDS[k].parse(v, SettingsManager.DEFAULT[k]);
         }
 
         return settings;
     }
-
-    // static update(base_settings, new_settings) {
-    //     // In-place mutation of base_settings
-    //     for (const k in new_settings) {
-    //         base_settings[k] = new_settings[k];
-    //     }
-    //     return base_settings;
-    // }
 }

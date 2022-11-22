@@ -2,19 +2,21 @@ export const VERSION = 'chrome';
 
 export const browser = globalThis.chrome;
 
-export function register_language() {
-    // // Reconnect existing scripts on upgrade
-    // browser.runtime.onInstalled.addListener(async () => {
-    //     for (const cs of browser.runtime.getManifest().content_scripts) {
-    //         for (const tab of await browser.tabs.query({url: cs.matches})) {
-    //             browser.scripting.executeScript({
-    //                 target: {tabId: tab.id},
-    //                 files: cs.js,
-    //             });
-    //         }
-    //     }
-    // });
+export function reconnect_scripts() {
+    // Reconnect existing scripts on upgrade
+    browser.runtime.onInstalled.addListener(async () => {
+        for (const cs of browser.runtime.getManifest().content_scripts) {
+            for (const tab of await browser.tabs.query({url: cs.matches})) {
+                browser.scripting.executeScript({
+                    target: {tabId: tab.id},
+                    files: cs.js,
+                });
+            }
+        }
+    });
+}
 
+export function register_language() {
     browser.declarativeNetRequest.updateDynamicRules({
         addRules: [
             // Force set language to English for reCAPTCHA
@@ -34,7 +36,7 @@ export function register_language() {
                     },
                 },
                 'condition': {
-                    'regexFilter': '^https://[^\\.]*\\.(google\\.com|recaptcha\\.net)/recaptcha',
+                    'regexFilter': '^(http|https)://[^\\.]*\\.(google\\.com|recaptcha\\.net)/recaptcha',
                     'resourceTypes': ['sub_frame'],
                 },
             },
@@ -55,7 +57,7 @@ export function register_language() {
                     },
                 },
                 'condition': {
-                    'regexFilter': '^https://[^\\.]*\\.(funcaptcha\\.(co|com)|arkoselabs\\.(com|cn)|arkose\\.com\\.cn)',
+                    'regexFilter': '^(http|https)://[^\\.]*\\.(funcaptcha\\.(co|com)|arkoselabs\\.(com|cn)|arkose\\.com\\.cn)',
                     'resourceTypes': ['sub_frame'],
                 },
             },

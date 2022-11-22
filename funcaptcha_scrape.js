@@ -21,7 +21,7 @@
         const task = get_task();
         const image = get_image();
         if (task && image) {
-            const url = (await BG.exec('info_tab'))?.url;
+            const url = (await BG.exec('Tab.info'))?.url;
             const data = {task, image, index, url};
 
             if (SUBMISSION_STRATEGY.startsWith('l')) {

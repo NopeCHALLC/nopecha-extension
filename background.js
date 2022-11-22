@@ -1,4 +1,4 @@
-import {Cache, deep_copy, SettingsManager, Time} from './utils.mjs'
+import {deep_copy, SettingsManager, Time} from './utils.mjs'
 import * as bapi from './api.js'
 
 
@@ -6,83 +6,115 @@ console.clear();
 console.log('browser.runtime.id', bapi.browser.runtime.id, 'on', bapi.VERSION);
 
 
-class Net {
-    static async fetch({data: {url, options}}) {
-        try {
-            const res = await fetch(url, options);
-            return await res.text();
-        } catch (e) {
-            console.error("failed to fetch", url, e)
-            return null;
+class API {
+    static endpoints = {};
+
+    static register(obj, fname) {
+        const endpoint = `${obj.name}.${fname}`;
+        const fn = obj[fname];
+        function wrapped() {
+            return fn.apply(obj, [{tab_id: arguments[0].tab_id, frame_id: arguments[0].frame_id, ...arguments[0].data}]);
         }
+        this.endpoints[endpoint] = wrapped;
     }
 }
 
 
-class Tab {
-    static reloads = {};  // tab_id -> {delay, start, timer}
+class Cache {
+    // Runtime variables cache
+    static cache = {};
 
-    static _reload({tab_id}) {
-        return new Promise(resolve => bapi.browser.tabs.reload(tab_id, {bypassCache: true}, resolve));
-    }
-
-    static async reload({tab_id, data: {delay, overwrite}={delay: 0, overwrite: true}}) {
-        // Clear and start timer if overwrite is true or if delay <= remaining time of active timer
-        delay = parseInt(delay);
-        let remaining = Tab.reloads[tab_id]?.delay - (Date.now() - Tab.reloads[tab_id]?.start);
-        remaining = (isNaN(remaining) || remaining < 0) ? 0 : remaining;
-        // console.log('reload_after', tab_id, 'delay', delay, 'overwrite', overwrite, 'remaining', remaining);
-
-        if (overwrite || remaining == 0 || delay <= remaining) {
-            // console.log(`set reload timer tab=${tab_id} after=${delay/1000}s`);
-            clearTimeout(Tab.reloads[tab_id]?.timer);
-            Tab.reloads[tab_id] = {
-                delay: delay,
-                start: Date.now(),
-                timer: setTimeout(() => Tab._reload({tab_id}), delay),
-            };
-            return true;
+    // Values, counts, and arrays
+    static async set({tab_id, name, value, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
         }
-        return false;
+        Cache.cache[name] = value;
+        return Cache.cache[name];
     }
 
-    static close({tab_id}) {
-        return new Promise(resolve => bapi.browser.tabs.remove(tab_id, resolve));
+    // Values, counts, and arrays
+    static async get({tab_id, name, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        return Cache.cache[name];
     }
 
-    static async open({tab_id, data: {url}}) {
-        bapi.browser.tabs.create({url});
+    // Values, counts, and arrays
+    static async remove({tab_id, name, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        const value = Cache.cache[name];
+        delete Cache.cache[name];
+        return value;
     }
 
-    static info({tab_id}) {
-        return new Promise(resolve => {
-            try {
-                bapi.browser.tabs.get(tab_id, tab => resolve(tab));
-            } catch (e) {
-                console.log('error getting tab info', e);
-                resolve(false);
-            }
-        });
+    // Arrays
+    static async append({tab_id, name, value, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        if (!(name in Cache.cache)) {
+            Cache.cache[name] = [];
+        }
+        Cache.cache[name].push(value);
+        return Cache.cache[name];
     }
 
-    static active() {
-        // `tab` will either be a `tabs.Tab` instance or `undefined`
-        return new Promise(async resolve => {
-            if (bapi.VERSION === 'firefox') {
-                // MV2
-                bapi.browser.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
-                    if (bapi.browser.runtime.lastError) {
-                        console.error(bapi.browser.runtime.lastError);
-                    }
-                    resolve(tab);
-                });
-            }
-            else {
-                // MV3
-                const [tab] = await bapi.browser.tabs.query({active: true, lastFocusedWindow: true});
-                return resolve(tab);
-            }
-        });
+    // Arrays
+    static async empty({tab_id, name, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        const value = Cache.cache[name];
+        Cache.cache[name] = [];
+        return value;
+    }
+
+    // Counts
+    static async inc({tab_id, name, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        if (!(name in Cache.cache)) {
+            Cache.cache[name] = 0;
+        }
+        Cache.cache[name]++;
+        return Cache.cache[name];
+    }
+
+    // Counts
+    static async dec({tab_id, name, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        if (!(name in Cache.cache)) {
+            Cache.cache[name] = 0;
+        }
+        Cache.cache[name]--;
+        return Cache.cache[name];
+    }
+
+    // Counts
+    static async zero({tab_id, name, tab_specific}={tab_specific: false}) {
+        if (tab_specific) {
+            name = `${tab_id}_${name}`;
+        }
+        Cache.cache[name] = 0;
+        return Cache.cache[name];
+    }
+
+    static {
+        API.register(this, 'set');
+        API.register(this, 'get');
+        API.register(this, 'remove');
+        API.register(this, 'append');
+        API.register(this, 'empty');
+        API.register(this, 'inc');
+        API.register(this, 'dec');
+        API.register(this, 'zero');
     }
 }
 
@@ -127,7 +159,7 @@ class Settings {
         return Settings.data;
     }
 
-    static async set({data: {id, value}}) {
+    static async set({id, value}) {
         Settings.data[id] = value;
         await Settings._save();
     }
@@ -143,10 +175,114 @@ class Settings {
 
         await Settings._save();
     }
+
+    static {
+        API.register(this, 'get');
+        API.register(this, 'set');
+        API.register(this, 'reset');
+    }
 }
 
 
-class Injector {
+class Net {
+    static async fetch({url, options}={options: {}}) {
+        try {
+            const res = await fetch(url, options);
+            return await res.text();
+        } catch (e) {
+            console.error("failed to fetch", url, e)
+            return null;
+        }
+    }
+
+    static {
+        API.register(this, 'fetch');
+    }
+}
+
+
+class Tab {
+    static reloads = {};  // tab_id -> {delay, start, timer}
+
+    static _reload({tab_id}) {
+        return new Promise(resolve => bapi.browser.tabs.reload(tab_id, {bypassCache: true}, resolve));
+    }
+
+    static async reload({tab_id, delay, overwrite}={delay: 0, overwrite: true}) {
+        // Clear and start timer if overwrite is true or if delay <= remaining time of active timer
+        delay = parseInt(delay);
+        let remaining = Tab.reloads[tab_id]?.delay - (Date.now() - Tab.reloads[tab_id]?.start);
+        remaining = (isNaN(remaining) || remaining < 0) ? 0 : remaining;
+        // console.log('reload_after', tab_id, 'delay', delay, 'overwrite', overwrite, 'remaining', remaining);
+
+        if (overwrite || remaining == 0 || delay <= remaining) {
+            // console.log(`set reload timer tab=${tab_id} after=${delay/1000}s`);
+            clearTimeout(Tab.reloads[tab_id]?.timer);
+            Tab.reloads[tab_id] = {
+                delay: delay,
+                start: Date.now(),
+                timer: setTimeout(() => Tab._reload({tab_id}), delay),
+            };
+            return true;
+        }
+        return false;
+    }
+
+    static close({tab_id}) {
+        return new Promise(resolve => bapi.browser.tabs.remove(tab_id, resolve));
+    }
+
+    static open({url}={url: null}) {
+        return new Promise(resolve => bapi.browser.tabs.create({url}, resolve));
+    }
+
+    static navigate({tab_id, url}) {
+        return new Promise(resolve => bapi.browser.tabs.update(tab_id, {url}, resolve));
+    }
+
+    static info({tab_id}) {
+        return new Promise(resolve => {
+            try {
+                bapi.browser.tabs.get(tab_id, tab => resolve(tab));
+            } catch (e) {
+                console.log('error getting tab info', e);
+                resolve(false);
+            }
+        });
+    }
+
+    static active() {
+        // `tab` will either be a `tabs.Tab` instance or `undefined`
+        return new Promise(async resolve => {
+            if (bapi.VERSION === 'firefox') {
+                // MV2
+                bapi.browser.tabs.query({active: true, lastFocusedWindow: true}, ([tab]) => {
+                    if (bapi.browser.runtime.lastError) {
+                        console.error(bapi.browser.runtime.lastError);
+                    }
+                    resolve(tab);
+                });
+            }
+            else {
+                // MV3
+                const [tab] = await bapi.browser.tabs.query({active: true, lastFocusedWindow: true});
+                return resolve(tab);
+            }
+        });
+    }
+
+    static {
+        API.register(this, 'reload');
+        API.register(this, 'close');
+        API.register(this, 'open');
+        API.register(this, 'navigate');
+        API.register(this, 'info');
+        API.register(this, 'active');
+    }
+}
+
+
+class Inject {
     static async _inject(options) {
         // Inject into active tab if target tabId is undefined
         if (!options.target.tabId) {
@@ -160,7 +296,7 @@ class Injector {
         return await prom;
     }
 
-    static async inject_func({tab_id, data: {func, args}}) {
+    static async func({tab_id, func, args}={args: []}) {
         const options = {
             target: {tabId: tab_id, allFrames: true},
             world: 'MAIN',
@@ -169,10 +305,10 @@ class Injector {
             args: args,
         };
         // return new Promise(resolve => bapi.browser.scripting.executeScript(options, resolve));
-        return await Injector._inject(options);
+        return await Inject._inject(options);
     }
 
-    static async inject_files({tab_id, frame_id, data: {files}}) {
+    static async files({tab_id, frame_id, files}) {
         const options = {
             target: {tabId: tab_id, frameIds: [frame_id]},
             world: 'MAIN',
@@ -182,15 +318,24 @@ class Injector {
         if (bapi.VERSION === 'firefox') {
             delete options.world;
         }
-        return await Injector._inject(options);
+        return await Inject._inject(options);
+    }
+
+    static {
+        API.register(this, 'func');
+        API.register(this, 'files');
     }
 }
 
 
 class Recaptcha {
     static async reset({tab_id}) {
-        await Injector.inject_func({tab_id, data: {func: () => {try {window.grecaptcha?.reset();} catch {}}, args: []}});
+        await Inject.func({tab_id, data: {func: () => {try {window.grecaptcha?.reset();} catch {}}, args: []}});
         return true;
+    }
+
+    static {
+        API.register(this, 'reset');
     }
 }
 
@@ -199,7 +344,7 @@ class Server {
     static ENDPOINT = `https://api.nopecha.com/status?v=${bapi.browser.runtime.getManifest().version}`;
     static is_fetching_plan = false;
 
-    static async get_plan({data: {key}}) {
+    static async get_plan({key}) {
         if (Server.is_fetching_plan) {
             return false;
         }
@@ -218,11 +363,15 @@ class Server {
         Server.is_fetching_plan = false;
         return plan;
     }
+
+    static {
+        API.register(this, 'get_plan');
+    }
 }
 
 
 class Image {
-    static b64({data: {url}}) {
+    static encode({url}) {
         return new Promise(resolve => {
             fetch(url)
                 .then(response => response.blob())
@@ -232,6 +381,10 @@ class Image {
                     reader.readAsDataURL(blob);
                 });
         });
+    }
+
+    static {
+        API.register(this, 'encode');
     }
 }
 
@@ -245,14 +398,18 @@ class Relay {
         }
         bapi.browser.tabs.sendMessage(tab_id, data);
     }
+
+    static {
+        API.register(this, 'send');
+    }
 }
 
 
 class Icon {
-    static set_icon({data}) {
+    static set_icon({status}) {
         return new Promise(resolve => {
             const ba = bapi.VERSION === 'firefox' ? bapi.browser.browserAction : bapi.browser.action;
-            if (data === 'on') {
+            if (status === 'on') {
                 ba.setIcon({
                     path: {
                         '16': '/icon/16.png',
@@ -262,7 +419,7 @@ class Icon {
                     },
                 }, resolve);
             }
-            else if (data === 'off') {
+            else if (status === 'off') {
                 ba.setIcon({
                     path: {
                         '16': '/icon/16g.png',
@@ -273,7 +430,7 @@ class Icon {
                 }, resolve);
             }
             else {
-                console.error('unknown icon mode', data);
+                console.error('unknown icon mode', status);
                 resolve(false);
             }
         });
@@ -315,94 +472,112 @@ class Icon {
         }
         return await Promise.all(proms);
     }
-}
 
-
-class Browser {
-    static async get_version() {
-        return bapi.VERSION;
+    static {
+        API.register(this, 'set_icon');
     }
 }
 
 
-const FN = {
-    set_cache: Cache.set,
-    get_cache: Cache.get,
-    remove_cache: Cache.remove,
-    append_cache: Cache.append,
-    empty_cache: Cache.empty,
-    inc_cache: Cache.inc,
-    dec_cache: Cache.dec,
-    zero_cache: Cache.zero,
+class Browser {
+    static async version() {
+        return bapi.VERSION;
+    }
 
-    fetch: Net.fetch,
+    static async log() {
+        console.warn('Browser.log', ...arguments);
+    }
 
-    reload_tab: Tab.reload,
-    close_tab: Tab.close,
-    open_tab: Tab.open,
-    info_tab: Tab.info,
-    active_tab: Tab.active,
+    static {
+        API.register(this, 'version');
+        API.register(this, 'log');
+    }
+}
 
-    get_settings: Settings.get,
-    set_settings: Settings.set,
-    reset_settings: Settings.reset,
 
-    inject_files: Injector.inject_files,
+class ContextMenu {
+    static listen() {
+        function on_context_menu(info, tab) {
+            if (info.menuItemId === 'nopecha_disable_host') {
+                const url = info.pageUrl;
+                if (!url) {
+                    return;
+                }
+                const hostname = url.replace(/^(.*:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/, '$2');
+                let hosts = new Set();
+                for (const e of Settings.data.disabled_hosts) {
+                    hosts.add(e.trim());
+                }
+                hosts.add(hostname);
+                hosts = [...hosts];
+                Settings.set({id: 'disabled_hosts', value: hosts});
+            }
+        };
+        bapi.browser.contextMenus.onClicked.addListener(on_context_menu);
+    }
 
-    reset_recaptcha: Recaptcha.reset,
+    static create() {
+        bapi.browser.contextMenus.create({'title': 'Disable NopeCHA on this site', 'id': 'nopecha_disable_host'});
+        // bapi.browser.contextMenus.create({'title': 'NopeCHA: CAPTCHA Solver', 'id': 'parent'});
+        // bapi.browser.contextMenus.create({'title': 'Disable NopeCHA on this site', 'parentId': 'parent', 'id': 'child0'});
+        // bapi.browser.contextMenus.create({'title': 'Select Text CAPTCHA Image Element', 'parentId': 'parent', 'id': 'child1'});
+        // bapi.browser.contextMenus.create({'title': 'Select Text CAPTCHA Input Element', 'parentId': 'parent', 'id': 'child2'});
+    }
 
-    get_server_plan: Server.get_plan,
-
-    b64_image: Image.b64,
-
-    relay: Relay.send,
-
-    set_icon: Icon.set_icon,
-    // set_badge: Icon.set_badge,
-
-    browser_version: Browser.get_version,
-};
+    static {
+        bapi.browser.runtime.onInstalled.addListener(ContextMenu.create);
+        ContextMenu.listen();
+    }
+}
 
 
 (async () => {
-    // Force language for reCAPTCHA and FunCAPTCHA
+    // bapi.reconnect_scripts();
+
     bapi.register_language();
 
-    // await Settings.reset();
     await Settings.load();
-    // console.log('Settings.data', Settings.data);
 
-    await Icon.set_icon({data: Settings.data.enabled ? 'on' : 'off'});
+    await Icon.set_icon({status: Settings.data.enabled ? 'on' : 'off'});
 
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
-        // Chrome doesn't support async event listeners yet
-        (async () => {
-            const verbose = !['get_settings', 'set_settings', 'set_cache'].includes(req.method);
-            // const verbose = !['set_cache'].includes(req.method);
-
-            if (verbose) {
-                console.log('message', sender, req);
+        const method = req[0];
+        let data = null;
+        if (req.length > 1) {
+            if (req.length === 2) {
+                data = req[1];
             }
-
-            let tab_id = sender?.tab?.id;
-            if (req.data && 'tab_id' in req.data) {
-                tab_id = req.data.tab_id;
+            else {
+                data = req.slice(1);
             }
+        }
+        const tab_id = (data && 'tab_id' in data) ? data.tab_id : sender?.tab?.id;
+        const frame_id = sender?.frameId;
+        // console.log('method', method, data);
 
-            try{
-                // const result = await FN[req.method]({tab_id: sender?.tab?.id, data: req.data});
-                const result = await FN[req.method]({tab_id, frame_id: sender?.frameId, data: req.data});
-                if (verbose){
-                    console.log('result', req.method, result);
-                }
-                return result;
-            } catch (e) {
-                console.error('Failed while executting ', req, 'exception happened', e);
-                throw e;
-            }
-        })().then(send).catch((s) => {console.error(s); send(s)});
+        try {
+            API.endpoints[method]({tab_id, frame_id, data})
+                .then(r => {
+                    const verbose = !['Browser.log', 'Settings.get', 'Settings.set', 'Cache.get', 'Cache.set', 'Tab.info'].includes(method);
 
-        // Will respond using the send callback
+                    if (verbose){
+                        console.log(method, r);
+                    }
+
+                    try {
+                        send(r);
+                    } catch (e) {
+                        console.error('error in send\n', method, '\n', data, e);
+                    }
+
+                })
+                .catch(e => {
+                    console.error('error in api method\n', method, '\n', data, e);
+                });
+        } catch (e) {
+            console.error('error in api call\n', method, '\n', data, e);
+        }
+
         return true;
     });
 
