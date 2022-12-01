@@ -42,7 +42,6 @@
     async function on_widget_frame(settings) {
         // Check if parent frame marked this frame as visible on screen
         const is_visible = await BG.exec('Cache.get', {name: 'recaptcha_widget_visible', tab_specific: true});
-        console.log('is_visible', is_visible);
         if (is_visible !== true) {
             return;
         }

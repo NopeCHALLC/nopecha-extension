@@ -3,6 +3,11 @@ let checking_server_plan = false;
 let rendering_server_plan = false;
 
 
+function sleep(t) {
+    return new Promise(resolve => setTimeout(t));
+}
+
+
 function get_loading_html() {
     return '<div class="loading"><div></div><div></div><div></div><div></div></div>';
 }
@@ -35,7 +40,29 @@ async function check_plan() {
             quota: 0,
             duration: null,
             lastreset: null,
+            current_period_start: 1,
+            current_period_end: 1,
         };
+    }
+
+    plan.subscription = ['Starter', 'Basic', 'Professional', 'Enterprise'].includes(plan.plan);
+    plan.invalid = false;
+    if (['Banned IP', 'Invalid key', 'Rate limit reached'].includes(plan.plan)) {
+        plan.invalid = true;
+    }
+    else {
+        plan.plan = `${plan.plan} Plan`;
+    }
+
+    plan.expired = false;
+    if (plan.subscription) {
+        const now = Date.now() / 1000;
+        const delta = plan.current_period_end - now;
+        if (delta < 0) {
+            plan.expired = true;
+            plan.credit = 0;
+            plan.quota = 0;
+        }
     }
 
     checking_server_plan = false;
@@ -70,19 +97,15 @@ async function render_plan() {
     }
 
     // Display plan name
-    let plan_name = plan.plan;
-    if (!['Invalid key', 'Rate limit reached'].includes(plan_name)) {
-        plan_name = `${plan_name} Plan`;
-    }
-    $plan.innerHTML = plan_name;
-
-    if (plan.error) {
+    $plan.innerHTML = plan.plan;
+    if (plan.invalid || plan.error) {
         $plan.classList.add('red');
     }
     else {
         $plan.classList.remove('red');
     }
 
+    // Display banned message
     if (plan.plan === 'Banned IP') {
         $ipbanned_warning.classList.remove('hidden');
     }
@@ -91,34 +114,45 @@ async function render_plan() {
     }
 
     // Display remaining credits
-    if (secs_until_reset === 0) {
-        // Show loading icon for remaining credit while the server resets quota
-        $credit.classList.remove('red');
-        $credit.innerHTML = get_loading_html();
+    $credit.innerHTML = `${number_with_comma(plan.credit)} / ${number_with_comma(plan.quota)}`;
+    if (plan.credit === 0) {
+        $credit.classList.add('red');
     }
     else {
-        $credit.innerHTML = `${number_with_comma(plan.credit)} / ${number_with_comma(plan.quota)}`;
-        if (plan.credit === 0) {
-            $credit.classList.add('red');
-        }
-        else {
-            $credit.classList.remove('red');
-        }
+        $credit.classList.remove('red');
     }
 
     // Display time until reset
-    if (secs_until_reset) {
-        const hms = Time.seconds_as_hms(secs_until_reset);
-        $refills.innerHTML = `${hms}`;
+    if (plan.expired) {
+        $refills.innerHTML = 'Expired';
+        $refills.classList.add('red');
     }
     else {
-        $refills.innerHTML = get_loading_html();
+        if (plan.duration < 0) {
+            $refills.innerHTML = 'No refills';
+            $refills.classList.add('red');
+        }
+        else if (secs_until_reset) {
+            const hms = Time.seconds_as_hms(secs_until_reset);
+            $refills.innerHTML = `${hms}`;
+            $refills.classList.remove('red');
+        }
+        else {
+            $refills.innerHTML = get_loading_html();
+            $refills.classList.remove('red');
+        }
+
+        // Plan may have been reset. Fetch data from server
+        if (plan.lastreset === 1) {
+            $refills.innerHTML = 'Not activated';
+            $refills.classList.add('red');
+        }
+        else if (plan.duration > 0 && secs_until_reset === 0) {
+            await sleep(1000);
+            await check_plan();
+        }
     }
 
-    // Plan may have been reset. Fetch data from server
-    if (plan.duration !== 0 && secs_until_reset === 0) {
-        await check_plan();
-    }
 
     rendering_server_plan = false;
 }
@@ -173,16 +207,25 @@ async function init_ui() {
      */
 
     const $key = document.querySelector('.settings_text[data-settings="key"]');
+    const $edit_icon = document.querySelector('.edit_icon');
+    const $key_label = document.querySelector('.key_label');
     function toggle_edit_key() {
         if ($key.classList.contains('hiddenleft')) {
             $key.classList.remove('hiddenleft');
             $key.focus();
+            $edit_icon.classList.remove('hidden');
+            $key_label.classList.add('hidden');
         }
         else {
             $key.classList.add('hiddenleft');
+            $edit_icon.classList.add('hidden');
+            $key_label.classList.remove('hidden');
         }
     }
-    document.querySelector('#edit_key').addEventListener('click', toggle_edit_key);
+    document.querySelector('#edit_key').addEventListener('click', () => {
+        toggle_edit_key();
+        check_plan();
+    });
     $key.addEventListener('keydown', e => {
         e = e || window.event;
         if (e.key === 'Enter') {
@@ -393,6 +436,20 @@ async function init_ui() {
         const url = SettingsManager.export(settings);
         window.open(url, '_blank');
     });
+
+
+    /**
+     * Footer
+     */
+    const VERSION = `Version ${chrome.runtime.getManifest().version}`;
+    for (const $footer of document.querySelectorAll('.footer')) {
+        const $version = document.createElement('div');
+        $version.innerHTML = VERSION;
+        const $copyright = document.createElement('div');
+        $copyright.innerHTML = `2022 NopeCHA`;
+        $footer.append($version);
+        $footer.append($copyright);
+    }
 }
 
 

@@ -1,30 +1,31 @@
 (async () => {
     function print_html() {
-        function wrap(text) {
-            return `<p style='font-family: monospace; font-size: 12px; white-space: pre;'>${text}</p>`
-        }
+        try {
+            function wrap(text) {
+                return `<p style='font-family: monospace; font-size: 12px; white-space: pre;'>${text}</p>`
+            }
 
-        const s = [];
-        for (const e of arguments) {
-            s.push(wrap(e));
+            const s = [];
+            for (const e of arguments) {
+                s.push(wrap(e));
+            }
+            s.push(wrap('Join us on <a href="https://nopecha.com/discord" target="_blank">Discord</a>'));
+            document.body.innerHTML = s.join('<hr>');
+        } catch (e) {
+            console.log('error print_html', e);
         }
-        s.push(wrap('Join us on <a href="https://nopecha.com/discord" target="_blank">Discord</a>'));
-        document.body.innerHTML = s.join('<hr>');
     }
 
     try {
         if (document.location.hash) {
             print_html('Importing settings...');
 
-            const settings = SettingsManager.import(document.location.hash);
-            console.log('imported settings', settings);
+            // Wait for Settings initialization
+            await BG.exec('Settings.get');
 
-            const proms = [];
-            for (const [k, v] of Object.entries(settings)) {
-                console.log(k, v);
-                proms.push(BG.exec('Settings.set', {id: k, value: v}));
-            }
-            await Promise.all(proms);
+            const settings = SettingsManager.import(document.location.hash);
+            console.log('settings', settings);
+            await BG.exec('Settings.update', {settings});
 
             const url = window.location.href;
             print_html(

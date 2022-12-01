@@ -96,6 +96,7 @@
                 }
 
                 const image_data = await get_image_data(settings.textcaptcha_image_selector);
+                console.log('image_data', image_data);
                 if (!image_data) {
                     checking = false;
                     return;

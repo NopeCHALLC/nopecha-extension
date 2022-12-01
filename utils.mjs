@@ -162,7 +162,7 @@ export class SettingsManager {
         recaptcha_auto_open: true,
         recaptcha_auto_solve: true,
         recaptcha_solve_delay: true,
-        recaptcha_solve_delay_time: 1000,
+        recaptcha_solve_delay_time: 2000,
         recaptcha_solve_method: 'Image',
 
         funcaptcha_auto_open: true,

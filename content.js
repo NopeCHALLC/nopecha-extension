@@ -1,5 +1,4 @@
 class BG {
-    // static exec(method, data) {
     static exec() {
         return new Promise(resolve => {
             try {
@@ -114,8 +113,8 @@ class NopeCHA {
             const data = {
                 type: captcha_type,
                 task: task,
-                v: chrome.runtime.getManifest().version,
                 key: key,
+                v: chrome.runtime.getManifest().version,
                 url: info ? info.url : window.location.href,
             };
             if (image_urls) {
@@ -131,9 +130,17 @@ class NopeCHA {
                 data.audio_data = audio_data;
             }
 
-            const text = await Net.fetch(NopeCHA.INFERENCE_URL, {method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'}});
-
             try {
+                const headers = {'Content-Type': 'application/json'};
+                if (key && key !== 'undefined') {
+                    headers.Authorization = `Bearer ${key}`;
+                }
+                const text = await Net.fetch(NopeCHA.INFERENCE_URL, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data),
+                });
+
                 const r = JSON.parse(text);
                 if ('error' in r) {
                     if (r.error === NopeCHA.ERRORS.RATE_LIMITED) {
@@ -158,14 +165,14 @@ class NopeCHA {
                 return await NopeCHA.get({job_id, key});
             } catch (e) {
                 console.log('failed to parse post response', e);
-                break;
+                // break;
             }
         }
 
         return {job_id: null, data: null};
     }
 
-    static async get({key, job_id}) {
+    static async get({job_id, key}) {
         const start_time = Date.now();
 
         while (true) {
@@ -175,7 +182,13 @@ class NopeCHA {
             }
 
             await Time.sleep(1000);
-            const text = await Net.fetch(`${NopeCHA.INFERENCE_URL}?id=${job_id}&key=${key}`);
+            const headers = {};
+            if (key && key !== 'undefined') {
+                headers.Authorization = `Bearer ${key}`;
+            }
+            const text = await Net.fetch(`${NopeCHA.INFERENCE_URL}?id=${job_id}&key=${key}`, {
+                headers: headers,
+            });
             try {
                 const r = JSON.parse(text);
                 if ('error' in r) {

@@ -32,6 +32,9 @@ html, body {
 div {
     display: block;
 }
+a {
+    text-decoration: none;
+}
 button, input, optgroup, select, textarea {
     font-family: inherit;
     font-size: 100%;
@@ -166,6 +169,14 @@ input[type=number] {
     100% {opacity: 1;}
 }
 
+/* MISC */
+.clickable {
+    cursor: pointer !important;
+}
+.clickable:hover {
+    opacity: 0.8 !important;
+}
+
 /* APP */
 
 #app_frame {
@@ -261,9 +272,6 @@ input[type=number] {
     margin-left: auto;
     display: flex;
 }
-.plan_value > a {
-    text-decoration: none;
-}
 .plan_button {
     display: flex;
     background-color: transparent;
@@ -281,13 +289,7 @@ input[type=number] {
     color: #0a95ff;
 }
 .plan_button.link,
-.plan_button.clickable {
-    cursor: pointer;
-}
 .plan_button.link:hover,
-.plan_button.clickable:hover {
-    opacity: 0.8;
-}
 .plan_button_label {
     box-sizing: border-box;
     font-size: 14px;
@@ -319,6 +321,20 @@ input[type=number] {
 
 /* KEY */
 
+.key_label {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+}
+.key_label > .instructions {
+    font-weight: normal;
+    line-height: 16px;
+    margin-left: 6px;
+    color: #fff;
+    font-size: 10px;
+}
 .settings_text[data-settings="key"] {
     background: #1a2432;
     position: absolute;
@@ -326,7 +342,13 @@ input[type=number] {
     transition: all ease 0.1s;
     z-index: 1;
 }
-#edit_key {
+/* .edit_key {
+    line-height: 16px;
+    margin-right: 6px;
+    color: #fff;
+    font-size: 10px;
+} */
+.edit_icon {
     z-index: 2;
 }
 
@@ -382,6 +404,16 @@ button.menu_item_container {
     width: 16px;
 }
 
+/* #export {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: color 0.5s ease 0s, border 0.5s ease 0s;
+}
+#export:hover {
+    color: rgb(255, 255, 255);
+} */
+
 /* TAB */
 
 .bbflex {
@@ -399,10 +431,15 @@ button.menu_item_container {
 }
 .settings_item_container {
     box-sizing: border-box;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     box-sizing: border-box;
+}
+.settings_item_container > a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: color 0.5s ease 0s, border 0.5s ease 0s;
 }
 .settings_item {
     width: 100%;

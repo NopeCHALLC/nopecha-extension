@@ -123,36 +123,64 @@ class Settings {
     static data = {};
 
     static _save() {
-        return new Promise(resolve => bapi.browser.storage.sync.set({settings: Settings.data}, resolve));
+        console.log('Settings.save', Settings.data);
+        return new Promise(resolve => {
+            bapi.browser.storage.sync.set({settings: Settings.data}, resolve);
+        });
     }
 
-    static load() {
+    // static load() {
+    //     return new Promise(resolve => {
+    //         const storage = bapi.browser.storage;
+    //         if (!storage) {
+    //             resolve();
+    //             return;
+    //         }
+    //         storage.sync.get(['settings'], async ({settings}) => {
+    //             if (!settings) {
+    //                 await Settings.reset();
+    //             }
+    //             else {
+    //                 Settings.data = settings;
+    //                 if (Settings.data.version !== SettingsManager.DEFAULT.version) {
+    //                     const key = Settings.data.key;
+    //                     console.log('mismatched version', key);
+    //                     await Settings.reset();
+    //                     Settings.data.key = key;
+    //                 }
+    //             }
+    //             resolve();
+    //         });
+    //     });
+    // }
+
+    static _get_settings() {
         return new Promise(resolve => {
-            const storage = bapi.browser.storage;
-            if (!storage) {
-                resolve();
-                return;
-            }
-            storage.sync.get(['settings'], async ({settings}) => {
-                if (!settings) {
-                    await Settings.reset();
-                }
-                else {
-                    Settings.data = settings;
-                    if (Settings.data.version !== SettingsManager.DEFAULT.version) {
-                        const key = Settings.data.key;
-                        console.log('mismatched version', key);
-                        await Settings.reset();
-                        Settings.data.key = key;
-                    }
-                }
-                // // Temporary fix
-                // if (Settings.data.key?.startsWith('MIIBI')) {
-                //     Settings.data.key = '';
-                // }
-                resolve();
+            bapi.browser.storage.sync.get(['settings'], ({settings}) => {
+                console.log('Settings._get_settings', settings);
+                resolve(settings);
             });
         });
+    }
+
+    static async load() {
+        for (let i = 0; i < 4; i++) {
+            const settings = await Settings._get_settings();
+            if (!settings) {
+                // await Time.sleep(100);
+                continue;
+            }
+            Settings.data = settings;
+            if (Settings.data.version !== SettingsManager.DEFAULT.version) {
+                const key = Settings.data.key;
+                console.log('mismatched version', key);
+                await Settings.reset();
+                Settings.data.key = key;
+            }
+            return;
+        }
+        console.log('settings load retry exceeded');
+        await Settings.reset();
     }
 
     static async get() {
@@ -164,14 +192,26 @@ class Settings {
         await Settings._save();
     }
 
+    static async update({settings}) {
+        for (const [k, v] of Object.entries(settings)) {
+            Settings.data[k] = v;
+        }
+        await Settings._save();
+    }
+
+    static async replace({settings}) {
+        Settings.data = settings;
+        await Settings._save();
+    }
+
     static async reset() {
         Settings.data = deep_copy(SettingsManager.DEFAULT);
 
-        // Set key from manifest
-        const manifest = bapi.browser.runtime.getManifest();
-        if (manifest.nopecha_key) {
-            Settings.data.key = manifest.nopecha_key;
-        }
+        // // Set key from manifest
+        // const manifest = bapi.browser.runtime.getManifest();
+        // if (manifest.nopecha_key) {
+        //     Settings.data.key = manifest.nopecha_key;
+        // }
 
         await Settings._save();
     }
@@ -179,6 +219,8 @@ class Settings {
     static {
         API.register(this, 'get');
         API.register(this, 'set');
+        API.register(this, 'update');
+        API.register(this, 'replace');
         API.register(this, 'reset');
     }
 }
@@ -357,7 +399,7 @@ class Server {
             if (key === 'undefined') {
                 key = '';
             }
-            const r = await fetch(`${Server.ENDPOINT}&k=${key}`);
+            const r = await fetch(`${Server.ENDPOINT}&key=${key}`);
             plan = JSON.parse(await r.text());
         } catch {}
         Server.is_fetching_plan = false;
@@ -406,7 +448,7 @@ class Relay {
 
 
 class Icon {
-    static set_icon({status}) {
+    static set({status}) {
         return new Promise(resolve => {
             const ba = bapi.VERSION === 'firefox' ? bapi.browser.browserAction : bapi.browser.action;
             if (status === 'on') {
@@ -474,7 +516,7 @@ class Icon {
     }
 
     static {
-        API.register(this, 'set_icon');
+        API.register(this, 'set');
     }
 }
 
@@ -538,7 +580,7 @@ class ContextMenu {
 
     await Settings.load();
 
-    await Icon.set_icon({status: Settings.data.enabled ? 'on' : 'off'});
+    await Icon.set({status: Settings.data.enabled ? 'on' : 'off'});
 
     bapi.browser.runtime.onMessage.addListener((req, sender, send) => {
         const method = req[0];
