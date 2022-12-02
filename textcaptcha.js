@@ -1,16 +1,17 @@
 (async () => {
     function is_present(settings) {
         try {
-            const $image = document.querySelector(settings.textcaptcha_image_selector);
-            if (!$image) {
-                return false;
+            if (settings?.textcaptcha_image_selector && settings?.textcaptcha_input_selector) {
+                const $image = document.querySelector(settings.textcaptcha_image_selector);
+                if (!$image) {
+                    return false;
+                }
+                const $input = document.querySelector(settings.textcaptcha_input_selector);
+                if (!$input || $input.value) {
+                    return false;
+                }
+                return true;
             }
-            const $input = document.querySelector(settings.textcaptcha_input_selector);
-            if (!$input || $input.value) {
-                return false;
-            }
-
-            return true;
         } catch (e) {}
         return false;
     }
@@ -73,7 +74,7 @@
             const $canvas = await get_canvas(selector);
             return $canvas.toDataURL('image/jpeg').split(';base64,')[1];
         } catch (e) {
-            console.error('failed to encode image data', e);
+            // console.error('failed to encode image data', e);
             return null;
         }
     }
