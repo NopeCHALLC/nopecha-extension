@@ -1,12 +1,32 @@
 ## NopeCHA Chrome Extension & Firefox Add-on
 
-[Official Website](https://www.nopecha.com)
+### Supported CAPTCHA types:
+- reCAPTCHA v2
+- reCAPTCHA v3
+- reCAPTCHA Enterprise
+- hCaptcha
+- hCaptcha Enterprise
+- FunCAPTCHA
+- AWS WAF CAPTCHA
+- Text-based CAPTCHA
 
 [Chrome Extension](https://www.nopecha.com/chrome)
 
 [Firefox Add-on](https://www.nopecha.com/firefox)
 
-[API Reference](https://www.nopecha.com/api)
+[API Documentation](https://developers.nopecha.com)
+
+
+## Usage Examples
+
+NopeCHA Extension in Selenium
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1h9Q37yQqrLNhkqBCCWtHMPc09iOlLEQ5?usp=sharing)
+
+NopeCHA Extension in Undetected Chromedriver
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1IAIwMWxpK7j1zzWJ1RmajD0TjaW_ANz4?usp=sharing)
+
 
 ## Development
 ### Prerequisites
