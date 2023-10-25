@@ -1,6 +1,6 @@
 # NopeCHA Chrome Extension & Firefox Add-on
 
-[![Latest Version](https://img.shields.io/github/v/release/NopeCHALLC/nopecha-extension?style=flat-square)](https://github.com/NopeCHALLC/nopecha-extension/releases)
+[![Latest Version](https://img.shields.io/github/v/release/NopeCHALLC/nopecha-extension?style=flat-square)](../../releases)
 [![License](https://img.shields.io/github/license/NopeCHALLC/nopecha-extension?style=flat-square)](LICENSE)
 
 ### Introduction
@@ -26,32 +26,17 @@ To test the extension:
 
 Here's a sample of CAPTCHA types supported by NopeCHA, with ongoing development for more:
 
-<div style="display: flex; flex-flow: row wrap;">
-    <div style="margin: auto; padding: 16px; display: flex; flex-flow: column nowrap; min-width: 300px; width: 45%; flex-grow: 1;">
-        <div style="text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #aaa;">All versions of reCAPTCHA</div>
-        <img src="assets/recaptcha.gif?raw=true" style="object-fit: contain;" alt="reCAPTCHA" title="reCAPTCHA" />
-    </div>
-    <div style="margin: auto; padding: 16px; display: flex; flex-flow: column nowrap; min-width: 300px; width: 45%; flex-grow: 1;">
-        <div style="text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #aaa;">Most versions of FunCAPTCHA</div>
-        <img src="assets/funcaptcha.gif?raw=true" style="object-fit: contain;" alt="FunCAPTCHA" title="FunCAPTCHA" />
-    </div>
-    <div style="margin: auto; padding: 16px; display: flex; flex-flow: column nowrap; min-width: 300px; width: 45%; flex-grow: 1;">
-        <div style="text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #aaa;">All versions of hCaptcha</div>
-        <img src="assets/hcaptcha.gif?raw=true" style="object-fit: contain;" alt="hCaptcha" title="hCaptcha" />
-    </div>
-    <div style="margin: auto; padding: 16px; display: flex; flex-flow: column nowrap; min-width: 300px; width: 45%; flex-grow: 1;">
-        <div style="text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #aaa;">AWS WAF CAPTCHA</div>
-        <img src="assets/awscaptcha.gif?raw=true" style="object-fit: contain;" alt="AWS WAF CAPTCHA" title="AWS WAF CAPTCHA" />
-    </div>
-    <div style="margin: auto; padding: 16px; display: flex; flex-flow: column nowrap; min-width: 300px; width: 45%; flex-grow: 1;">
-        <div style="text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #aaa;">300+ Types of Text-based CAPTCHA</div>
-        <img src="assets/textcaptcha.gif?raw=true" style="object-fit: contain;" alt="Text-based CAPTCHA" title="Text-based CAPTCHA" />
-    </div>
-    <div style="margin: auto; padding: 16px; display: flex; flex-flow: column nowrap; min-width: 300px; width: 45%; flex-grow: 1;">
-        <div style="text-align: center; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #aaa;">Cloudflare Turnstile</div>
-        <img src="assets/turnstile.gif?raw=true" style="object-fit: contain;" alt="Cloudflare Turnstile" title="Cloudflare Turnstile" />
-    </div>
-</div>
+| All versions of reCAPTCHA | Most versions of FunCAPTCHA |
+:-:|:-:
+![reCAPTCHA](assets/recaptcha.gif?raw=true) | ![FunCAPTCHA](assets/funcaptcha.gif?raw=true)
+
+| All versions of hCaptcha | AWS WAF CAPTCHA |
+:-:|:-:
+![hCaptcha](assets/hcaptcha.gif?raw=true) | ![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true)
+
+| 300+ Types of Text CAPTCHA | Cloudflare Turnstile |
+:-:|:-:|
+![Text-based CAPTCHA](assets/textcaptcha.gif?raw=true) | ![Cloudflare Turnstile](assets/turnstile.gif?raw=true)
 
 <br>
 
@@ -70,10 +55,9 @@ To maintain our edge without offering CAPTCHA providers a counter-strategy, we h
 
 <br>
 
-<div style="text-align: center;">
-    <img src="assets/hcaptcha_butterfly.gif?raw=true" alt="NopeCHA Cartoon" title="NopeCHA Cartoon" style="max-width: 240px" />
-    <img src="assets/nopecha_banner_1.webp?raw=true" alt="NopeCHA Cartoon" title="NopeCHA Cartoon" style="max-width: 300px" />
-</div>
+<p align="center">
+<img src="assets/hcaptcha_butterfly.gif?raw=true" width="240" /> <img src="assets/nopecha_banner_1.webp?raw=true" width="300" />
+</p>
 
 <br>
 
@@ -93,19 +77,16 @@ Thanks for your support, and remember—in a world full of CAPTCHAs, be a NopeCH
 
 <br>
 
-<div style="text-align: center;">
-    <img src="assets/nopecha_banner_0.webp?raw=true" alt="NopeCHA Digital Gym" title="NopeCHA Digital Gym" style="max-height: 400px" />
-</div>
+![NopeCHA Digital Gym](assets/nopecha_banner_0.webp?raw=true)
 
 <br>
-<br>
-<br>
 
-# The following section is deprecated and kept for archival purposes only
+# Following sections are DEPRECATED
+> :warning: **Archival purposes only**
 
 ## Usage Examples
-
 > :warning: **[Outdated examples due to Colab updates]**:
+
 While it's possible to use NopeCHA in Colab, we're not actively supporting it.
 If you're interested in using NopeCHA in Colab, you will need to change the code to get it working again.
 
