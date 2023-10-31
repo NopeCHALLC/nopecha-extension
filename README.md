@@ -16,7 +16,7 @@ Once installed, NopeCHA autonomously handles CAPTCHAs, allowing you to focus on 
 
 ### Getting Started
 
-For developers interested in integrating NopeCHA into their projects, please consult our [API documentation](http://localhost:34129/guides/extension_advanced/).
+For developers interested in integrating NopeCHA into their projects, please consult our [API documentation](https://developers.nopecha.com/guides/extension_advanced).
 
 To test the extension:
 - [Chrome Extension](https://www.nopecha.com/chrome)
