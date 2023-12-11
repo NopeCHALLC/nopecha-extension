@@ -104,6 +104,7 @@ def in_dir(new_path):
 def uglify(file: Path):
     return subprocess.check_output(
         [
+            "npx",
             "uglifyjs",
             "--compress",
             "--mangle",
@@ -111,7 +112,7 @@ def uglify(file: Path):
             "-c",
             "drop_console",
             "--",
-            os.fspath(file.absolute()),
+            os.fspath(file.absolute())
         ]
     )
 

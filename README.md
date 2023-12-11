@@ -129,7 +129,7 @@ or
 ## Building for production
 ### Prerequisites
 
-`npm install uglify-js -g`
+run `npm install uglify-js` in the project's root folder.
 
 ### Build
 
