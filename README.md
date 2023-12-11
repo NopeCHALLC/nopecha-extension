@@ -1,4 +1,4 @@
-# NopeCHA Chrome Extension & Firefox Add-on
+# NopeCHA Chrome Extension, Firefox Add-on & Safari Extension
 
 [![Latest Version](https://img.shields.io/github/v/release/NopeCHALLC/nopecha-extension?style=flat-square)](../../releases)
 [![License](https://img.shields.io/github/license/NopeCHALLC/nopecha-extension?style=flat-square)](LICENSE)
@@ -10,7 +10,7 @@ NopeCHA is a **free-to-use** automated CAPTCHA solver, compatible with multiple 
 ### Why NopeCHA?
 
 Staying up-to-date with frequently changing CAPTCHA challenges can be tedious.
-That's why we've developed browser extensions for both Chrome and Firefox.
+That's why we've developed browser extensions for Chrome, Firefox & Safari.
 These extensions receive regular updates to support the latest CAPTCHA challenges, ensuring uninterrupted service for your automation scripts.
 Once installed, NopeCHA autonomously handles CAPTCHAs, allowing you to focus on more important tasks.
 
@@ -21,6 +21,7 @@ For developers interested in integrating NopeCHA into their projects, please con
 To test the extension:
 - [Chrome Extension](https://www.nopecha.com/chrome)
 - [Firefox Add-on](https://www.nopecha.com/firefox)
+- [Safari Add-on](https://www.nopecha.com/safari) (TBA)
 
 ### Supported CAPTCHA Types
 
@@ -106,11 +107,13 @@ Having [Python 3.8](https://python.org) or above installed.
 
 ### Building
 
-To build debug copy for both Chrome and Firefox, simply run the following command:
+NOTE: building the Safari extension is only available on macOS and requires XCode installed.
+
+To build debug copy for Chrome, Firefox & Safari, simply run the following command:
 
 `python build.py`
 
-This will create a `dist` directory in the project root directory, in which you will find `firefox` and `chrome` directories for debugging purposes. If you use the `-p` argument, each debugging directory will have an additional xpi/crc archive for production usage.
+This will create a `dist` directory in the project root directory, in which you will find `firefox`, `chrome` and `safari` directories for debugging purposes. If you use the `-p` argument, each debugging directory will have an additional xpi/crc archive for production usage.
 
 ### Actively listening for changes
 For development convenience, `build.py` also supports listening to changes so files are quickly updated.

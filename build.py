@@ -150,7 +150,7 @@ dir_path = Path(__file__).absolute().parent
 
 with in_dir(dir_path):
 
-    def build():
+    def build_for_chrome_and_firefox():
         here_path = Path(".")
 
         # This is slow but there should be very few files, so it should be OK
@@ -168,8 +168,6 @@ with in_dir(dir_path):
         ]
 
         versions = filter(lambda p: p.is_dir(), VERSIONS_PATH.iterdir())
-        # This could be run just once per program run but it would bring unnecessary complexity to the code below
-        shutil.rmtree(EXPORT_PATH, True)
 
         for version in versions:
             export_directory = EXPORT_PATH / version.name
@@ -250,7 +248,55 @@ with in_dir(dir_path):
                         "manifest.json", json.dumps(extension_manifest).encode("UTF-8")
                     )
 
-    build()
+    def build_for_safari():
+        # only build a safari extension if we're on macOS
+        if sys.platform != 'darwin':
+            return
+
+        printe("-" * 80)
+        printe("packaging version", 'version/safari')
+
+        subprocess.check_output(
+            ["xcrun",
+             "safari-web-extension-converter",
+             "./dist/chrome",
+             "--macos-only",
+             "--copy-resources",
+             "--no-open",
+             "--objc",
+             "--project-location",
+             "./dist/"]
+        )
+
+        manifest_base = json.load(open(BASE_MANIFEST))
+        manifest_base_name = manifest_base['name']
+
+        os.rename(f'./dist/{manifest_base_name}', './dist/safari')
+        xcode_configuration = "Release" if program_args.production else "Debug"
+        subprocess.check_output(
+            ["xcodebuild",
+             "-project",
+             f"./dist/safari/{manifest_base_name}.xcodeproj",
+             "-configuration",
+             xcode_configuration]
+        )
+
+        if program_args.production:
+            safari_extension_directory = f'./dist/safari/build/{xcode_configuration}'
+            #  unlike ZipFile shutil.make_archive already takes care of the directory recursing
+            shutil.make_archive('./dist/safari',
+                                'zip',
+                                root_dir=safari_extension_directory,
+                                base_dir=f'{manifest_base_name}.app')
+
+
+    # This could be run just once per program run but it would bring unnecessary complexity to the code below
+    shutil.rmtree(EXPORT_PATH, True)
+
+    build_for_chrome_and_firefox()
+    # NOTE: the safari build relies on the output of the chrome extension build and
+    #       so should always come first.
+    build_for_safari()
 
     if program_args.watch:
         # All watchdog content here to "encapsulate" and only keep if wanted
@@ -264,7 +310,11 @@ with in_dir(dir_path):
                     not event.is_directory
                     and not os.fspath(EXPORT_PATH) in event.src_path
                 ):
-                    build()
+                    build_for_chrome_and_firefox()
+                    # TODO: implement watch rebuilding safari extension during watch
+                    # NOTE: the safari build relies on the output of the chrome extension build and
+                    #       so should always come first.
+                    # build_for_safari()
                     printe("changes detected - rebuilt extension")
                     observer.event_queue.empty()
 
