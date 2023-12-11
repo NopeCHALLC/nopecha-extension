@@ -1,4 +1,5 @@
 /archive/
 /dist/
 /.idea/
+/venv/
 .DS_Store

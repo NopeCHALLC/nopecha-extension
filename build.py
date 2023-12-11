@@ -10,7 +10,6 @@ import subprocess
 import sys
 import time
 from functools import partial
-from glob import glob
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
@@ -83,7 +82,7 @@ if watchdog is None and program_args.watch:
     exit(2)
 
 
-## Polyfill Python will remove link_to in python 3.12
+# Polyfill Python will remove link_to in python 3.12
 if not hasattr(Path, "hardlink_to"):
 
     def hardlink_to_polyfill(self, target):
@@ -117,7 +116,7 @@ def uglify(file: Path):
     )
 
 
-def process_file(source, dist_path, export_directory, zip):
+def process_file(source, dist_path, export_directory, zip_file):
     target = export_directory / dist_path
     target.parent.mkdir(parents=True, exist_ok=True)
 
@@ -135,7 +134,7 @@ def process_file(source, dist_path, export_directory, zip):
         printe("debug: hardlink", source)
         raise
 
-    if zip:
+    if zip_file:
         if source.suffix == ".js":
             printe("release: uglify js", source)
             zip_content = uglify(source)
@@ -143,7 +142,7 @@ def process_file(source, dist_path, export_directory, zip):
             printe("release: include file", source)
             zip_content = source.read_bytes()
 
-        zip.writestr(os.fspath(dist_path), zip_content)
+        zip_file.writestr(os.fspath(dist_path), zip_content)
 
 
 dir_path = Path(__file__).absolute().parent
@@ -185,7 +184,7 @@ with in_dir(dir_path):
             else:
                 zip_deploy = contextlib.nullcontext()
 
-            with zip_deploy as zip:
+            with zip_deploy as zip_file:
 
                 printe("-" * 80)
                 printe("packaging version", version)
@@ -200,13 +199,13 @@ with in_dir(dir_path):
 
                 for file_to_include in files_to_include:
                     process_file(
-                        file_to_include, file_to_include, export_directory, zip
+                        file_to_include, file_to_include, export_directory, zip_file
                     )
 
                 for version_file_to_include in version_files_to_include:
                     target_path = version_file_to_include.relative_to(version)
                     process_file(
-                        version_file_to_include, target_path, export_directory, zip
+                        version_file_to_include, target_path, export_directory, zip_file
                     )
 
                 # utils.js is generated from utils.mjs so they can stay synchronized for both usages
@@ -223,9 +222,9 @@ with in_dir(dir_path):
 
                 version_manifest = version / "manifest.json"
 
-                if zip:
+                if zip_file:
                     printe("debug: store utils", version_manifest)
-                    zip.writestr("utils.js", utils_js)
+                    zip_file.writestr("utils.js", utils_js)
 
                 printe("debug: manifest", version_manifest)
 
@@ -244,9 +243,9 @@ with in_dir(dir_path):
                 manifest_content = json.dumps(extension_manifest, indent=4)
                 (export_directory / "manifest.json").write_text(manifest_content)
 
-                if zip:
+                if zip_file:
                     printe("debug: store manifest", version_manifest)
-                    zip.writestr(
+                    zip_file.writestr(
                         "manifest.json", json.dumps(extension_manifest).encode("UTF-8")
                     )
 
