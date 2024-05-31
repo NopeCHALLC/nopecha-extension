@@ -1,9 +1,10 @@
 # NopeCHA Chrome Extension & Firefox Add-on
 
-[![Latest Version](https://img.shields.io/github/v/release/NopeCHALLC/nopecha-extension?style=flat-square)](../../releases)
-[![License](https://img.shields.io/github/license/NopeCHALLC/nopecha-extension?style=flat-square)](LICENSE)
-
-### Introduction
+![PyPI - Version](https://img.shields.io/pypi/v/nopecha?label=PyPI&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fpypi)
+![NPM Version](https://img.shields.io/npm/v/nopecha?label=NPM&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fnpm)
+![GitHub Release](https://img.shields.io/github/v/release/NopeCHALLC/nopecha-extension?label=Extension%20Release&color=4a4&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fgithub)
+![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dknlfmjaanfblgfdfebhijalfmhmjjjo?label=Chrome%20Web%20Store&color=4a4&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fchrome)
+![Mozilla Add-on Version](https://img.shields.io/amo/v/noptcha?label=Mozilla%20Add-on&color=4a4&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Ffirefox)
 
 NopeCHA is a **free-to-use** automated CAPTCHA solver, compatible with multiple CAPTCHA types, and powered by advanced deep learning models via the [NopeCHA API](https://developers.nopecha.com).
 
@@ -24,7 +25,7 @@ To test the extension:
 
 ### Supported CAPTCHA Types
 
-Here's a sample of CAPTCHA types supported by NopeCHA, with ongoing development for more:
+Here's a sample of CAPTCHA types supported by NopeCHA, with more being added regularly:
 
 | All versions of reCAPTCHA | Most versions of FunCAPTCHA |
 :-:|:-:
@@ -37,6 +38,11 @@ Here's a sample of CAPTCHA types supported by NopeCHA, with ongoing development 
 | 300+ Types of Text CAPTCHA | Cloudflare Turnstile |
 :-:|:-:|
 ![Text-based CAPTCHA](assets/textcaptcha.gif?raw=true) | ![Cloudflare Turnstile](assets/turnstile.gif?raw=true)
+
+- PerimeterX
+- GeeTest CAPTCHA
+- Lemin CAPTCHA
+- [View all supported CAPTCHAs](https://developers.nopecha.com/captcha/)
 
 <br>
 
