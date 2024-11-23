@@ -97,6 +97,14 @@
             "run_at": "document_end",
             "all_frames": true,
             "match_about_blank": true
+        },
+
+        {
+            "matches": ["*://*.shopee.tw/*"],
+            "js": ["yidun_captcha.js"],
+            "run_at": "document_end",
+            "all_frames": true,
+            "match_about_blank": false
         }
     ],
     "icons": {
