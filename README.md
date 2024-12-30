@@ -31,18 +31,24 @@ Here's a sample of CAPTCHA types supported by NopeCHA, with more being added reg
 :-:|:-:
 ![reCAPTCHA](assets/recaptcha.gif?raw=true) | ![FunCAPTCHA](assets/funcaptcha.gif?raw=true)
 
-| All versions of hCaptcha | AWS WAF CAPTCHA |
-:-:|:-:
-![hCaptcha](assets/hcaptcha.gif?raw=true) | ![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true)
-
 | 300+ Types of Text CAPTCHA | Cloudflare Turnstile |
 :-:|:-:|
 ![Text-based CAPTCHA](assets/textcaptcha.gif?raw=true) | ![Cloudflare Turnstile](assets/turnstile.gif?raw=true)
 
-- PerimeterX
-- GeeTest CAPTCHA
-- Lemin CAPTCHA
+| AWS WAF CAPTCHA | And all other CAPTCHAs |
+:-:|:-:
+![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true) | ![CAPTCHA](assets/collage.png?raw=true)
+
 - [View all supported CAPTCHAs](https://developers.nopecha.com/captcha/)
+
+<br>
+
+# What's Next in 2025
+We're excited to announce **computer use** coming to the NopeCHA API. This new feature will empower developers to send commands and a screenshot of their computer to the API, enabling our model to analyze the input and respond with precise actions. From data scraping to task automation, the updated API will handle a diverse range of operations—going beyond CAPTCHA solving.
+
+With a strong focus on efficiency and speed, this feature will launch in Q1 2025. Developers can leverage it seamlessly, with no concerns about added costs or delays. Stay tuned for more details and updates!
+
+![NopeCHA](assets/nopecha_1600x900.jpg?raw=true)
 
 <br>
 
@@ -52,20 +58,6 @@ Here's a sample of CAPTCHA types supported by NopeCHA, with more being added reg
 
 Starting 2023, NopeCHA has transitioned to a closed-source model.
 Despite this, we will continue to publish the latest builds under [Releases](../../releases).
-
-### Why the Transition?
-
-Earlier this year, hCaptcha and FunCAPTCHA added a hardcoded check to detect NopeCHA v0.3.x and open-source softwares developed by NopeCHA, LLC.
-This attention validates our impact.
-To maintain our edge without offering CAPTCHA providers a counter-strategy, we have chosen to restrict source code access.
-
-<br>
-
-<p align="center">
-<img src="assets/hcaptcha_butterfly.gif?raw=true" width="240" /> <img src="assets/nopecha_banner_1.webp?raw=true" width="300" />
-</p>
-
-<br>
 
 ### Technical Advancements
 
