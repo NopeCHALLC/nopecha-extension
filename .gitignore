@@ -1,3 +1,7 @@
-/archive/
-/dist/
-/.idea/
+# Keep main minimal: ignore everything by default
+*
+!.gitignore
+!README.md
+!LICENSE
+!assets/
+!assets/**
