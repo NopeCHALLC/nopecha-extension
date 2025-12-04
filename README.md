@@ -36,6 +36,7 @@ Easy, fast, and cheap CAPTCHA automation for everyone.
 
 *Latest News* 🔥
 
+- [2025/12] Released [0.5.4](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4) updating mouse actions into an undetectable implementation for hCaptcha, FunCAPTCHA, reCAPTCHA, and Cloudflare Turnstile (Chromium-only), among other fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4).
 - [2025/11] Released [0.5.3](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3) adding support for hCaptcha video challenges and improved click precision; introduced online RL for browser agents. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3).
 - [2025/11] Released [0.5.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.2) fixing hCaptcha drag-and-drop coordinate rescaling on small viewports, Turnstile checkbox detection on Cloudflare interstitial pages, improving Turnstile bounding boxes, hardening reCAPTCHA flows, and restoring GeeTest. See the updated API reference [here](https://nopecha.com/api-reference/).
 - [2025/11] Released [0.5.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1) to adapt to hCaptcha’s new coordinate system post 0.5.0. See the notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1).
