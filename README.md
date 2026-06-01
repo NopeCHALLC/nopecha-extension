@@ -18,12 +18,6 @@ Easy, fast, and cheap CAPTCHA automation for everyone.
 | <a href="https://nopecha.com/discord"><b>Developer Discord</b></a> |
 </p>
 
-
-<!-- ![PyPI - Version](https://img.shields.io/pypi/v/nopecha?label=PyPI&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fpypi) -->
-<!-- ![NPM Version](https://img.shields.io/npm/v/nopecha?label=NPM&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fnpm) -->
-<!-- ![GitHub Release](https://img.shields.io/github/v/release/NopeCHALLC/nopecha-extension?label=Extension%20Release&color=4a4&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fgithub) -->
-<!-- ![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/dknlfmjaanfblgfdfebhijalfmhmjjjo?label=Chrome%20Web%20Store&color=4a4&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fchrome) -->
-<!-- ![Mozilla Add-on Version](https://img.shields.io/amo/v/noptcha?label=Mozilla%20Add-on&color=4a4&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Ffirefox) -->
 <p align="center">
     <img alt="PyPI - Version" src="https://img.shields.io/pypi/v/nopecha?label=PyPI&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fpypi">
     <img alt="NPM Version" src="https://img.shields.io/npm/v/nopecha?label=NPM&link=https%3A%2F%2Fnopecha.com&link=https%3A%2F%2Fnopecha.com%2Fnpm">
@@ -36,6 +30,7 @@ Easy, fast, and cheap CAPTCHA automation for everyone.
 
 *Latest News* 🔥
 
+- [2026/06] Released [0.6.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0) adding configurable mouse speed and visualization, richer popup solve-status and pass-rate diagnostics, Text CAPTCHA math expression mode, and reliability fixes across hCaptcha, PerimeterX, GeeTest, AWS WAF, FunCAPTCHA, reCAPTCHA, Turnstile, and Firefox. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0).
 - [2026/04] Released [0.5.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6) adding user-configurable input and hook methods; improving hCaptcha drag-drop and label-binary handling; and various minor bug fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6).
 - [2026/01] Released [0.5.5](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5) improving hCaptcha bounding-box precision for canvas-based challenges; improving mouse action stability for all supported CAPTCHAs; and fixing minor bugs. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5).
 - [2025/12] Released [0.5.4](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4) updating mouse actions into an undetectable implementation for hCaptcha, FunCAPTCHA, reCAPTCHA, and Cloudflare Turnstile (Chromium-only), among other fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4).
@@ -91,10 +86,10 @@ NopeCHA is a **free-to-use** and **fully automatic** CAPTCHA solver powered by m
 ### Why NopeCHA?
 
 - Staying up-to-date with frequently changing CAPTCHA challenges can be tedious.
-- Our extensions, libraries, and API receive regular updates to keep up with the latest challenges, ensuring uninterrupted service for your workflow.
-- Load our extension in an automated browser like Selenium and watch it solve CAPTCHAs on any website you visit. No need to write custom code to bypass CAPTCHAs.
-- Use our API endpoints or Python and Node.js libraries use in custom applications, scripts, or bots.
-- Our AI is state-of-the-art. Behind the scenes, we use browsers controlled by AI agents to collect feedback by interacting with real CAPTCHAs. Then, the AI agents use this experience to update their policies, continuously and autonomously. The moment a new CAPTCHA is released, our models are already learning to solve it. Our robust and powerful online RL pipeline allows us to stay ahead of the curve and offer the lowest prices on the market.
+- Our extensions, libraries, and API receive regular updates, ensuring uninterrupted service for your automation needs.
+- Load our extension in an automated browser like Selenium and bypass CAPTCHAs in any web automation workflow, from testing to data collection and more.
+- Use our [API endpoints](https://nopecha.com/api-reference/) in your preferred programming language.
+- NopeCHA AI is state-of-the-art in CAPTCHA solving. Behind the scenes, AI agents collect feedback by interacting with real CAPTCHAs. Our models use this experience to update their policies, continuously and autonomously. The moment a new CAPTCHA is released, our AI is already learning to solve it. Our robust and powerful online RL pipeline allows us to stay ahead of the curve and offer the lowest prices in the industry.
 
 Find the full list of supported CAPTCHAs [here](https://developers.nopecha.com/captcha/).
 
@@ -168,23 +163,20 @@ Here is a sample of CAPTCHA types supported by NopeCHA, with more added regularl
 
 ### Why Closed Source?
 
-In early 2023, hCaptcha and FunCAPTCHA added a hardcoded check to detect NopeCHA v0.3.x and open-source softwares developed by NopeCHA, LLC.
-This attention validates our impact.
-To maintain our edge without offering CAPTCHA providers a counter-strategy, we have chosen to restrict source code access.
+To maintain our edge and prevent abuse, we have chosen to restrict source code access to our browser extension. This allows us to continue providing a free-to-use service while protecting our proprietary technology and ensuring the integrity of our CAPTCHA-solving capabilities.
 
 ### What Changed
 
-We continue to publish the latest builds under <a href="../../releases">GitHub releases</a> and in the Chrome Web Store and Mozilla Add-on store, but the source code is no longer publicly available.
+We continue to publish the latest builds under <a href="../../releases">GitHub releases</a> and in the Chrome Web Store and Mozilla Add-on store, but the source code for the latest versions will no longer be publicly available.
+
+We have archived the open-source [v0.3.x branch](https://github.com/NopeCHALLC/nopecha-extension/tree/legacy-oss) for reference, but it is no longer maintained or supported.
 
 ### The Road Ahead
 
 We are committed to expanding support across CAPTCHA providers and improving accuracy, throughput, and cost efficiency.
 
-Thanks for your support.
+Thank you for your understanding and continued support as we evolve our services to better serve our users and maintain the quality and reliability of our CAPTCHA-solving technology.
 
 </details>
 
 <br>
-
-![NopeCHA Digital Gym](assets/nopecha_banner_0.webp?raw=true)
-
