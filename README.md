@@ -30,17 +30,18 @@ Easy, fast, and cheap CAPTCHA automation for everyone.
 
 *Latest News* 🔥
 
+- [2026/06] Released [0.6.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1) fixing some bugs and making Turnstile and PerimterX work on more pages. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1).
 - [2026/06] Released [0.6.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0) adding configurable mouse speed and visualization, richer popup solve-status and pass-rate diagnostics, Text CAPTCHA math expression mode, and reliability fixes across hCaptcha, PerimeterX, GeeTest, AWS WAF, FunCAPTCHA, reCAPTCHA, Turnstile, and Firefox. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0).
 - [2026/04] Released [0.5.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6) adding user-configurable input and hook methods; improving hCaptcha drag-drop and label-binary handling; and various minor bug fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6).
 - [2026/01] Released [0.5.5](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5) improving hCaptcha bounding-box precision for canvas-based challenges; improving mouse action stability for all supported CAPTCHAs; and fixing minor bugs. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5).
 - [2025/12] Released [0.5.4](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4) updating mouse actions into an undetectable implementation for hCaptcha, FunCAPTCHA, reCAPTCHA, and Cloudflare Turnstile (Chromium-only), among other fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4).
 - [2025/11] Released [0.5.3](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3) adding support for hCaptcha video challenges and improved click precision; introduced online RL for browser agents. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3).
-- [2025/11] Released [0.5.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.2) fixing hCaptcha drag-and-drop coordinate rescaling on small viewports, Turnstile checkbox detection on Cloudflare interstitial pages, improving Turnstile bounding boxes, hardening reCAPTCHA flows, and restoring GeeTest. See the updated API reference [here](https://nopecha.com/api-reference/).
-- [2025/11] Released [0.5.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1) to adapt to hCaptcha’s new coordinate system post 0.5.0. See the notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1).
 
 <details>
 <summary>Previous News</summary>
 
+- [2025/11] Released [0.5.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.2) fixing hCaptcha drag-and-drop coordinate rescaling on small viewports, Turnstile checkbox detection on Cloudflare interstitial pages, improving Turnstile bounding boxes, hardening reCAPTCHA flows, and restoring GeeTest. See the updated API reference [here](https://nopecha.com/api-reference/).
+- [2025/11] Released [0.5.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1) to adapt to hCaptcha’s new coordinate system post 0.5.0. See the notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1).
 - [2025/11] Released [0.5.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.0) introducing new AI models for hCaptcha and general computer use (invite-only beta), plus Turnstile fixes, performance, and stability improvements. Notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.0).
 - [2024/11] Released [0.4.13](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.13) fixing Cloudflare Turnstile, improving GeeTest recognition, and delivering performance and stability improvements.
 - [2024/06] Released [0.4.12](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.12) fixing Cloudflare Turnstile.
