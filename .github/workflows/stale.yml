@@ -15,5 +15,6 @@ jobs:
       - uses: actions/stale@v10
         with:
           exempt-all-pr-assignees: true
+          exempt-issue-labels: enhancement,feature request,bug,triaged
           days-before-stale: 14
           days-before-close: 3
