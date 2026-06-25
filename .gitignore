@@ -5,3 +5,5 @@
 !LICENSE
 !assets/
 !assets/**
+!.github
+!.github/**
