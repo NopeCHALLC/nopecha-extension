@@ -1,0 +1,91 @@
+name: Extension bug report
+description: Report a bug with the NopeCHA browser extension.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only for issues with the NopeCHA browser extension.
+
+        For API, account, billing, dashboard, website, or other non-extension issues, contact support@nopecha.com.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Issue scope
+      options:
+        - label: This issue is about the NopeCHA browser extension, not the API, account, billing, dashboard, or website.
+          required: true
+      options:
+        - label: This issue is NOT about recognition quality
+          required: true
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+      description: Find this on your browser's extensions/add-ons page.
+      placeholder: "0.6.1"
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Brave
+        - Other Chromium-based browser
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser version
+      placeholder: "Chrome 149.0.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: captcha-type
+    attributes:
+      label: CAPTCHA type
+      options:
+        - reCAPTCHA
+        - hCaptcha
+        - FunCAPTCHA
+        - AWS WAF
+        - Cloudflare Turnstile
+        - GeeTest
+        - PerimeterX
+        - Text CAPTCHA
+        - Other
+        - Unknown
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the page URL if it can be shared publicly.
+      placeholder: |
+        1. Go to ...
+        2. Open a page with ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Add extension logs, browser console output, screenshots, or screen recordings if available. Remove secrets such as API keys.
+      render: text
+    validations:
+      required: false

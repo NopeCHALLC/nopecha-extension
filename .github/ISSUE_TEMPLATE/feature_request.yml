@@ -1,0 +1,52 @@
+name: Extension feature request
+description: Suggest an improvement for the NopeCHA browser extension.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only for feature requests about the NopeCHA browser extension.
+
+        For API, account, billing, dashboard, website, or other non-extension issues, contact support@nopecha.com.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Request scope
+      options:
+        - label: This request is about the NopeCHA browser extension, not the API, account, billing, dashboard, or website.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What extension workflow or limitation does this feature address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior or setting you would like added to the extension.
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Brave
+        - Other Chromium-based browser
+        - All supported browsers
+        - Not browser-specific
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Share any current workaround or alternative behavior you considered.
+    validations:
+      required: false
