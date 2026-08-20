@@ -28,9 +28,10 @@ Easy, fast, and cheap CAPTCHA automation for everyone.
 
 ---
 
-*Latest News* 🔥
+_Latest News_ 🔥
 
-- [2026/06] Released [0.6.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1) fixing some bugs and making Turnstile and PerimterX work on more pages. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1).
+- [2026/08] Released [0.6.2-rc.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.2-rc.2). See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.2-rc.2).
+- [2026/06] Released [0.6.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1) fixing some bugs and making Turnstile and PerimeterX work on more pages. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1).
 - [2026/06] Released [0.6.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0) adding configurable mouse speed and visualization, richer popup solve-status and pass-rate diagnostics, Text CAPTCHA math expression mode, and reliability fixes across hCaptcha, PerimeterX, GeeTest, AWS WAF, FunCAPTCHA, reCAPTCHA, Turnstile, and Firefox. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0).
 - [2026/04] Released [0.5.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6) adding user-configurable input and hook methods; improving hCaptcha drag-drop and label-binary handling; and various minor bug fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6).
 - [2026/01] Released [0.5.5](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5) improving hCaptcha bounding-box precision for canvas-based challenges; improving mouse action stability for all supported CAPTCHAs; and fixing minor bugs. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5).
@@ -112,10 +113,9 @@ The fastest way to start is to install our browser extension that automatically 
 
 Free to use for up to 100 requests per day. No sign-up or API key needed! Just install our extension and it will work instantly on any CAPTCHA it detects.
 
-> *Note: requests made without an API key counts usage by IP address.*
+> _Note: requests made without an API key counts usage by IP address._
 
 For higher limits and more features, sign up at <a href="https://nopecha.com">NopeCHA.com</a> to create an API key.
-
 
 <br>
 
@@ -127,21 +127,22 @@ For developers integrating NopeCHA into their projects, please see our <a href="
 
 Here is a sample of CAPTCHA types supported by NopeCHA, with more added regularly:
 
-| reCAPTCHA | FunCAPTCHA |
-:-:|:-:
-![reCAPTCHA](assets/recaptcha.gif?raw=true) | ![FunCAPTCHA](assets/funcaptcha.gif?raw=true)
+|                  reCAPTCHA                  |                  FunCAPTCHA                   |
+| :-----------------------------------------: | :-------------------------------------------: |
+| ![reCAPTCHA](assets/recaptcha.gif?raw=true) | ![FunCAPTCHA](assets/funcaptcha.gif?raw=true) |
 
-| hCaptcha | AWS WAF |
-:-:|:-:
-![hCaptcha](assets/hcaptcha.gif?raw=true) | ![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true)
+|                 hCaptcha                  |                      AWS WAF                       |
+| :---------------------------------------: | :------------------------------------------------: |
+| ![hCaptcha](assets/hcaptcha.gif?raw=true) | ![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true) |
 
-| Text CAPTCHA | Cloudflare Turnstile |
-:-:|:-:|
-![Text-based CAPTCHA](assets/textcaptcha.gif?raw=true) | ![Cloudflare Turnstile](assets/turnstile.gif?raw=true)
+|                      Text CAPTCHA                      |                  Cloudflare Turnstile                  |
+| :----------------------------------------------------: | :----------------------------------------------------: |
+| ![Text-based CAPTCHA](assets/textcaptcha.gif?raw=true) | ![Cloudflare Turnstile](assets/turnstile.gif?raw=true) |
 
-| And more ... | |
-:-:|:-:
-![CAPTCHA](assets/hcaptcha_video_type.gif) | ![CAPTCHA](assets/hcaptcha_recognition_sample.gif)
+|                And more ...                |                                                    |
+| :----------------------------------------: | :------------------------------------------------: |
+| ![CAPTCHA](assets/hcaptcha_video_type.gif) | ![CAPTCHA](assets/hcaptcha_recognition_sample.gif) |
+
 <!-- ![CAPTCHA](assets/collage.png?raw=true) -->
 
 <br>
