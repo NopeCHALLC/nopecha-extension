@@ -15,7 +15,6 @@ body:
       options:
         - label: This issue is about the NopeCHA browser extension, not the API, account, billing, dashboard, or website.
           required: true
-      options:
         - label: This issue is NOT about recognition quality
           required: true
   - type: input
@@ -52,7 +51,6 @@ body:
       label: CAPTCHA type
       options:
         - reCAPTCHA
-        - hCaptcha
         - FunCAPTCHA
         - AWS WAF
         - Cloudflare Turnstile
