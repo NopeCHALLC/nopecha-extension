@@ -32,30 +32,30 @@ _Latest News_ 🔥
 
 - [2026/08] Released [0.6.2-rc.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.2-rc.2). See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.2-rc.2).
 - [2026/06] Released [0.6.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1) fixing some bugs and making Turnstile and PerimeterX work on more pages. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.1).
-- [2026/06] Released [0.6.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0) adding configurable mouse speed and visualization, richer popup solve-status and pass-rate diagnostics, Text CAPTCHA math expression mode, and reliability fixes across hCaptcha, PerimeterX, GeeTest, AWS WAF, FunCAPTCHA, reCAPTCHA, Turnstile, and Firefox. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0).
-- [2026/04] Released [0.5.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6) adding user-configurable input and hook methods; improving hCaptcha drag-drop and label-binary handling; and various minor bug fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6).
-- [2026/01] Released [0.5.5](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5) improving hCaptcha bounding-box precision for canvas-based challenges; improving mouse action stability for all supported CAPTCHAs; and fixing minor bugs. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5).
-- [2025/12] Released [0.5.4](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4) updating mouse actions into an undetectable implementation for hCaptcha, FunCAPTCHA, reCAPTCHA, and Cloudflare Turnstile (Chromium-only), among other fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4).
-- [2025/11] Released [0.5.3](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3) adding support for hCaptcha video challenges and improved click precision; introduced online RL for browser agents. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3).
+- [2026/06] Released [0.6.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0) adding configurable mouse speed and visualization, richer popup solve-status and pass-rate diagnostics, Text CAPTCHA math expression mode, and reliability fixes across PerimeterX, GeeTest, AWS WAF, FunCAPTCHA, reCAPTCHA, Turnstile, and Firefox. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.6.0).
+- [2026/04] Released [0.5.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6) adding user-configurable input and hook methods; improving drag-drop and label-binary handling; and various minor bug fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.6).
+- [2026/01] Released [0.5.5](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5) improving bounding-box precision for canvas-based challenges; improving mouse action stability for all supported CAPTCHAs; and fixing minor bugs. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.5).
+- [2025/12] Released [0.5.4](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4) updating mouse actions into an undetectable implementation for FunCAPTCHA, reCAPTCHA, and Cloudflare Turnstile (Chromium-only), among other fixes and improvements. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.4).
+- [2025/11] Released [0.5.3](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3) adding support for video challenges and improved click precision; introduced online RL for browser agents. See the release notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.3).
 
 <details>
 <summary>Previous News</summary>
 
-- [2025/11] Released [0.5.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.2) fixing hCaptcha drag-and-drop coordinate rescaling on small viewports, Turnstile checkbox detection on Cloudflare interstitial pages, improving Turnstile bounding boxes, hardening reCAPTCHA flows, and restoring GeeTest. See the updated API reference [here](https://nopecha.com/api-reference/).
-- [2025/11] Released [0.5.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1) to adapt to hCaptcha’s new coordinate system post 0.5.0. See the notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1).
-- [2025/11] Released [0.5.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.0) introducing new AI models for hCaptcha and general computer use (invite-only beta), plus Turnstile fixes, performance, and stability improvements. Notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.0).
+- [2025/11] Released [0.5.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.2) fixing drag-and-drop coordinate rescaling on small viewports, Turnstile checkbox detection on Cloudflare interstitial pages, improving Turnstile bounding boxes, hardening reCAPTCHA flows, and restoring GeeTest. See the updated API reference [here](https://nopecha.com/api-reference/).
+- [2025/11] Released [0.5.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1) to adapt to a new coordinate system post 0.5.0. See the notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.1).
+- [2025/11] Released [0.5.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.0) introducing new AI models for general computer use (invite-only beta), plus Turnstile fixes, performance, and stability improvements. Notes [here](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.5.0).
 - [2024/11] Released [0.4.13](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.13) fixing Cloudflare Turnstile, improving GeeTest recognition, and delivering performance and stability improvements.
 - [2024/06] Released [0.4.12](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.12) fixing Cloudflare Turnstile.
 - [2024/06] Released [0.4.11](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.11) fixing the reCAPTCHA language code.
 - [2024/06] Released [0.4.10](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.10) adding beta support for GeeTest, Lemin, and Yandex CAPTCHAs; plus fixes for AWS CAPTCHA and Cloudflare Turnstile, and stability improvements.
 - [2024/05] Released [0.4.9](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.9) adding retry delay to avoid rate limits, fixing icon text overflow, and improving stability.
-- [2024/04] Released [0.4.8](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.8) fixing AWS WAF loop; improving AWS WAF, hCaptcha, and reCAPTCHA recognition; plus performance and minor bug fixes.
+- [2024/04] Released [0.4.8](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.8) fixing AWS WAF loop; improving AWS WAF, and reCAPTCHA recognition; plus performance and minor bug fixes.
 - [2023/11] Released [0.4.7](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.7) adding CSS selector extraction via UI and a disabled hosts menu; fixing Text CAPTCHA input, duplicate AWS WAF API calls, and Firefox logs; with performance and stability improvements.
 - [2023/11] Released [0.4.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.6) with a UI redesign, Settings API logs, an incognito bug fix, and major stability improvements.
 - [2023/10] Released [0.4.5](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.5) fixing empty image data in POST and PerimeterX on several domains; stability improvements.
 - [2023/10] Released [0.4.4](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.4) fixing Draw a box around challenges; minor stability improvements.
-- [2023/10] Released [0.4.3](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.3) adding support for a new hCaptcha API function.
-- [2023/10] Released [0.4.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.2) improving hCaptcha area select recognition and fixing minor bugs.
+- [2023/10] Released [0.4.3](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.3) adding support for a new API function.
+- [2023/10] Released [0.4.2](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.2) improving area select recognition and fixing minor bugs.
 - [2023/10] Released [0.4.1](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.1) maintenance update.
 - [2023/10] Released [0.4.0](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.4.0) maintenance update.
 - [2023/04] Released [0.3.13](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.13) maintenance update.
@@ -63,7 +63,7 @@ _Latest News_ 🔥
 - [2023/04] Released [0.3.11](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.11) maintenance update.
 - [2023/04] Released [0.3.10](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.10) maintenance update.
 - [2023/04] Released [0.3.9](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.9) maintenance update.
-- [2023/03] Released [0.3.8](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.8) fixing an hCaptcha multiple choice bug.
+- [2023/03] Released [0.3.8](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.8) fixing a multiple choice bug.
 - [2023/03] Released [0.3.7](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.7) maintenance update.
 - [2023/03] Released [0.3.6](https://github.com/NopeCHALLC/nopecha-extension/releases/tag/0.3.6) maintenance update.
 - [2022/12] Major commit [textcaptcha empty selectors](https://github.com/NopeCHALLC/nopecha-extension/commit/6d97479) improving Text CAPTCHA selector handling.
@@ -117,6 +117,7 @@ Free to use for up to 100 requests per day. No sign-up or API key needed! Just i
 
 For higher limits and more features, sign up at <a href="https://nopecha.com">NopeCHA.com</a> to create an API key.
 
+
 <br>
 
 For developers integrating NopeCHA into their projects, please see our <a href="https://nopecha.com/docs/">Documentation</a> and <a href="https://nopecha.com/api-reference/">API reference</a>.
@@ -131,19 +132,17 @@ Here is a sample of CAPTCHA types supported by NopeCHA, with more added regularl
 | :-----------------------------------------: | :-------------------------------------------: |
 | ![reCAPTCHA](assets/recaptcha.gif?raw=true) | ![FunCAPTCHA](assets/funcaptcha.gif?raw=true) |
 
-|                 hCaptcha                  |                      AWS WAF                       |
-| :---------------------------------------: | :------------------------------------------------: |
-| ![hCaptcha](assets/hcaptcha.gif?raw=true) | ![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true) |
+|                 Image CAPTCHA                       |                      AWS WAF                       |
+| :-------------------------------------------------: | :------------------------------------------------: |
+| ![Image CAPTCHA](assets/image_captcha.gif?raw=true) | ![AWS WAF CAPTCHA](assets/awscaptcha.gif?raw=true) |
 
 |                      Text CAPTCHA                      |                  Cloudflare Turnstile                  |
 | :----------------------------------------------------: | :----------------------------------------------------: |
 | ![Text-based CAPTCHA](assets/textcaptcha.gif?raw=true) | ![Cloudflare Turnstile](assets/turnstile.gif?raw=true) |
 
-|                And more ...                |                                                    |
-| :----------------------------------------: | :------------------------------------------------: |
-| ![CAPTCHA](assets/hcaptcha_video_type.gif) | ![CAPTCHA](assets/hcaptcha_recognition_sample.gif) |
-
-<!-- ![CAPTCHA](assets/collage.png?raw=true) -->
+|            And more ...           |                                           |
+| :-------------------------------: | :---------------------------------------: |
+| ![CAPTCHA](assets/video_type.gif) | ![CAPTCHA](assets/recognition_sample.gif) |
 
 <br>
 
